@@ -47,3 +47,8 @@ npm-debug.log
 
 # Ignore NuGet packages
 *.nupkg
+
+# Additional rules
+# Ignore build and publish output
+publish/
+*.PublishProfiles/
