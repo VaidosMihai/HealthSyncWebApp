@@ -1,0 +1,62 @@
+<div class="contact-container">
+    <h1>Contact Information</h1>
+    <p>For any inquiries, please contact our call center or visit one of our locations below.</p>
+    <p><strong>Call Center:</strong> 0800-123-456</p>
+    <p><strong>Email:</strong> contact&commat;healthsync.com</p>
+  
+    <h2>Our Locations</h2>
+    <div class="location-details">
+      <div class="location-card" *ngFor="let location of locations">
+        <h3>{{ location.title }}</h3>
+        <p><strong>Description:</strong> {{ location.description }}</p>
+      </div>
+    </div>
+  
+    <h2>Contact Form</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="firstName">Prenume</label>
+        <input type="text" id="firstName" [(ngModel)]="contactForm.firstName" name="firstName" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Nume</label>
+        <input type="text" id="lastName" [(ngModel)]="contactForm.lastName" name="lastName" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Telefon</label>
+        <input type="tel" id="phone" [(ngModel)]="contactForm.phone" name="phone" required>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" [(ngModel)]="contactForm.email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="dob">Data nașterii</label>
+        <input type="date" id="dob" [(ngModel)]="contactForm.dob" name="dob" required>
+      </div>
+      <div class="form-group">
+        <label for="comments">Comentarii (optional)</label>
+        <textarea id="comments" [(ngModel)]="contactForm.comments" name="comments"></textarea>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="contactForm.agreeTerms" name="agreeTerms" required>
+          Sunt de acord cu <a href="#">Termeni și condiții site</a>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="contactForm.agreePrivacy" name="agreePrivacy" required>
+          Am citit și sunt de acord cu <a href="#">Politica prelucrare date</a>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="contactForm.agreeMarketing" name="agreeMarketing">
+          Sunt de acord să primesc comunicări de marketing
+        </label>
+      </div>
+      <button type="submit" class="submit-btn">Trimite</button>
+    </form>
+  </div>
+  

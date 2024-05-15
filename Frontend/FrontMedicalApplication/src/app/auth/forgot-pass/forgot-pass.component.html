@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MediApp</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="login-container">
+      <mat-card>
+        <mat-card-title style="font-size: xx-large; align-self: center;">Reset Password</mat-card-title>
+        <mat-card-content>
+          <form [formGroup]="forgotPasswordForm" (ngSubmit)="onReset()">
+            <!-- Phone Number Input -->
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Phone Number</mat-label>
+              <input matInput placeholder="Enter your phone number" formControlName="phoneNumber">
+              <mat-error *ngIf="forgotPasswordForm.get('phoneNumber')?.errors">
+                Please enter a valid phone number.
+              </mat-error>
+            </mat-form-field>
+
+            <button type="button" mat-raised-button color="primary" (click)="onRequestCode()" [disabled]="forgotPasswordForm.get('phoneNumber')?.invalid">
+              Send Code
+            </button>
+
+            <!-- Reset Code Input -->
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Reset Code</mat-label>
+              <input matInput placeholder="Enter reset code" formControlName="code">
+            </mat-form-field>
+
+            <!-- New Password Input -->
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>New Password</mat-label>
+              <input title="passnew" type="password" matInput formControlName="newPassword">
+            </mat-form-field>
+
+            <!-- Confirm Password Input -->
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Confirm Password</mat-label>
+              <input title="passconf" type="password" matInput formControlName="confirmPassword">
+              <mat-error *ngIf="forgotPasswordForm.get('confirmPassword')?.errors?.['mustMatch'] && forgotPasswordForm.get('confirmPassword')?.touched">
+                Passwords must match
+              </mat-error>
+              
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid">
+              Reset Password
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</body>
+</html>

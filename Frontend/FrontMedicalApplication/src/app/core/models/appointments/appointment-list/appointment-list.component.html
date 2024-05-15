@@ -1,0 +1,104 @@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 *ngIf="!isPatient">Appointments List</h2>
+    <h2 *ngIf="isPatient">Your appointments</h2>
+  </div>
+  <div class="container mt-4">
+    <h2>Upcoming Appointments</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Doctor Name</th>
+            <th>Patient Name</th>
+            <th>Date and Time</th>
+            <th>Reason</th>
+            <th>Actions</th>
+            <th>Actions</th>
+            <th>Actions</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of upcomingAppointments">
+            <td>{{ doctorNames[appointment.doctorId] || 'Unknown' }}</td>
+            <td>{{ patientNames[appointment.patientId] || 'Unknown' }}</td>
+            <td>{{ appointment.dateTime | date: 'medium' }}</td>
+            <td>{{ appointment.reason }}</td>
+            <td>
+              <button
+                class="btn btn-primary btn-sm"
+                *ngIf="appointment.appointmentId"
+                [routerLink]="['/appointment/edit', appointment.appointmentId]">
+                Amend
+              </button>
+            </td>
+            <td>
+              <button
+                class="btn btn-danger btn-sm"
+                *ngIf="appointment.appointmentId"
+                (click)="deleteAppointment(appointment.appointmentId)">
+                Cancel the appointment
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-primary btn-sm"
+                *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && appointment.appointmentId"
+                [routerLink]="['/medical-record/new', appointment.appointmentId]">
+                Make Diagnosis
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-primary btn-sm"
+                *ngIf="isPatient || isDoctor"
+                [routerLink]="['/medical-record/view', appointment.appointmentId]">
+                View Diagnostics
+              </button>
+              <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Past Appointments</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Doctor Name</th>
+            <th>Patient Name</th>
+            <th>Date and Time</th>
+            <th>Reason</th>
+            <th>Actions</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of pastAppointments">
+            <td>{{ doctorNames[appointment.doctorId] || 'Unknown' }}</td>
+            <td>{{ patientNames[appointment.patientId] || 'Unknown' }}</td>
+            <td>{{ appointment.dateTime | date: 'medium' }}</td>
+            <td>{{ appointment.reason }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm"
+                *ngIf="isPatient || isDoctor"
+                [routerLink]="['/medical-record/view', appointment.appointmentId]">
+                View Diagnostics
+              </button>
+              <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
+            </td>
+            <td>
+              <button class="btn btn-primary btn-sm"
+                *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && appointment.appointmentId"
+                [routerLink]="['/medical-record/new', appointment.appointmentId]">
+                Make Diagnosis
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

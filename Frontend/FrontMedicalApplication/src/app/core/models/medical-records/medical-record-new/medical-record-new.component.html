@@ -1,0 +1,15 @@
+<div class="container">
+    <h2>Add Medical Record</h2>
+    <form (ngSubmit)="onSubmit()" #medicalRecordForm="ngForm">
+      <div class="mb-3">
+        <label for="diagnosis" class="form-label">Diagnosis</label>
+        <input type="text" class="form-control" id="diagnosis" [(ngModel)]="medicalRecord.diagnosis" name="diagnosis" required>
+      </div>
+      <div class="mb-3">
+        <label for="notes" class="form-label">Notes</label>
+        <textarea class="form-control" id="notes" [(ngModel)]="medicalRecord.notes" name="notes"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  

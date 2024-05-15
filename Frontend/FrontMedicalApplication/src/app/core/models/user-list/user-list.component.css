@@ -1,0 +1,14 @@
+.table th, .table td {
+    padding: 8px;  /* Reduced padding */
+    font-size: 14px; /* Smaller font size for table data */
+}
+
+.table th {
+  font-weight: bold;
+  background-color: #f8f9fa; /* Light background for headers */
+}
+
+th, td {
+    min-width: 120px; /* Set a minimum width for each table cell */
+ }
+      

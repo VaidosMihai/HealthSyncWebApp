@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/BackendMedicalApplicationapi/apis/BackendMedicalApplication",
+      "type": "apis.azure"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/BackendMedicalApplication/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsBackendDatabase_C50E9B5FD8",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/bdmedicalapplication5/databases/BDMedicalApplication5",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:BackendDatabase",
+      "dynamicId": null
+    }
+  }
+}

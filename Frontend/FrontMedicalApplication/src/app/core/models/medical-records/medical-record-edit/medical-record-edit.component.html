@@ -1,0 +1,25 @@
+<div class="container mt-4">
+  <h2>Medical Record</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="medicalRecordForm">
+    <!-- <div class="form-group">
+      <label for="patientId">Patient ID</label>
+      <input type="text" class="form-control" id="patientId" formControlName="patientId" readonly>
+    </div> -->
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input type="date" class="form-control" id="date" formControlName="date" readonly>
+    </div>
+    <div class="form-group">
+      <label for="time">Time</label>
+      <input type="time" class="form-control" id="time" formControlName="time" readonly>
+    </div>
+    <div class="form-group">
+      <label for="diagnosis">Diagnosis</label>
+      <input type="text" class="form-control" id="diagnosis" formControlName="diagnosis" placeholder="Describe the diagnosis" readonly>
+    </div>
+    <div class="form-group">
+      <label for="notes">Notes</label>
+      <textarea class="form-control" id="notes" formControlName="notes" placeholder="Additional notes (optional)" readonly></textarea>
+    </div>
+  </form>
+</div>

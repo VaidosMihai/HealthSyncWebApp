@@ -1,0 +1,13 @@
+<div class="notification-modal">
+    <h2>Notifications</h2>
+    <ul>
+      <li *ngFor="let notification of notifications">
+        <div class="notification-item">
+          <p>{{ notification.message }}</p>
+          <span>{{ notification.createdAt | date: 'short' }}</span>
+        </div>
+      </li>
+    </ul>
+    <button (click)="closeModal()">Close</button>
+  </div>
+  

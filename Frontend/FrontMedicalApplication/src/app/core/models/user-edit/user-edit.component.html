@@ -1,0 +1,61 @@
+<!-- user-add.component.html -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+  <h2>Edit User</h2>
+  <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="roleId">Role ID</label>
+      <input type="number" class="form-control" id="roleId" formControlName="roleId" placeholder="Enter role ID">
+    </div>
+        <div class="form-outline mb-4">
+          <label class="form-label" for="username" >Username</label>
+          <input type="text" id="username" class="form-control" formControlName="username" required placeholder="Enter username"/>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="name">Name</label>
+          <input type="text" id="name" class="form-control" formControlName="name" required placeholder="Enter name"/>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="surname">Surname</label>
+          <input type="text" id="surname" class="form-control" formControlName="surname" required placeholder="Enter surname"/>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="emailAddress">Email address</label>
+          <input type="email" id="email" class="form-control" formControlName="emailAddress" required placeholder="Enter email address"/>
+          <mat-error *ngIf="editUserForm.get('emailAddress')?.errors?.['emailAddress']">Please enter a valid email</mat-error>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" class="form-control" formControlName="password" required minlength="6" placeholder="Enter password"/>
+          <mat-error *ngIf="editUserForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="cnp">CNP</label>
+          <input type="text" id="cnp" class="form-control" formControlName="cnp" required pattern="^[0-9]+$" placeholder="Enter CNP"/>
+          <mat-error *ngIf="editUserForm.get('cnp')?.hasError('min')">CNP must be a positive string</mat-error>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="age">Age</label>
+          <input type="number" id="age" class="form-control" formControlName="age" required min="0" placeholder="Enter age"/>
+          <mat-error *ngIf="editUserForm.get('age')?.hasError('min')">Age must be a positive number</mat-error>
+        </div>
+
+        <div class="form-outline mb-4">
+          <label class="form-label" for="address">Address</label>
+          <input type="text" id="address" class="form-control" formControlName="address" required placeholder="Enter address"/>
+        </div>
+        
+        <div class="form-outline mb-4">
+          <label class="form-label" for="phoneNumber">Phone Number</label>
+          <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber" required placeholder="Enter phone number"/>
+        </div>
+    <button type="submit" class="btn btn-primary">Edit User</button>
+  </form>
+</div>

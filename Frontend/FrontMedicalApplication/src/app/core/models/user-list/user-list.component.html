@@ -1,0 +1,43 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2>User List</h2>
+    <button class="btn btn-success" (click)="addUser()">New User</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Email Address</th>
+          <th>Name</th>
+          <th>Surname</th>
+          <th>Role ID</th>
+          <th>CNP</th>
+          <th>Age</th>
+          <th>Address</th>
+          <th>Phone Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.userId }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.emailAddress }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.surname }}</td>
+          <td>{{ user.roleId }}</td>
+          <td>{{ user.cnp }}</td>
+          <td>{{ user.age }}</td>
+          <td>{{ user.address }}</td>
+          <td>{{ user.phoneNumber }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" *ngIf="user.userId" [routerLink]="['/user/edit', user.userId]">Edit</button>
+            <button class="btn btn-danger btn-sm" *ngIf="user.userId" (click)="confirmDeleteUser(user.userId)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

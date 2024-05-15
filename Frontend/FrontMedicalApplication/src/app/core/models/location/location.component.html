@@ -1,0 +1,11 @@
+<div class="map-container">
+    <div #mapContainer class="map"></div>
+  </div>
+  
+  <div class="locations-info">
+    <div class="location-card" *ngFor="let location of locations">
+      <h5>{{ location.title }}</h5>
+      <p>Coordinates: {{ location.lat }}, {{ location.lng }}</p>
+    </div>
+  </div>
+  

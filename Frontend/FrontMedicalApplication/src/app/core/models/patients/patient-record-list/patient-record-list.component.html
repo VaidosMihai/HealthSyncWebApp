@@ -1,0 +1,48 @@
+<!-- patient-list.component.html -->
+<div class="container mt-3">
+  <h2>Patients</h2>
+  <div class="row">
+    <div *ngFor="let patient of patients" class="col-md-4 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title text-center">{{ patient.name }} {{ patient.surname }}</h5>
+          <ul class="list-unstyled">
+            <li><strong>Username:</strong> {{ patient.username }}</li>
+            <li><strong>Email:</strong> {{ patient.emailAddress }}</li>
+            <li><strong>CNP:</strong> {{ patient.cnp }}</li>
+            <li><strong>Age:</strong> {{ patient.age }}</li>
+            <li><strong>Address:</strong> {{ patient.address }}</li>
+            <li><strong>Phone:</strong> {{ patient.phoneNumber }}</li>
+            <li><strong>Next Appointment:</strong> {{ getNextAppointment(patient.userId)?.dateTime | date: 'short' || 'No upcoming appointments' }}</li>
+          </ul>
+          <div class="text-center">
+            <button class="btn btn-primary mt-2" (click)="openModal(patient)">View patient profile</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="patientModal" class="modal" [class.show]="isModalOpen">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>{{ selectedPatient?.name }} {{ selectedPatient?.surname }}</h2>
+      <ul class="list-unstyled">
+        <li><strong>Username:</strong> {{ selectedPatient?.username }}</li>
+        <li><strong>Email:</strong> {{ selectedPatient?.emailAddress }}</li>
+        <li><strong>CNP:</strong> {{ selectedPatient?.cnp }}</li>
+        <li><strong>Age:</strong> {{ selectedPatient?.age }}</li>
+        <li><strong>Address:</strong> {{ selectedPatient?.address }}</li>
+        <li><strong>Phone:</strong> {{ selectedPatient?.phoneNumber }}</li>
+      </ul>
+      <h3>Appointments</h3>
+      <ul class="list-unstyled">
+        <li *ngFor="let appointment of patientAppointments">
+          <strong>{{ appointment.dateTime | date: 'short' }}:</strong> {{ appointment.reason }}
+        </li>
+      </ul>
+      <button class="btn btn-primary" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

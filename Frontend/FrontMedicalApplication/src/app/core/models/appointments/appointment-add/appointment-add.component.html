@@ -1,0 +1,34 @@
+<div class="container mt-4">
+    <h2>Add New Appointment</h2>
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+      <input type="hidden" formControlName="doctorId" [value]="doctorId">
+      <input type="hidden" formControlName="patientId" [value]="patientId">
+      <div class="form-group">
+        <label for="doctorId">Doctor</label>
+        <select class="form-control" id="doctorId" formControlName="doctorId">
+          <option *ngFor="let doctor of doctors" [value]="doctor.userId">
+            {{ doctor.name }} {{ doctor.surname }}
+          </option>
+        </select>
+      </div>
+      <!-- <div class="form-group">
+        <label for="doctorUsername">Doctor Username</label>
+        <input type="text" class="form-control" id="doctorUsername" formControlName="doctorUsername" readonly>
+      </div> -->
+      <!-- <div class="form-group">
+        <label for="patientUsername">Patient Username</label>
+        <input type="text" class="form-control" id="patientUsername" formControlName="patientUsername" readonly>
+      </div> -->
+      <div class="form-group">
+        <label for="date">Date and Time</label>
+        <!-- <input type="datetime-local" class="form-control" id="date" formControlName="date"> -->
+        <input type="datetime-local" class="form-control" id="date" formControlName="date" >
+      </div>
+      <div class="form-group">
+        <label for="reason">Reason for Visit</label>
+        <textarea class="form-control" id="reason" formControlName="reason" placeholder="Please describe your symptoms, their duration, any triggers you've noticed, and how they are affecting your daily activities. For example, 'I've been experiencing sharp back pain for the last two weeks, mostly in the mornings and after sitting for long periods at my desk. It has made it difficult for me to stay focused at work and perform regular exercises.'"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  

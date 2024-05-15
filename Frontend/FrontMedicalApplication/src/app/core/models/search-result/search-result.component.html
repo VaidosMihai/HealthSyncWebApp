@@ -1,0 +1,85 @@
+<div class="container">
+    <h1>Search Results for "{{ searchTerm }}"</h1>
+    <div *ngIf="!searchResults">Searching...</div>
+    <ng-container *ngIf="searchResults">
+      <section *ngIf="entityType === 'users' && searchResults?.length">
+        <h2>Users</h2>
+        <ul *ngIf="isDoctor || isPatient">
+          <li *ngFor="let user of searchResults" style="font-size: larger;">
+            Username: {{ user.username }}, 
+            Name: {{ user.name }} {{ user.surname }},
+            Email: {{ user.emailAddress }}, 
+            Age: {{ user.age }}, 
+            Role: <span *ngIf="user.roleId === 1">Doctor</span>
+            <span *ngIf="user.roleId === 2">Patient</span>
+            <span *ngIf="user.roleId === 3">Admin</span>
+          </li>
+        </ul>
+        <ul *ngIf="isAdmin">
+          <li *ngFor="let user of searchResults">
+            ID: {{ user.userId }}, Username: {{ user.username }}, Name: {{ user.name }} {{ user.surname }},
+            Email: {{ user.emailAddress }}, CNP: {{ user.cnp }}, Age: {{ user.age }}, Address: {{ user.address }},
+            Phone: {{ user.phoneNumber }}, Role ID: {{ user.roleId }}, Token: {{ user.token }}
+          </li>
+        </ul>
+      </section>
+      <!-- <div *ngIf="searchResults">
+        <pre>{{ searchResults | json }}</pre>
+        Appointment ID: {{ searchResults[1].appointmentId }},
+      </div> -->
+      <section *ngIf="entityType === 'appointments' && searchResults.length">
+        <h2>Appointments</h2>
+        <ul>
+          <li *ngFor="let appointment of searchResults">
+            Appointment ID: {{ appointment.appointmentId }},
+            Patient ID: {{ appointment.patientId }},
+            Doctor ID: {{ appointment.doctorId }},
+            Date: {{ appointment.dateTime | date:'medium' }},
+            Reason: {{ appointment.reason }}
+          </li>
+        </ul>
+      </section>
+  
+      <section *ngIf="entityType === 'billings' && searchResults?.length">
+        <h2>Billings</h2>
+        <ul>
+          <li *ngFor="let billing of searchResults.Billings">
+            Amount: {{ billing.amount }}, Issued: {{ billing.dateIssued | date:'mediumDate' }}, Status: {{ billing.paymentStatus }}
+          </li>
+        </ul>
+      </section>
+  
+      <section *ngIf="entityType === 'patientRecords' && searchResults?.length">
+        <h2>Patient Records</h2>
+        <ul>
+          <li *ngFor="let patientRecord of searchResults.PatientRecords">
+            Patient ID: {{ patientRecord.patientId }},
+            Record Date: {{ patientRecord.recordDate | date:'mediumDate' }},
+            Diagnosis: {{ patientRecord.diagnosis }},
+            Treatment: {{ patientRecord.treatment }},
+            Notes: {{ patientRecord.notes }}
+          </li>
+        </ul>
+      </section>
+  
+      <section *ngIf="entityType === 'roles' && searchResults?.length">
+        <h2>Roles</h2>
+        <ul>
+          <li *ngFor="let role of searchResults.Roles">
+            Role ID: {{ role.roleId }},
+            Role Name: {{ role.name }}
+          </li>
+        </ul>
+      </section>
+  
+      <section *ngIf="entityType === 'treatments' && searchResults?.length">
+        <h2>Treatments</h2>
+        <ul>
+          <li *ngFor="let treatment of searchResults.Treatments">
+            Treatment ID: {{ treatment.treatmentId }},
+            Description: {{ treatment.description }}
+          </li>
+        </ul>
+      </section>
+    </ng-container>
+  </div>
