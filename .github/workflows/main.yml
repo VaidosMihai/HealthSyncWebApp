@@ -53,4 +53,4 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         action: "upload"
         app_location: "Frontend/FrontMedicalApplication"
-        output_location: "Frontend/FrontMedicalApplication/dist"
+        output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application"
