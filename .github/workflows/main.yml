@@ -19,18 +19,18 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore backend dependencies
-      run: dotnet restore Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj
+      run: dotnet restore BackendMedicalApplication/BackendMedicalApplication.csproj
 
     - name: Build backend
-      run: dotnet build Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj --configuration Release --no-restore
+      run: dotnet build BackendMedicalApplication/BackendMedicalApplication.csproj --configuration Release --no-restore
 
     - name: Publish backend
-      run: dotnet publish Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj --configuration Release --no-restore --output ./publish
+      run: dotnet publish BackendMedicalApplication/BackendMedicalApplication.csproj --configuration Release --no-restore --output ./publish
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18.13.0'
+        node-version: '18.13.0'  # Updated to use Node.js v18.13.0
 
     - name: Install frontend dependencies
       run: npm install --prefix Frontend/FrontMedicalApplication
