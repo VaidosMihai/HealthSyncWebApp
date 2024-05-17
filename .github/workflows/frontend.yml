@@ -30,7 +30,7 @@ jobs:
         run: npm install -g @angular/cli@latest
 
       - name: Install frontend dependencies
-        run: npm install --prefix Frontend/FrontMedicalApplication
+        run: npm install --prefix Frontend/FrontMedicalApplication --legacy-peer-deps
 
       - name: Build frontend
         run: npm run build --prefix Frontend/FrontMedicalApplication
