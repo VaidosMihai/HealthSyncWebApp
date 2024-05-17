@@ -8,9 +8,12 @@ apt-get install -y nodejs
 node -v
 npm -v
 
+# Navigate to the project directory
+cd Frontend/FrontMedicalApplication
+
 # Install Angular CLI and dependencies
 npm install -g @angular/cli@latest
-npm install --legacy-peer-deps --prefix Frontend/FrontMedicalApplication
+npm install --legacy-peer-deps
 
 # Build the Angular project
-npm run build --prefix Frontend/FrontMedicalApplication
+npm run build
