@@ -26,6 +26,9 @@ jobs:
         with:
           node-version: '20.13.1'  # Ensure Node.js version matches your local setup
 
+      - name: Make build script executable
+        run: chmod +x ./build.sh
+
       - name: Run custom build script
         run: ./build.sh
 
