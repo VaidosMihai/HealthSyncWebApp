@@ -26,17 +26,8 @@ jobs:
         with:
           node-version: '20.13.1'  # Ensure Node.js version matches your local setup
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli@latest
-
-      - name: Install frontend dependencies
-        run: npm install --prefix Frontend/FrontMedicalApplication --legacy-peer-deps
-
-      - name: Build frontend
-        run: npm run build --prefix Frontend/FrontMedicalApplication
-
-      - name: Check Node.js version
-        run: node -v
+      - name: Run custom build script
+        run: ./build.sh
 
       - name: Deploy frontend to Azure Static Web Apps
         id: builddeploy
