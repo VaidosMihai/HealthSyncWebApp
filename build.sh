@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install Node.js directly
-curl -sL https://deb.nodesource.com/setup_20.x | bash -
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt-get install -y nodejs
 
 # Check Node.js and npm versions
