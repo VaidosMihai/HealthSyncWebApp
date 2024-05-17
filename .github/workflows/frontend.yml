@@ -22,9 +22,12 @@ jobs:
           lfs: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '18.13.0'  # Ensure Node.js version is 18.13.0 or higher
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli@latest
 
       - name: Install frontend dependencies
         run: npm install --prefix Frontend/FrontMedicalApplication
