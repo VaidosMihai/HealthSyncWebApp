@@ -36,4 +36,4 @@ jobs:
           action: "upload"
           app_location: "Frontend/FrontMedicalApplication"
           api_location: ""
-          output_location: "dist/front-medical-application"
+          output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application"
