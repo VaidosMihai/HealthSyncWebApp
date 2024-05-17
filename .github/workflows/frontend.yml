@@ -35,6 +35,9 @@ jobs:
       - name: Build frontend
         run: npm run build --prefix Frontend/FrontMedicalApplication
 
+      - name: Check Node.js version
+        run: node -v
+
       - name: Deploy frontend to Azure Static Web Apps
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
