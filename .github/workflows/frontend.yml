@@ -25,7 +25,7 @@ jobs:
         run: chmod +x ./build.sh
 
       - name: Run custom build script
-        run: sudo ./build.sh
+        run: ./build.sh
 
       - name: Deploy frontend to Azure Static Web Apps
         id: builddeploy
@@ -37,4 +37,4 @@ jobs:
           app_location: "Frontend/FrontMedicalApplication"
           api_location: ""
           output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application"
-          app_build_command: "./build.sh"
+          app_build_command: "npm run build --prefix Frontend/FrontMedicalApplication"
