@@ -37,4 +37,3 @@ jobs:
           app_location: "Frontend/FrontMedicalApplication"
           api_location: ""
           output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application"
-          app_build_command: "npm run build --prefix Frontend/FrontMedicalApplication"
