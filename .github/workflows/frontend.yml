@@ -24,16 +24,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14.15.0'  # Ensure Node.js version is 18.13.0 or higher
+          node-version: '20.13.1'  # Ensure Node.js version matches your local setup
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli@latest
+      - name: Make build script executable
+        run: chmod +x ./build.sh
 
-      - name: Install frontend dependencies
-        run: npm install --prefix Frontend/FrontMedicalApplication --legacy-peer-deps
-
-      - name: Build frontend
-        run: npm run build --prefix Frontend/FrontMedicalApplication
+      - name: Run custom build script
+        run: ./build.sh
 
       - name: Deploy frontend to Azure Static Web Apps
         id: builddeploy
@@ -45,15 +42,4 @@ jobs:
           app_location: "Frontend/FrontMedicalApplication" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application" # Built app content directory - optional
-
-  close_pull_request:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          action: "close"
+          app_build_command: "nvm use 20.13.1 && npm run build --prefix Frontend/FrontMedicalApplication"
