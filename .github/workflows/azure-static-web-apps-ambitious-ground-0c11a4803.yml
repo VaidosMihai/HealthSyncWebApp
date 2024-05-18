@@ -28,10 +28,13 @@ jobs:
       - name: Install frontend dependencies
         run: npm install --prefix Frontend/FrontMedicalApplication
 
+      - name: List directory contents before build
+        run: ls -la Frontend/FrontMedicalApplication
+
       - name: Build frontend
         run: npm run build --prefix Frontend/FrontMedicalApplication
 
-      - name: Validate build output directory
+      - name: List directory contents after build
         run: ls -la Frontend/FrontMedicalApplication/dist/front-medical-application
 
       - name: Make build.sh executable
@@ -82,5 +85,5 @@ jobs:
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static-web-apps-api-token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"
