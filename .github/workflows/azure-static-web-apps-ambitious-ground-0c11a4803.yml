@@ -34,6 +34,9 @@ jobs:
       - name: Validate build output directory
         run: ls -la Frontend/FrontMedicalApplication/dist/front-medical-application
 
+      - name: Make build.sh executable
+        run: chmod +x build.sh
+
       - name: Run build.sh script
         run: ./build.sh
 
