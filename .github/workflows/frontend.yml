@@ -21,19 +21,39 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: Make build script executable
-        run: chmod +x ./build.sh
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.13.0'  # Ensure Node.js version is 18.13.0 or higher
 
-      - name: Run custom build script
-        run: ./build.sh
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli@latest
+
+      - name: Install frontend dependencies
+        run: npm install --prefix Frontend/FrontMedicalApplication --legacy-peer-deps
+
+      - name: Build frontend
+        run: npm run build --prefix Frontend/FrontMedicalApplication
 
       - name: Deploy frontend to Azure Static Web Apps
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
-          app_location: "Frontend/FrontMedicalApplication/dist"
-          api_location: ""
-          output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application"
+          app_location: "Frontend/FrontMedicalApplication" # App source code path
+          api_location: "" # Api source code path - optional
+          output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application" # Built app content directory - optional
+
+  close_pull_request:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: "close"
