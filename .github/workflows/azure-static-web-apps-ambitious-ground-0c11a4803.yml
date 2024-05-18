@@ -29,13 +29,16 @@ jobs:
         run: npm install --prefix Frontend/FrontMedicalApplication
 
       - name: List all files in the workspace before build
-        run: find .
+        run: find . -type f | sort
 
       - name: Build frontend
         run: npm run build --prefix Frontend/FrontMedicalApplication
 
       - name: List directory contents after build
         run: ls -la Frontend/FrontMedicalApplication/dist/front-medical-application
+
+      - name: List all files in the workspace after build
+        run: find . -type f | sort
 
       - name: Make build.sh executable
         run: chmod +x build.sh
