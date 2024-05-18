@@ -34,6 +34,9 @@ jobs:
       - name: Validate build output directory
         run: ls -la Frontend/FrontMedicalApplication/dist/front-medical-application
 
+      - name: Run build.sh script
+        run: ./build.sh
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
