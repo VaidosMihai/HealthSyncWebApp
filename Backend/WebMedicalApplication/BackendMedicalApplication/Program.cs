@@ -70,7 +70,7 @@ builder.Services.AddCors(options =>
         builder => builder
             .WithOrigins(
                 "http://localhost:4200", // Local development
-                "https://lemon-cliff-0c0893203.5.azurestaticapps.net" // Your Angular app URL on Azure Static Web Apps
+                "https://lemon-cliff-0c0893203.5.azurestaticapps.net" //Azure Static Web Apps
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
