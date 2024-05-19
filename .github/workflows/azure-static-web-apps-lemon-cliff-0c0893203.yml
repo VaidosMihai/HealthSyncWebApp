@@ -26,16 +26,16 @@ jobs:
           node-version: '18.13.0'
 
       - name: Install frontend dependencies
-        run: npm install --prefix Frontend/FrontMedicalApplication
+        run: npm install --prefix ./Frontend/FrontMedicalApplication
 
       - name: List contents of Frontend directory
-        run: ls -la Frontend/FrontMedicalApplication
+        run: ls -la ./Frontend/FrontMedicalApplication
 
       - name: Build frontend
-        run: npm run build --prefix Frontend/FrontMedicalApplication
+        run: npm run build --prefix ./Frontend/FrontMedicalApplication
 
       - name: List directory contents after build
-        run: ls -la Frontend/FrontMedicalApplication/dist/front-medical-application
+        run: ls -la ./Frontend/FrontMedicalApplication/dist/front-medical-application
 
       - name: Deploy frontend to Azure Static Web Apps
         id: builddeploy
@@ -47,7 +47,7 @@ jobs:
           app_location: "Frontend/FrontMedicalApplication" # App source code path
           api_location: "api" # Api source code path - optional
           output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application" # Built app content directory - optional
-          app_build_command: "npm run build --prefix Frontend/FrontMedicalApplication"
+          app_build_command: "npm run build --prefix ./Frontend/FrontMedicalApplication"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
