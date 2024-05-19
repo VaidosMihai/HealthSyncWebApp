@@ -239,6 +239,7 @@ export class PatientProfileComponent implements OnInit {
       this.reviewService.deleteReview(reviewId).subscribe({
         next: () => {
           console.log('Review deleted successfully');
+          window.location.reload();
           if (this.currentUser?.roleId === 1) {
             this.loadReviewsForDoctor(this.currentUser?.userId ?? 0);
           this.loadReviewsForDoctor(this.currentUser?.userId ?? 0);

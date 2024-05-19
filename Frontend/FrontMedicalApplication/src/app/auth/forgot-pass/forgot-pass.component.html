@@ -6,56 +6,81 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-  <div class="wrapper">
-    <div class="login-container">
-      <mat-card>
-        <mat-card-title style="font-size: xx-large; align-self: center;">Reset Password</mat-card-title>
-        <mat-card-content>
-          <form [formGroup]="forgotPasswordForm" (ngSubmit)="onReset()">
-            <!-- Phone Number Input -->
-            <mat-form-field appearance="fill" class="full-width-input">
-              <mat-label>Phone Number</mat-label>
-              <input matInput placeholder="Enter your phone number" formControlName="phoneNumber">
-              <mat-error *ngIf="forgotPasswordForm.get('phoneNumber')?.errors">
-                Please enter a valid phone number.
-              </mat-error>
-            </mat-form-field>
+  <section class="text-center text-lg-start">
+    <div class="card mb-3">
+      <div class="row g-0 d-flex align-items-center">
+        <div class="col-lg-4 d-none d-lg-flex">
+          <img src="/assets/loginImage.png" alt="Reset Password Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+        </div>
+        <div class="col-lg-8">
+          <div class="card-body py-5 px-md-5">
+            <mat-card>
+              <mat-card-title class="text-center mb-4" style="font-size: xx-large;">Reset Password</mat-card-title>
+              <mat-card-content>
+                <form [formGroup]="forgotPasswordForm" (ngSubmit)="onReset()">
+                  <!-- Phone Number Input -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="phoneNumber">Phone Number</label>
+                    <input matInput id="phoneNumber" placeholder="Enter your phone number" formControlName="phoneNumber" class="form-control" />
+                    <mat-error *ngIf="forgotPasswordForm.get('phoneNumber')?.errors">
+                      Please enter a valid phone number.
+                    </mat-error>
+                  </div>
 
-            <button type="button" mat-raised-button color="primary" (click)="onRequestCode()" [disabled]="forgotPasswordForm.get('phoneNumber')?.invalid">
-              Send Code
-            </button>
+                  <button type="button" mat-raised-button color="primary" (click)="onRequestCode()" [disabled]="forgotPasswordForm.get('phoneNumber')?.invalid" class="btn btn-primary btn-block mb-4">
+                    Send Code
+                  </button>
 
-            <!-- Reset Code Input -->
-            <mat-form-field appearance="fill" class="full-width-input">
-              <mat-label>Reset Code</mat-label>
-              <input matInput placeholder="Enter reset code" formControlName="code">
-            </mat-form-field>
+                  <!-- Reset Code Input -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="code">Reset Code</label>
+                    <input matInput id="code" placeholder="Enter reset code" formControlName="code" class="form-control" />
+                  </div>
 
-            <!-- New Password Input -->
-            <mat-form-field appearance="fill" class="full-width-input">
-              <mat-label>New Password</mat-label>
-              <input title="passnew" type="password" matInput formControlName="newPassword">
-            </mat-form-field>
+                  <!-- New Password Input -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="newPassword">New Password</label>
+                    <input title="passnew" type="password" id="newPassword" matInput formControlName="newPassword" class="form-control" />
+                  </div>
 
-            <!-- Confirm Password Input -->
-            <mat-form-field appearance="fill" class="full-width-input">
-              <mat-label>Confirm Password</mat-label>
-              <input title="passconf" type="password" matInput formControlName="confirmPassword">
-              <mat-error *ngIf="forgotPasswordForm.get('confirmPassword')?.errors?.['mustMatch'] && forgotPasswordForm.get('confirmPassword')?.touched">
-                Passwords must match
-              </mat-error>
-              
-            </mat-form-field>
+                  <!-- Confirm Password Input -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input title="passconf" type="password" id="confirmPassword" matInput formControlName="confirmPassword" class="form-control" />
+                    <mat-error *ngIf="forgotPasswordForm.get('confirmPassword')?.errors?.['mustMatch'] && forgotPasswordForm.get('confirmPassword')?.touched">
+                      Passwords must match.
+                    </mat-error>
+                  </div>
 
-            <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid">
-              Reset Password
-            </button>
-          </form>
-        </mat-card-content>
-      </mat-card>
+                  <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid" class="btn btn-primary btn-block mb-4">
+                    Reset Password
+                  </button>
+                </form>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <style>
+    .rounded-t-5 {
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+    }
+
+    @media (min-width: 992px) {
+      .rounded-tr-lg-0 {
+        border-top-right-radius: 0;
+      }
+    }
+    .rounded-bl-lg-5 {
+      border-bottom-left-radius: 0.5rem;
+    }
+  </style>
 </body>
 </html>

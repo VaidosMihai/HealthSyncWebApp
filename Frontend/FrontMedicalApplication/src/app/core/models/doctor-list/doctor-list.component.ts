@@ -106,10 +106,14 @@ export class DoctorListComponent implements OnInit {
     });
 
     this.starRatings = starCounts.map((count, index) => ({
-      stars: `${5 - index} Star${(5 - index) > 1 ? 's' : ''}`,
+      stars: `${5 - index}`,
       percentage: totalReviews > 0 ? (count / totalReviews) * 100 : 0,
       count: count
     }));
+  }
+
+  setRating(star: number): void {
+    this.newReview.rating = star;
   }
 
   calculateAverageRating(): void {
