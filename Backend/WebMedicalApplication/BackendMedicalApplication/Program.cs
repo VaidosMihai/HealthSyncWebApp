@@ -9,12 +9,28 @@ using System.Text;
 using BackendMedicalApplication.Models;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+
+// Load configuration from environment variables
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var twilioAccountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
+var twilioAuthToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+var twilioFromNumber = Environment.GetEnvironmentVariable("TWILIO_FROM_NUMBER");
+var backendDatabaseConnectionString = Environment.GetEnvironmentVariable("BACKEND_DATABASE_CONNECTION_STRING");
+var smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER");
+var smtpPort = Environment.GetEnvironmentVariable("SMTP_PORT");
+var emailSenderName = Environment.GetEnvironmentVariable("EMAIL_SENDER_NAME");
+var emailSenderEmail = Environment.GetEnvironmentVariable("EMAIL_SENDER_EMAIL");
+var emailSenderPassword = Environment.GetEnvironmentVariable("EMAIL_SENDER_PASSWORD");
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -25,12 +41,33 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BackendDatabase")));
+    options.UseSqlServer(backendDatabaseConnectionString));
 
 // Dependency Injection for services
-builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
-builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<JwtConfig>(options =>
+{
+    options.Secret = jwtSecret;
+    options.Issuer = jwtIssuer;
+    options.Audience = jwtAudience;
+    options.AccessTokenExpirationMinutes = 60;
+    options.RefreshTokenExpirationDays = 7;
+});
+
+builder.Services.Configure<TwilioSettings>(options =>
+{
+    options.AccountSid = twilioAccountSid;
+    options.AuthToken = twilioAuthToken;
+    options.FromNumber = twilioFromNumber;
+});
+
+builder.Services.Configure<EmailSettings>(options =>
+{
+    options.SmtpServer = smtpServer;
+    options.SmtpPort = int.Parse(smtpPort);
+    options.SenderName = emailSenderName;
+    options.SenderEmail = emailSenderEmail;
+    options.SenderPassword = emailSenderPassword;
+});
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPatientRecordService, PatientRecordService>();
@@ -57,9 +94,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-        ValidAudience = builder.Configuration["JwtConfig:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Secret"]))
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
     };
 });
 
