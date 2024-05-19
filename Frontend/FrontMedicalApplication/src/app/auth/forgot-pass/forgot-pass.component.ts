@@ -9,6 +9,9 @@ import { AuthService } from '../../core/services/auth-service.service';
 })
 export class ForgotPassComponent implements OnInit {
   forgotPasswordForm: FormGroup;
+  requestCodeSent: boolean = false;
+  resetSuccess: boolean = false;
+  resetError: string = '';
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.forgotPasswordForm = this.fb.group({
@@ -28,7 +31,10 @@ export class ForgotPassComponent implements OnInit {
     const phoneNumberControl = this.forgotPasswordForm.get('phoneNumber');
     if (phoneNumberControl?.valid) {
       this.authService.requestResetCode(phoneNumberControl.value).subscribe({
-        next: data => console.log('Reset code sent!'),
+        next: data => {
+          console.log('Reset code sent!');
+          this.requestCodeSent = true;
+        },
         error: error => console.error('Error sending reset code', error)
       });
     }
@@ -36,18 +42,20 @@ export class ForgotPassComponent implements OnInit {
 
   onReset(): void {
     if (this.forgotPasswordForm.valid) {
-      // Ensure that the form includes 'code' and 'newPassword' along with 'phoneNumber'
-      this.authService.resetPassword(
-        this.forgotPasswordForm.value.phoneNumber, 
-        this.forgotPasswordForm.value.code, 
-        this.forgotPasswordForm.value.newPassword
-      ).subscribe({
-        next: data => console.log('Password reset successful'),
-        error: error => console.error('Error resetting password', error)
+      const { phoneNumber, code, newPassword } = this.forgotPasswordForm.value;
+      this.authService.resetPassword(phoneNumber, code, newPassword).subscribe({
+        next: data => {
+          console.log('Password reset successful');
+          this.resetSuccess = true;
+          this.resetError = '';
+        },
+        error: error => {
+          console.error('Error resetting password', error);
+          this.resetError = 'Invalid code or failed to reset password';
+        }
       });
     }
   }
-  
 
   private mustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {

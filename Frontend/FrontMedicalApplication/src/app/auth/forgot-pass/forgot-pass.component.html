@@ -13,7 +13,7 @@
     <div class="card mb-3">
       <div class="row g-0 d-flex align-items-center">
         <div class="col-lg-4 d-none d-lg-flex">
-          <img src="/assets/loginImage.png" alt="Reset Password Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+          <img src="../../../assets/forgotpass.png" alt="Reset Password Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
         </div>
         <div class="col-lg-8">
           <div class="card-body py-5 px-md-5">
@@ -29,35 +29,45 @@
                       Please enter a valid phone number.
                     </mat-error>
                   </div>
-
-                  <button type="button" mat-raised-button color="primary" (click)="onRequestCode()" [disabled]="forgotPasswordForm.get('phoneNumber')?.invalid" class="btn btn-primary btn-block mb-4">
+  
+                  <button type="button" mat-raised-button color="primary" (click)="onRequestCode()" class="btn btn-primary btn-block mb-4">
                     Send Code
                   </button>
-
-                  <!-- Reset Code Input -->
-                  <div class="form-outline mb-4">
-                    <label class="form-label" for="code">Reset Code</label>
-                    <input matInput id="code" placeholder="Enter reset code" formControlName="code" class="form-control" />
+  
+                  <div *ngIf="requestCodeSent">
+                    <!-- Reset Code Input -->
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="code">Reset Code</label>
+                      <input matInput id="code" placeholder="Enter reset code" formControlName="code" class="form-control" />
+                    </div>
+  
+                    <!-- New Password Input -->
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="newPassword">New Password</label>
+                      <input title="passnew" type="password" id="newPassword" matInput formControlName="newPassword" class="form-control" />
+                    </div>
+  
+                    <!-- Confirm Password Input -->
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="confirmPassword">Confirm Password</label>
+                      <input title="passconf" type="password" id="confirmPassword" matInput formControlName="confirmPassword" class="form-control" />
+                      <mat-error *ngIf="forgotPasswordForm.get('confirmPassword')?.errors?.['mustMatch'] && forgotPasswordForm.get('confirmPassword')?.touched">
+                        Passwords must match.
+                      </mat-error>
+                    </div>
+  
+                    <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid" class="btn btn-primary btn-block mb-4">
+                      Reset Password
+                    </button>
                   </div>
-
-                  <!-- New Password Input -->
-                  <div class="form-outline mb-4">
-                    <label class="form-label" for="newPassword">New Password</label>
-                    <input title="passnew" type="password" id="newPassword" matInput formControlName="newPassword" class="form-control" />
+  
+                  <div *ngIf="resetSuccess" class="alert alert-success">
+                    Password reset successfully!
                   </div>
-
-                  <!-- Confirm Password Input -->
-                  <div class="form-outline mb-4">
-                    <label class="form-label" for="confirmPassword">Confirm Password</label>
-                    <input title="passconf" type="password" id="confirmPassword" matInput formControlName="confirmPassword" class="form-control" />
-                    <mat-error *ngIf="forgotPasswordForm.get('confirmPassword')?.errors?.['mustMatch'] && forgotPasswordForm.get('confirmPassword')?.touched">
-                      Passwords must match.
-                    </mat-error>
+  
+                  <div *ngIf="resetError" class="alert alert-danger">
+                    {{ resetError }}
                   </div>
-
-                  <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid" class="btn btn-primary btn-block mb-4">
-                    Reset Password
-                  </button>
                 </form>
               </mat-card-content>
             </mat-card>
@@ -66,6 +76,7 @@
       </div>
     </div>
   </section>
+  
 
   <style>
     .rounded-t-5 {
