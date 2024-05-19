@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BackendMedicalApplication.Models;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging; // Add this for logging
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +68,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         builder => builder
-            .WithOrigins("http://localhost:4200") // Replace with your Angular app URL
+            .WithOrigins(
+                "http://localhost:4200", // Local development
+                "https://lemon-cliff-0c0893203.5.azurestaticapps.net" // Your Angular app URL on Azure Static Web Apps
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
