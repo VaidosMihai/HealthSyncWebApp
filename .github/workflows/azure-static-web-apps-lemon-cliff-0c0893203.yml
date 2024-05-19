@@ -29,7 +29,7 @@ jobs:
         run: npm install --prefix Frontend/FrontMedicalApplication
 
       - name: Build frontend
-        run: npm run build --prefix Frontend/FrontMedicalApplication
+        run: npm run build:azure --prefix Frontend/FrontMedicalApplication
 
       - name: List directory contents after build
         run: ls -la Frontend/FrontMedicalApplication/dist/front-medical-application
@@ -44,6 +44,7 @@ jobs:
           app_location: "./Frontend" # App source code path
           api_location: "api" # Api source code path - optional
           output_location: "Frontend/FrontMedicalApplication/dist/front-medical-application" # Built app content directory - optional
+          app_build_command: "npm run build:azure --prefix Frontend/FrontMedicalApplication"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
