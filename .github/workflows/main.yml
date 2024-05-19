@@ -1,36 +1,56 @@
-name: CI/CD Pipeline
+name: Backend CI/CD
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
 
 jobs:
-  build:
+  build_and_deploy_backend:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-
+    name: Build and Deploy Backend
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
 
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
-    - name: Restore dependencies
-      run: dotnet restore Backend/WebMedicalApplication/WebMedicalApplication.csproj
+      - name: Restore backend dependencies
+        run: dotnet restore Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj
 
-    - name: Build
-      run: dotnet build Backend/WebMedicalApplication/WebMedicalApplication.csproj --configuration Release --no-restore
+      - name: Build backend
+        run: dotnet build Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj --configuration Release --no-restore
 
-    - name: Publish
-      run: dotnet publish Backend/WebMedicalApplication/WebMedicalApplication.csproj --configuration Release --no-restore --output ./publish
+      - name: Publish backend
+        run: dotnet publish Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj --configuration Release --no-restore --output ./publish
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: BackendMedicalApplication
-        slot-name: production
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ./publish
+      - name: Deploy backend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: BackendMedicalApplication
+          slot-name: production
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
+
+  close_pull_request:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: "close"
