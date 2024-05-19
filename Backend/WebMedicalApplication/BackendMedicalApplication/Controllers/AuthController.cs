@@ -69,16 +69,16 @@ namespace BackendMedicalApplication.Controllers
             {
                 return BadRequest(new { message = "Passwords don't match" });
             }
-            var createdUser = await _userService.CreateUserAsync(registrationDto);
-            if (createdUser == null)
-            {
-                return BadRequest(new { message = "User creation failed" });
+                var createdUser = await _userService.CreateUserAsync(registrationDto);
+                if (createdUser == null)
+                {
+                    return BadRequest(new { message = "User creation failed" });
+                }
+
+                var jwtToken = GenerateJwtToken(createdUser);
+
+                return Ok(new { token = jwtToken });
             }
-
-            var jwtToken = GenerateJwtToken(createdUser);
-
-            return Ok(new { token = jwtToken });
-        }
 
 
         private string GenerateJwtToken(UserDto user)
@@ -112,9 +112,31 @@ namespace BackendMedicalApplication.Controllers
             var user = await _userService.GeneratePasswordResetCode(model.PhoneNumber);
             if (user == null) return NotFound("User not found.");
 
-            _twilioService.SendSms(model.PhoneNumber, $"Your reset code is: {user.ResetPasswordCode}"); 
+            // Ensure phone number is correctly formatted
+            string formattedPhoneNumber = FormatPhoneNumber(model.PhoneNumber);
+
+            await _twilioService.SendSms(formattedPhoneNumber, $"Your reset code is: {user.ResetPasswordCode}");
             return Ok("Reset code sent to your phone.");
         }
+
+        private string FormatPhoneNumber(string phoneNumber)
+        {
+            // Remove any non-digit characters
+            phoneNumber = new string(phoneNumber.Where(char.IsDigit).ToArray());
+
+            // Add the Romanian country code if not already present
+            if (!phoneNumber.StartsWith("40"))
+            {
+                if (phoneNumber.StartsWith("0"))
+                {
+                    phoneNumber = phoneNumber.TrimStart('0');
+                }
+                phoneNumber = "40" + phoneNumber;
+            }
+
+            return "+" + phoneNumber;
+        }
+
 
 
         [HttpPost("reset-password/sms")]
@@ -130,7 +152,5 @@ namespace BackendMedicalApplication.Controllers
 
             return Ok("Password has been reset successfully.");
         }
-
-
     }
 }

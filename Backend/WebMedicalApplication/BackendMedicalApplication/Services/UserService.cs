@@ -10,6 +10,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Microsoft.Extensions.Configuration;
 using WebMedicalApplication.Models;
+using System.Configuration;
 
 namespace BackendMedicalApplication.Services
 {
@@ -18,9 +19,10 @@ namespace BackendMedicalApplication.Services
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public UserService(AppDbContext context)
+        public UserService(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public IEnumerable<UserDto> GetAllUsers()
@@ -305,19 +307,46 @@ namespace BackendMedicalApplication.Services
             user.ResetPasswordCodeExpires = DateTime.UtcNow.AddMinutes(15); // Code expires in 15 minutes
             await _context.SaveChangesAsync();
 
-            await SendPasswordResetSMS(user.PhoneNumber, user.ResetPasswordCode);
+            await SendPasswordResetSMS(FormatPhoneNumber(user.PhoneNumber), user.ResetPasswordCode);
             return user;
         }
 
         private async Task SendPasswordResetSMS(string phoneNumber, string code)
         {
-            TwilioClient.Init(_configuration["Twilio:AccountSid"], _configuration["Twilio:AuthToken"]);
+            var accountSid = _configuration["TwilioSettings:AccountSid"];
+            var authToken = _configuration["TwilioSettings:AuthToken"];
+            var fromNumber = _configuration["TwilioSettings:FromNumber"];
+
+            if (string.IsNullOrWhiteSpace(accountSid) || string.IsNullOrWhiteSpace(authToken) || string.IsNullOrWhiteSpace(fromNumber))
+            {
+                throw new InvalidOperationException("Twilio configuration settings are missing.");
+            }
+
+            TwilioClient.Init(accountSid, authToken);
 
             var message = await MessageResource.CreateAsync(
                 body: $"Your password reset code is: {code}",
-                from: new Twilio.Types.PhoneNumber(_configuration["Twilio:FromNumber"]),
+                from: new Twilio.Types.PhoneNumber(fromNumber),
                 to: new Twilio.Types.PhoneNumber(phoneNumber)
             );
+        }
+
+        private string FormatPhoneNumber(string phoneNumber)
+        {
+            // Remove any non-digit characters
+            phoneNumber = new string(phoneNumber.Where(char.IsDigit).ToArray());
+
+            // Add the Romanian country code if not already present
+            if (!phoneNumber.StartsWith("40"))
+            {
+                if (phoneNumber.StartsWith("0"))
+                {
+                    phoneNumber = phoneNumber.TrimStart('0');
+                }
+                phoneNumber = "40" + phoneNumber;
+            }
+
+            return "+" + phoneNumber;
         }
 
         public async Task<User> ResetPasswordWithCode(string phoneNumber, string code, string newPassword)
