@@ -19,15 +19,15 @@ interface ContactForm {
 })
 export class ContactinfoComponent implements OnInit {
   locations = [
-    { title: 'Bucharest', description: 'The capital of Romania' },
-    { title: 'Cluj Napoca', description: 'Known for its universities' },
-    { title: 'Timisoara', description: 'Cultural hub in western Romania' },
-    { title: 'Brasov', description: 'Surrounded by the Carpathian Mountains' },
-    { title: 'Constanta', description: 'Major port city on the Black Sea' },
-    { title: 'Miercurea Ciuc', description: 'Located in eastern Transylvania' },
-    { title: 'Satu Mare', description: 'City near the Hungarian border' },
-    { title: 'Iasi', description: 'Known for its cultural heritage' },
-    { title: 'Craiova', description: 'Economic center in southwestern Romania' }
+    { title: 'Bucharest', description: 'Strada Lipscani, Nr. 27, Bucharest' },
+    { title: 'Cluj Napoca', description: 'Bulevardul Eroilor, Nr. 21, Cluj Napoca' },
+    { title: 'Timisoara', description: 'Piața Victoriei, Nr. 3, Timisoara' },
+    { title: 'Brasov', description: 'Strada Republicii, Nr. 12, Brasov' },
+    { title: 'Constanta', description: 'Bulevardul Tomis, Nr. 5, Constanta' },
+    { title: 'Miercurea Ciuc', description: 'Strada Petőfi Sándor, Nr. 1, Miercurea Ciuc' },
+    { title: 'Satu Mare', description: 'Strada Ștefan cel Mare, Nr. 4, Satu Mare' },
+    { title: 'Iasi', description: 'Bulevardul Ștefan cel Mare, Nr. 10, Iasi' },
+    { title: 'Craiova', description: 'Calea Unirii, Nr. 15, Craiova' }
   ];
 
   contactForm: ContactForm = {

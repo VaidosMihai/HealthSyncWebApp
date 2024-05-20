@@ -131,26 +131,30 @@ footer {
 .search-bar {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 }
 
 .search-bar select,
-.search-bar input {
+.search-bar input,
+.search-bar button {
   padding: 0.5rem;
   border: none;
   border-radius: 5px;
   outline: none;
   margin-right: 10px;
+  font-size: 1rem; /* Ensure consistent font size */
+  height: 40px; /* Ensure consistent height */
 }
 
 .search-bar button {
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 1rem;
   border: none;
   background: #ffcc00;
   color: #005eb8;
   border-radius: 5px;
   cursor: pointer;
+  margin-right: 0; /* Remove margin-right for the last element */
 }
+
 
 .auth-section {
   display: flex;
