@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ContactApi.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,18 +20,29 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 // Load configuration from environment variables
-var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-var twilioAccountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
-var twilioAuthToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
-var twilioFromNumber = Environment.GetEnvironmentVariable("TWILIO_FROM_NUMBER");
-var backendDatabaseConnectionString = Environment.GetEnvironmentVariable("BACKEND_DATABASE_CONNECTION_STRING");
-var smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER");
-var smtpPort = Environment.GetEnvironmentVariable("SMTP_PORT");
-var emailSenderName = Environment.GetEnvironmentVariable("EMAIL_SENDER_NAME");
-var emailSenderEmail = Environment.GetEnvironmentVariable("EMAIL_SENDER_EMAIL");
-var emailSenderPassword = Environment.GetEnvironmentVariable("EMAIL_SENDER_PASSWORD");
+string GetEnvironmentVariable(string name)
+{
+    var value = Environment.GetEnvironmentVariable(name);
+    if (string.IsNullOrEmpty(value))
+    {
+        Console.WriteLine($"Environment variable '{name}' is not set.");
+        throw new ArgumentNullException(name, $"Environment variable '{name}' is not set.");
+    }
+    return value;
+}
+
+var jwtSecret = GetEnvironmentVariable("JWT_SECRET");
+var jwtIssuer = GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = GetEnvironmentVariable("JWT_AUDIENCE");
+var twilioAccountSid = GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
+var twilioAuthToken = GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+var twilioFromNumber = GetEnvironmentVariable("TWILIO_FROM_NUMBER");
+var backendDatabaseConnectionString = GetEnvironmentVariable("BACKEND_DATABASE_CONNECTION_STRING");
+var smtpServer = GetEnvironmentVariable("SMTP_SERVER");
+var smtpPort = GetEnvironmentVariable("SMTP_PORT");
+var emailSenderName = GetEnvironmentVariable("EMAIL_SENDER_NAME");
+var emailSenderEmail = GetEnvironmentVariable("EMAIL_SENDER_EMAIL");
+var emailSenderPassword = GetEnvironmentVariable("EMAIL_SENDER_PASSWORD");
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -107,7 +119,7 @@ builder.Services.AddCors(options =>
         builder => builder
             .WithOrigins(
                 "http://localhost:4200", // Local development
-                "https://lemon-cliff-0c0893203.5.azurestaticapps.net" //Azure Static Web Apps
+                "https://lemon-cliff-0c0893203.5.azurestaticapps.net" // Azure Static Web Apps
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
