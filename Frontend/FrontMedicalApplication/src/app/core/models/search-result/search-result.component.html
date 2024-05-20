@@ -1,85 +1,97 @@
-<div class="container">
+  <div class="container">
     <h1>Search Results for "{{ searchTerm }}"</h1>
     <div *ngIf="!searchResults">Searching...</div>
     <ng-container *ngIf="searchResults">
       <section *ngIf="entityType === 'users' && searchResults?.length">
         <h2>Users</h2>
-        <ul *ngIf="isDoctor || isPatient">
-          <li *ngFor="let user of searchResults" style="font-size: larger;">
-            Username: {{ user.username }}, 
-            Name: {{ user.name }} {{ user.surname }},
-            Email: {{ user.emailAddress }}, 
-            Age: {{ user.age }}, 
-            Role: <span *ngIf="user.roleId === 1">Doctor</span>
-            <span *ngIf="user.roleId === 2">Patient</span>
-            <span *ngIf="user.roleId === 3">Admin</span>
-          </li>
-        </ul>
-        <ul *ngIf="isAdmin">
-          <li *ngFor="let user of searchResults">
-            ID: {{ user.userId }}, Username: {{ user.username }}, Name: {{ user.name }} {{ user.surname }},
-            Email: {{ user.emailAddress }}, CNP: {{ user.cnp }}, Age: {{ user.age }}, Address: {{ user.address }},
-            Phone: {{ user.phoneNumber }}, Role ID: {{ user.roleId }}, Token: {{ user.token }}
-          </li>
-        </ul>
+        <div class="card-list">
+          <div *ngFor="let user of searchResults" class="card" [class.admin]="isAdmin">
+            <div class="card-body">
+              <p class="card-title">{{ user.username }}</p>
+              <p class="card-subtitle">{{ user.name }} {{ user.surname }}</p>
+              <p class="card-text">{{ user.emailAddress }}</p>
+              <p class="card-text">Age: {{ user.age }}</p>
+              <p class="card-text">
+                Role: 
+                <span *ngIf="user.roleId === 1">Doctor</span>
+                <span *ngIf="user.roleId === 2">Patient</span>
+                <span *ngIf="user.roleId === 3">Admin</span>
+              </p>
+              <div *ngIf="isAdmin" class="admin-details">
+                <p *ngIf="isDoctor || isAdmin" class="card-text">CNP: {{ user.cnp }}</p>
+                <p class="card-text">Address: {{ user.address }}</p>
+                <p class="card-text">Phone: {{ user.phoneNumber }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
-      <!-- <div *ngIf="searchResults">
-        <pre>{{ searchResults | json }}</pre>
-        Appointment ID: {{ searchResults[1].appointmentId }},
-      </div> -->
+
       <section *ngIf="entityType === 'appointments' && searchResults.length">
         <h2>Appointments</h2>
-        <ul>
-          <li *ngFor="let appointment of searchResults">
-            Appointment ID: {{ appointment.appointmentId }},
-            Patient ID: {{ appointment.patientId }},
-            Doctor ID: {{ appointment.doctorId }},
-            Date: {{ appointment.dateTime | date:'medium' }},
-            Reason: {{ appointment.reason }}
-          </li>
-        </ul>
+        <div class="card-list">
+          <div *ngFor="let appointment of searchResults" class="card">
+            <div class="card-body">
+              <p class="card-title">Appointment ID: {{ appointment.appointmentId }}</p>
+              <p class="card-text">Patient ID: {{ appointment.patientId }}</p>
+              <p class="card-text">Doctor ID: {{ appointment.doctorId }}</p>
+              <p class="card-text">Date: {{ appointment.dateTime | date:'medium' }}</p>
+              <p class="card-text">Reason: {{ appointment.reason }}</p>
+            </div>
+          </div>
+        </div>
       </section>
-  
+
       <section *ngIf="entityType === 'billings' && searchResults?.length">
         <h2>Billings</h2>
-        <ul>
-          <li *ngFor="let billing of searchResults.Billings">
-            Amount: {{ billing.amount }}, Issued: {{ billing.dateIssued | date:'mediumDate' }}, Status: {{ billing.paymentStatus }}
-          </li>
-        </ul>
+        <div class="card-list">
+          <div *ngFor="let billing of searchResults.Billings" class="card">
+            <div class="card-body">
+              <p class="card-title">Amount: {{ billing.amount }}</p>
+              <p class="card-text">Issued: {{ billing.dateIssued | date:'mediumDate' }}</p>
+              <p class="card-text">Status: {{ billing.paymentStatus }}</p>
+            </div>
+          </div>
+        </div>
       </section>
-  
+
       <section *ngIf="entityType === 'patientRecords' && searchResults?.length">
         <h2>Patient Records</h2>
-        <ul>
-          <li *ngFor="let patientRecord of searchResults.PatientRecords">
-            Patient ID: {{ patientRecord.patientId }},
-            Record Date: {{ patientRecord.recordDate | date:'mediumDate' }},
-            Diagnosis: {{ patientRecord.diagnosis }},
-            Treatment: {{ patientRecord.treatment }},
-            Notes: {{ patientRecord.notes }}
-          </li>
-        </ul>
+        <div class="card-list">
+          <div *ngFor="let patientRecord of searchResults.PatientRecords" class="card">
+            <div class="card-body">
+              <p class="card-title">Patient ID: {{ patientRecord.patientId }}</p>
+              <p class="card-text">Record Date: {{ patientRecord.recordDate | date:'mediumDate' }}</p>
+              <p class="card-text">Diagnosis: {{ patientRecord.diagnosis }}</p>
+              <p class="card-text">Treatment: {{ patientRecord.treatment }}</p>
+              <p class="card-text">Notes: {{ patientRecord.notes }}</p>
+            </div>
+          </div>
+        </div>
       </section>
-  
+
       <section *ngIf="entityType === 'roles' && searchResults?.length">
         <h2>Roles</h2>
-        <ul>
-          <li *ngFor="let role of searchResults.Roles">
-            Role ID: {{ role.roleId }},
-            Role Name: {{ role.name }}
-          </li>
-        </ul>
+        <div class="card-list">
+          <div *ngFor="let role of searchResults.Roles" class="card">
+            <div class="card-body">
+              <p class="card-title">Role ID: {{ role.roleId }}</p>
+              <p class="card-text">Role Name: {{ role.name }}</p>
+            </div>
+          </div>
+        </div>
       </section>
-  
+
       <section *ngIf="entityType === 'treatments' && searchResults?.length">
         <h2>Treatments</h2>
-        <ul>
-          <li *ngFor="let treatment of searchResults.Treatments">
-            Treatment ID: {{ treatment.treatmentId }},
-            Description: {{ treatment.description }}
-          </li>
-        </ul>
+        <div class="card-list">
+          <div *ngFor="let treatment of searchResults.Treatments" class="card">
+            <div class="card-body">
+              <p class="card-title">Treatment ID: {{ treatment.treatmentId }}</p>
+              <p class="card-text">Description: {{ treatment.description }}</p>
+            </div>
+          </div>
+        </div>
       </section>
     </ng-container>
   </div>
