@@ -78,7 +78,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJMpKd-JiHFlwKykZJKDS3kH6R8Sb9PA4&libraries=places"></script>
 <title>HealthSync</title>
 <link rel="stylesheet" href="app.component.css">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
@@ -120,7 +120,7 @@
           <option value="patientRecords">Patient Records</option>
         </select>
         <input type="search" [(ngModel)]="searchTerm" placeholder="Search..." (keydown.enter)="onSearch()">
-        <button type="button" (click)="onSearch()">Search</button>
+        <button type="button" class="search-button" (click)="onSearch()">Search</button>
       </div>
       <div class="auth-section">
         <div *ngIf="isAdmin || isPatient || isDoctor" class="notification-icon" (click)="viewNotifications()">
@@ -130,14 +130,16 @@
           </div>
         </div>
         <ng-container *ngIf="isLoggedIn">
-          <button mat-button routerLink="/profile">
+          <b>
             {{ currentUserFullName }}
-          </button>
+          </b>
+          <button mat-button routerLink="/profile">
           <div class="profile-picture">
             <img *ngIf="isPatient" src="assets/UserProfilePhoto.png" alt="Profile" />
             <img *ngIf="isDoctor" src="assets/DoctorProfilePhoto.png" alt="Profile" />
             <img *ngIf="isAdmin" src="assets/AdminProfilePhoto.png" alt="Profile" />
           </div>
+        </button>
           <button mat-button (click)="logout()">Logout</button>
         </ng-container>
         <ng-container *ngIf="!isLoggedIn">
