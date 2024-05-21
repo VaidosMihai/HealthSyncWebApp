@@ -1,14 +1,82 @@
-.table th, .table td {
-    padding: 8px;  /* Reduced padding */
-    font-size: 14px; /* Smaller font size for table data */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background-color: transparent;
+}
+
+.table th,
+.table td {
+  padding: 12px;  /* Increased padding for better spacing */
+  text-align: left;
+  border-top: 1px solid #dee2e6;
 }
 
 .table th {
   font-weight: bold;
   background-color: #f8f9fa; /* Light background for headers */
+  text-transform: uppercase; /* Capitalized headers for better readability */
+}
+
+.table tbody tr:hover {
+  background-color: #f1f1f1; /* Add hover effect to rows */
 }
 
 th, td {
-    min-width: 120px; /* Set a minimum width for each table cell */
- }
-      
+  min-width: 120px; /* Set a minimum width for each table cell */
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}

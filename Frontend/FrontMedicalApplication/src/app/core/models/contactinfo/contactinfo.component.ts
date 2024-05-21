@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationService } from '../../services/notification-service.service';
 
 interface ContactForm {
   firstName: string;
@@ -15,7 +16,7 @@ interface ContactForm {
 @Component({
   selector: 'app-contactinfo',
   templateUrl: './contactinfo.component.html',
-  styleUrl: './contactinfo.component.css'
+  styleUrls: ['./contactinfo.component.css']
 })
 export class ContactinfoComponent implements OnInit {
   locations = [
@@ -42,13 +43,16 @@ export class ContactinfoComponent implements OnInit {
     agreeMarketing: false
   };
 
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit(): void { }
 
   onSubmit(): void {
     console.log('Form Data:', this.contactForm);
     alert('Your contact information has been submitted successfully!');
-    // Implement form submission logic here, e.g., send the data to a backend server
+    this.notificationService.sendEmail(this.contactForm.email, 'Contact Form Submission', 'Thank you for contacting us!').subscribe(
+      response => console.log('Email sent successfully', response),
+      error => console.error('Error sending email', error)
+    );
   }
 }

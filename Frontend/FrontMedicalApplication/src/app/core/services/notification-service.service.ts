@@ -18,4 +18,12 @@ export class NotificationService {
   getNotificationsByUserId(userId: number): Observable<Notification[]> {
     return this.http.get<Notification[]>(`${this.apiUrl}/user/${userId}`);
   }
+
+  sendEmail(to: string, subject: string, body: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/contact`, { to, subject, body });
+  }
+
+  sendSms(to: string, message: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/send-sms`, { to, message });
+  }
 }
