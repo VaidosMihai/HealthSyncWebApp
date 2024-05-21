@@ -26,6 +26,21 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
+      - name: Set Environment Variables
+        run: |
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+          echo "JWT_ISSUER=${{ secrets.JWT_ISSUER }}" >> $GITHUB_ENV
+          echo "JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }}" >> $GITHUB_ENV
+          echo "TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> $GITHUB_ENV
+          echo "TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> $GITHUB_ENV
+          echo "TWILIO_FROM_NUMBER=${{ secrets.TWILIO_FROM_NUMBER }}" >> $GITHUB_ENV
+          echo "BACKEND_DATABASE_CONNECTION_STRING=${{ secrets.BACKEND_DATABASE_CONNECTION_STRING }}" >> $GITHUB_ENV
+          echo "SMTP_SERVER=${{ secrets.SMTP_SERVER }}" >> $GITHUB_ENV
+          echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> $GITHUB_ENV
+          echo "EMAIL_SENDER_NAME=${{ secrets.EMAIL_SENDER_NAME }}" >> $GITHUB_ENV
+          echo "EMAIL_SENDER_EMAIL=${{ secrets.EMAIL_SENDER_EMAIL }}" >> $GITHUB_ENV
+          echo "EMAIL_SENDER_PASSWORD=${{ secrets.EMAIL_SENDER_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Restore backend dependencies
         run: dotnet restore Backend/WebMedicalApplication/BackendMedicalApplication/BackendMedicalApplication.csproj
 
