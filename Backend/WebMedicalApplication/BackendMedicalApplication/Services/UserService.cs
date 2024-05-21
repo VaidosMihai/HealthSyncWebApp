@@ -18,11 +18,13 @@ namespace BackendMedicalApplication.Services
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ISmsService _smsService;
 
-        public UserService(AppDbContext context, IConfiguration configuration)
+        public UserService(AppDbContext context, IConfiguration configuration, ISmsService smsService)
         {
             _context = context;
             _configuration = configuration;
+            _smsService = smsService;
         }
 
         public IEnumerable<UserDto> GetAllUsers()
@@ -293,7 +295,7 @@ namespace BackendMedicalApplication.Services
 
             return user;
         }
-
+/*
         public async Task<User> GeneratePasswordResetCode(string phoneNumber)
         {
             var user = await GetUserByPhone(phoneNumber);
@@ -329,6 +331,37 @@ namespace BackendMedicalApplication.Services
                 from: new Twilio.Types.PhoneNumber(fromNumber),
                 to: new Twilio.Types.PhoneNumber(phoneNumber)
             );
+        }*/
+
+        public async Task<User> GeneratePasswordResetCode(string phoneNumber)
+        {
+            var user = await GetUserByPhone(phoneNumber);
+            if (user == null)
+            {
+                return null;
+            }
+
+            // Generate a 6-digit code
+            user.ResetPasswordCode = new Random().Next(100000, 999999).ToString();
+            user.ResetPasswordCodeExpires = DateTime.UtcNow.AddMinutes(15); // Code expires in 15 minutes
+            await _context.SaveChangesAsync();
+
+            await _smsService.SendSmsAsync(FormatPhoneNumber(user.PhoneNumber), $"Your password reset code is: {user.ResetPasswordCode}");
+            return user;
+        }
+
+        public async Task<User> ResetPasswordWithCode(string phoneNumber, string code, string newPassword)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u =>  u.ResetPasswordCode == code
+                                                                      /*&& u.ResetPasswordCodeExpires > DateTime.UtcNow*/);
+            if (user == null) return null;
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.ResetPasswordCode = null;
+            user.ResetPasswordCodeExpires = null;
+            await _context.SaveChangesAsync();
+
+            return user;
         }
 
         private string FormatPhoneNumber(string phoneNumber)
@@ -349,20 +382,6 @@ namespace BackendMedicalApplication.Services
             return "+" + phoneNumber;
         }
 
-        public async Task<User> ResetPasswordWithCode(string phoneNumber, string code, string newPassword)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.PhoneNumber == phoneNumber
-                                                                      && u.ResetPasswordCode == code
-                                                                      && u.ResetPasswordCodeExpires > DateTime.UtcNow);
-            if (user == null) return null;
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.ResetPasswordCode = null;
-            user.ResetPasswordCodeExpires = null;
-            await _context.SaveChangesAsync();
-
-            return user;
-        }
 
         public IEnumerable<UserDto> GetUsersByRole(int roleId)
         {

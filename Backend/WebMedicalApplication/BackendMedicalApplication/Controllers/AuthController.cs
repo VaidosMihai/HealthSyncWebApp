@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BackendMedicalApplication.Models;
 using Microsoft.Extensions.Options;
+using BackendMedicalApplication.Services;
 
 namespace BackendMedicalApplication.Controllers
 {
@@ -17,13 +18,13 @@ namespace BackendMedicalApplication.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ITwilioService _twilioService;
+        private readonly ISmsService _smsService;
         private readonly JwtConfig _jwtConfig;
 
-        public AuthController(IUserService userService, ITwilioService twilioService, IOptionsMonitor<JwtConfig> optionsMonitor)
+        public AuthController(IUserService userService, ISmsService smsService, IOptionsMonitor<JwtConfig> optionsMonitor)
         {
             _userService = userService;
-            _twilioService = twilioService;
+            _smsService = smsService;
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
@@ -69,16 +70,16 @@ namespace BackendMedicalApplication.Controllers
             {
                 return BadRequest(new { message = "Passwords don't match" });
             }
-                var createdUser = await _userService.CreateUserAsync(registrationDto);
-                if (createdUser == null)
-                {
-                    return BadRequest(new { message = "User creation failed" });
-                }
-
-                var jwtToken = GenerateJwtToken(createdUser);
-
-                return Ok(new { token = jwtToken });
+            var createdUser = await _userService.CreateUserAsync(registrationDto);
+            if (createdUser == null)
+            {
+                return BadRequest(new { message = "User creation failed" });
             }
+
+            var jwtToken = GenerateJwtToken(createdUser);
+
+            return Ok(new { token = jwtToken });
+        }
 
 
         private string GenerateJwtToken(UserDto user)
@@ -115,8 +116,22 @@ namespace BackendMedicalApplication.Controllers
             // Ensure phone number is correctly formatted
             string formattedPhoneNumber = FormatPhoneNumber(model.PhoneNumber);
 
-            await _twilioService.SendSms(formattedPhoneNumber, $"Your reset code is: {user.ResetPasswordCode}");
+            await _smsService.SendSmsAsync(formattedPhoneNumber, $"Your reset code is: {user.ResetPasswordCode}");
             return Ok("Reset code sent to your phone.");
+        }
+
+        [HttpPost("reset-password/sms")]
+        public async Task<IActionResult> ResetPasswordSMS([FromBody] ResetPasswordSMSDto model)
+        {
+            var user = await _userService.ResetPasswordWithCode(model.PhoneNumber, model.Code, model.NewPassword);
+            if (user == null)
+                return BadRequest("Invalid code or code expired.");
+
+            // Ensure reset code and its expiration are handled correctly
+            if (user.ResetPasswordCode == null || user.ResetPasswordCodeExpires == null || user.ResetPasswordCodeExpires < DateTime.UtcNow)
+                return BadRequest("Reset code is expired or not set.");
+
+            return Ok("Password has been reset successfully.");
         }
 
         private string FormatPhoneNumber(string phoneNumber)
@@ -135,22 +150,6 @@ namespace BackendMedicalApplication.Controllers
             }
 
             return "+" + phoneNumber;
-        }
-
-
-
-        [HttpPost("reset-password/sms")]
-        public async Task<IActionResult> ResetPasswordSMS([FromBody] ResetPasswordSMSDto model)
-        {
-            var user = await _userService.ResetPasswordWithCode(model.PhoneNumber, model.Code, model.NewPassword);
-            if (user == null)
-                return BadRequest("Invalid code or code expired.");
-
-            // Ensure reset code and its expiration are handled correctly
-            if (user.ResetPasswordCode == null || user.ResetPasswordCodeExpires == null || user.ResetPasswordCodeExpires < DateTime.UtcNow)
-                return BadRequest("Reset code is expired or not set.");
-
-            return Ok("Password has been reset successfully.");
         }
     }
 }

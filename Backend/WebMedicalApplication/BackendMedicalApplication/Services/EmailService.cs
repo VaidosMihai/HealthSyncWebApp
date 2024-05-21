@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using BackendMedicalApplication.Interfaces;
 using BackendMedicalApplication.Models;
 using Microsoft.Extensions.Options;
@@ -13,14 +14,14 @@ public class EmailService : IEmailService
         _emailSettings = emailSettings.Value;
     }
 
-    public async Task SendEmailAsync(string to, string subject, string body)
+    public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = false)
     {
         var mailMessage = new MailMessage
         {
             From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
             Subject = subject,
             Body = body,
-            IsBodyHtml = true
+            IsBodyHtml = isHtml
         };
         mailMessage.To.Add(to);
 

@@ -1,4 +1,5 @@
-﻿using BackendMedicalApplication.Interfaces;
+﻿using BackendMedicalApplication.DTo;
+using BackendMedicalApplication.Interfaces;
 using BackendMedicalApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,12 +10,14 @@ using System.Threading.Tasks;
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-    private readonly IEmailService _emailService; // Email service dependency
+    private readonly IEmailService _emailService;
+    private readonly ISmsService _smsService;
 
-    public NotificationController(INotificationService notificationService, IEmailService emailService)
+    public NotificationController(INotificationService notificationService, IEmailService emailService, ISmsService smsService)
     {
         _notificationService = notificationService;
-        _emailService = emailService; // Initialize email service
+        _emailService = emailService;
+        _smsService = smsService;
     }
 
     [HttpGet("user/{userId}")]
@@ -30,25 +33,12 @@ public class NotificationController : ControllerBase
         var count = await _notificationService.GetUnreadNotificationsCount(userId);
         return Ok(count);
     }
-
+/*
     [HttpPost("send-email")]
-    public async Task<IActionResult> SendEmailNotification([FromBody] EmailRequest emailRequest)
+    public async Task<IActionResult> SendEmail([FromBody] EmailDto emailDto)
     {
-        try
-        {
-            await _emailService.SendEmailAsync(emailRequest.To, emailRequest.Subject, emailRequest.Body);
-            return Ok("Email sent successfully.");
-        }
-        catch (System.Exception ex)
-        {
-            return BadRequest("Failed to send email: " + ex.Message);
-        }
-    }
-}
 
-public class EmailRequest
-{
-    public string To { get; set; }
-    public string Subject { get; set; }
-    public string Body { get; set; }
+        await _emailService.SendEmailAsync(emailDto.To, emailDto.Subject, emailDto.Body);
+        return Ok("Email sent successfully.");
+    }*/
 }

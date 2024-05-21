@@ -81,6 +81,10 @@ builder.Services.Configure<EmailSettings>(options =>
     options.SenderPassword = emailSenderPassword;
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<SMSApiSettings>(builder.Configuration.GetSection("SMSApiSettings"));
+builder.Services.Configure<MailerSendSettings>(builder.Configuration.GetSection("MailerSendSettings"));
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPatientRecordService, PatientRecordService>();
 builder.Services.AddScoped<IBillingService, BillingService>();
@@ -88,7 +92,12 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<ITwilioService, TwilioService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
-builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<ISmsService, SmsService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailService, MailerSendEmailService>();
+
+
+/*builder.Services.AddTransient<IEmailService, EmailService>();*/
 
 builder.Services.AddAuthentication(options =>
 {
@@ -132,7 +141,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BackendMedicalApplication v1"));
     app.UseDeveloperExceptionPage();
 }
 
