@@ -25,6 +25,7 @@ namespace BackendMedicalApplication
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewVote> ReviewVotes { get; set; }
+        public DbSet<ContactFormSubmission> ContactFormSubmissions { get; set; }
         public virtual ICollection<Appointment> DoctorAppointments { get; set; }
         public virtual ICollection<Appointment> PatientAppointments { get; set; }
 
@@ -91,6 +92,8 @@ namespace BackendMedicalApplication
             });
 
             modelBuilder.Entity<ReviewVote>().HasIndex(rv => new { rv.ReviewId, rv.UserId }).IsUnique();
+
+            modelBuilder.Entity<ContactFormSubmission>().ToTable("ContactFormSubmissions");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ContactApi.Models;
 using BackendMedicalApplication.Interfaces;
+using BackendMedicalApplication.Models;
 
 namespace ContactApi.Controllers
 {
@@ -9,15 +10,33 @@ namespace ContactApi.Controllers
     public class ContactController : ControllerBase
     {
         private readonly IEmailService _emailService;
+        private readonly IContactFormService _contactFormService;
 
-        public ContactController(IEmailService emailService)
+        public ContactController(IEmailService emailService, IContactFormService contactFormService)
         {
             _emailService = emailService;
+            _contactFormService = contactFormService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ContactForm contactForm)
         {
+            var submission = new ContactFormSubmission
+            {
+                FirstName = contactForm.FirstName,
+                LastName = contactForm.LastName,
+                Phone = contactForm.Phone,
+                Email = contactForm.Email,
+                Dob = contactForm.Dob,
+                Comments = contactForm.Comments,
+                AgreeTerms = contactForm.AgreeTerms,
+                AgreePrivacy = contactForm.AgreePrivacy,
+                AgreeMarketing = contactForm.AgreeMarketing,
+                SubmissionDate = DateTime.UtcNow
+            };
+
+            await _contactFormService.SaveContactFormSubmissionAsync(submission);
+
             var body = $@"
                 <html>
                 <body>

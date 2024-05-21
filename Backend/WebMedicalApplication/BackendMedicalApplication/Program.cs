@@ -95,6 +95,8 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailService, MailerSendEmailService>();
+builder.Services.AddScoped<IContactFormService, ContactFormService>();
+
 
 
 /*builder.Services.AddTransient<IEmailService, EmailService>();*/
