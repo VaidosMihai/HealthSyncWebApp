@@ -14,6 +14,7 @@ export class SignupComponent {
   signupForm: FormGroup;
   loading = false;
   error = '';
+  message = '';
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +43,7 @@ export class SignupComponent {
   
       this.authService.signUp(username, email, password, confirmPassword, name, surname, CNP, age, roleId, Address, PhoneNumber).subscribe({
         next: (response) => {
+          this.message = 'Registration successful! Please check your email to verify your account.';
           if (typeof response.token === 'string') {
             //localStorage.setItem('token', response.token);
             localStorage.setItem('token', JSON.stringify(response));

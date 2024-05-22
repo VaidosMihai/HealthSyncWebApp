@@ -25,6 +25,7 @@ import { NotificationListComponent } from './core/models/notification-list/notif
 import { DashboardComponent } from './core/models/dashboard/dashboard.component';
 import { LocationComponent } from './core/models/location/location.component';
 import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.component';
+import { VerifyEmailComponent } from './core/models/verify-email/verify-email.component';
 
 const routes: Routes = [
   { path: 'signup', component: SignupComponent },
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'locations', component: LocationComponent },
   { path: 'contactinfo', component: ContactinfoComponent },
+  { path: 'verify-email', component: VerifyEmailComponent },
 
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },

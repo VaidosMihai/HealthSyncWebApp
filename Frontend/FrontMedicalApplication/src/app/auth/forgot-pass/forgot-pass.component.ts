@@ -15,7 +15,7 @@ export class ForgotPassComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.forgotPasswordForm = this.fb.group({
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+      email: ['', [Validators.required, Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
@@ -28,9 +28,9 @@ export class ForgotPassComponent implements OnInit {
   }
 
   onRequestCode(): void {
-    const phoneNumberControl = this.forgotPasswordForm.get('phoneNumber');
-    if (phoneNumberControl?.valid) {
-      this.authService.requestResetCode(phoneNumberControl.value).subscribe({
+    const emailControl = this.forgotPasswordForm.get('email');
+    if (emailControl?.valid) {
+      this.authService.requestResetCode(emailControl.value).subscribe({
         next: data => {
           console.log('Reset code sent!');
           this.requestCodeSent = true;
@@ -42,8 +42,8 @@ export class ForgotPassComponent implements OnInit {
 
   onReset(): void {
     if (this.forgotPasswordForm.valid) {
-      const { phoneNumber, code, newPassword } = this.forgotPasswordForm.value;
-      this.authService.resetPassword(phoneNumber, code, newPassword).subscribe({
+      const { email, code, newPassword } = this.forgotPasswordForm.value;
+      this.authService.resetPassword(email, code, newPassword).subscribe({
         next: data => {
           console.log('Password reset successful');
           this.resetSuccess = true;

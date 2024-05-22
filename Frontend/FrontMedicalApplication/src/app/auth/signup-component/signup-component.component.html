@@ -120,8 +120,14 @@
                   <mat-error *ngIf="signupForm.get('PhoneNumber')?.hasError('min')">Phone number must be completed</mat-error>
                 </div>
                 <div class="btn-container">
-                  <button type="submit" class="btn btn-primary btn-block mb-4">Sign up</button>
+                  <button type="submit" class="btn btn-primary btn-block mb-4" [disabled]="loading">Sign up</button>
                   <button type="submit" mat-button routerLink="/login">Already have an account? Login</button>
+                </div>
+                <div *ngIf="message" class="alert alert-success">
+                  {{ message }}
+                </div>
+                <div *ngIf="error" class="alert alert-danger">
+                  {{ error }}
                 </div>
               </form>
             </div>

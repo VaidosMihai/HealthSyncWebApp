@@ -66,14 +66,14 @@ export class AuthService {
     return this.http.get<UserDto[]>(`${environment.apiUrl}/user?email=${email}`);
   }
 
-  public requestResetCode(phoneNumber: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/password-reset/request-code`, { phoneNumber }).pipe(
+  public requestResetCode(email: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/password-reset/request-code`, { email }).pipe(
       catchError(this.handleError)
     );
   }
 
-  public resetPassword(phoneNumber: string, code: string, newPassword: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/reset-password/sms`, { phoneNumber, code, newPassword }).pipe(
+  public resetPassword(email: string, code: string, newPassword: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/reset-password/email`, { email, code, newPassword }).pipe(
       catchError(this.handleError)
     );
   }
@@ -81,6 +81,12 @@ export class AuthService {
   public signUp(username: string, email: string, password: string, confirmPassword: string, name: string, surname: string, CNP: string, age: number, roleId: number, Address: string, PhoneNumber: string): Observable<UserDto> {
     const body = { username, email, password, confirmPassword, name, surname, CNP, age, roleId, Address, PhoneNumber };
     return this.http.post<UserDto>(`${environment.apiUrl}/auth/register`, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public verifyEmail(token: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/auth/verify-email`, { params: { token } }).pipe(
       catchError(this.handleError)
     );
   }

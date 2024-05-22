@@ -22,8 +22,4 @@ export class NotificationService {
   sendEmail(to: string, subject: string, body: string): Observable<any> {
     return this.http.post(`${environment.apiUrl}/contact`, { to, subject, body });
   }
-
-  sendSms(to: string, message: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/send-sms`, { to, message });
-  }
 }
