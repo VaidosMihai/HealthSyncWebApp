@@ -6,11 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
 using Microsoft.Extensions.Configuration;
 using WebMedicalApplication.Models;
-using System.Configuration;
+using System;
 
 namespace BackendMedicalApplication.Services
 {
@@ -18,13 +16,13 @@ namespace BackendMedicalApplication.Services
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
-        private readonly ISmsService _smsService;
+        private readonly IEmailService _emailService;
 
-        public UserService(AppDbContext context, IConfiguration configuration, ISmsService smsService)
+        public UserService(AppDbContext context, IConfiguration configuration, IEmailService emailService)
         {
             _context = context;
             _configuration = configuration;
-            _smsService = smsService;
+            _emailService = emailService;
         }
 
         public IEnumerable<UserDto> GetAllUsers()
@@ -282,10 +280,10 @@ namespace BackendMedicalApplication.Services
             return user;
         }
 
-        public async Task<User> GetUserByPhone(string phoneNumber)
+        public async Task<User> GetUserByEmail(string email)
         {
             var user = await _context.Users
-                                     .Where(u => u.PhoneNumber == phoneNumber)
+                                     .Where(u => u.EmailAddress == email)
                                      .FirstOrDefaultAsync();
 
             if (user == null)
@@ -295,10 +293,10 @@ namespace BackendMedicalApplication.Services
 
             return user;
         }
-/*
-        public async Task<User> GeneratePasswordResetCode(string phoneNumber)
+
+        public async Task<User> GeneratePasswordResetCode(string email)
         {
-            var user = await GetUserByPhone(phoneNumber);
+            var user = await GetUserByEmail(email);
             if (user == null)
             {
                 return null;
@@ -309,51 +307,17 @@ namespace BackendMedicalApplication.Services
             user.ResetPasswordCodeExpires = DateTime.UtcNow.AddMinutes(15); // Code expires in 15 minutes
             await _context.SaveChangesAsync();
 
-            await SendPasswordResetSMS(FormatPhoneNumber(user.PhoneNumber), user.ResetPasswordCode);
+            string emailSubject = "Your Password Reset Code";
+            string emailBody = $"Your password reset code is: {user.ResetPasswordCode}. You have 15 minutes to use this code before it expires.";
+            await _emailService.SendEmailAsync(user.EmailAddress, emailSubject, emailBody, true);
             return user;
         }
 
-        private async Task SendPasswordResetSMS(string phoneNumber, string code)
+
+        public async Task<User> ResetPasswordWithCode(string email, string code, string newPassword)
         {
-            var accountSid = _configuration["TwilioSettings:AccountSid"];
-            var authToken = _configuration["TwilioSettings:AuthToken"];
-            var fromNumber = _configuration["TwilioSettings:FromNumber"];
-
-            if (string.IsNullOrWhiteSpace(accountSid) || string.IsNullOrWhiteSpace(authToken) || string.IsNullOrWhiteSpace(fromNumber))
-            {
-                throw new InvalidOperationException("Twilio configuration settings are missing.");
-            }
-
-            TwilioClient.Init(accountSid, authToken);
-
-            var message = await MessageResource.CreateAsync(
-                body: $"Your password reset code is: {code}",
-                from: new Twilio.Types.PhoneNumber(fromNumber),
-                to: new Twilio.Types.PhoneNumber(phoneNumber)
-            );
-        }*/
-
-        public async Task<User> GeneratePasswordResetCode(string phoneNumber)
-        {
-            var user = await GetUserByPhone(phoneNumber);
-            if (user == null)
-            {
-                return null;
-            }
-
-            // Generate a 6-digit code
-            user.ResetPasswordCode = new Random().Next(100000, 999999).ToString();
-            user.ResetPasswordCodeExpires = DateTime.UtcNow.AddMinutes(15); // Code expires in 15 minutes
-            await _context.SaveChangesAsync();
-
-            await _smsService.SendSmsAsync(FormatPhoneNumber(user.PhoneNumber), $"Your password reset code is: {user.ResetPasswordCode}");
-            return user;
-        }
-
-        public async Task<User> ResetPasswordWithCode(string phoneNumber, string code, string newPassword)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(u =>  u.ResetPasswordCode == code
-                                                                      /*&& u.ResetPasswordCodeExpires > DateTime.UtcNow*/);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.EmailAddress == email && u.ResetPasswordCode == code
+                                                                      && u.ResetPasswordCodeExpires > DateTime.UtcNow);
             if (user == null) return null;
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
@@ -363,25 +327,6 @@ namespace BackendMedicalApplication.Services
 
             return user;
         }
-
-        private string FormatPhoneNumber(string phoneNumber)
-        {
-            // Remove any non-digit characters
-            phoneNumber = new string(phoneNumber.Where(char.IsDigit).ToArray());
-
-            // Add the Romanian country code if not already present
-            if (!phoneNumber.StartsWith("40"))
-            {
-                if (phoneNumber.StartsWith("0"))
-                {
-                    phoneNumber = phoneNumber.TrimStart('0');
-                }
-                phoneNumber = "40" + phoneNumber;
-            }
-
-            return "+" + phoneNumber;
-        }
-
 
         public IEnumerable<UserDto> GetUsersByRole(int roleId)
         {

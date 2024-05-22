@@ -18,13 +18,13 @@ namespace BackendMedicalApplication.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ISmsService _smsService;
+        private readonly IEmailService _emailService;
         private readonly JwtConfig _jwtConfig;
 
-        public AuthController(IUserService userService, ISmsService smsService, IOptionsMonitor<JwtConfig> optionsMonitor)
+        public AuthController(IUserService userService, IEmailService emailService, IOptionsMonitor<JwtConfig> optionsMonitor)
         {
             _userService = userService;
-            _smsService = smsService;
+            _emailService = emailService;
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
@@ -81,7 +81,6 @@ namespace BackendMedicalApplication.Controllers
             return Ok(new { token = jwtToken });
         }
 
-
         private string GenerateJwtToken(UserDto user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -107,49 +106,39 @@ namespace BackendMedicalApplication.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
-        [HttpPost("forgot-password/sms")]
-        public async Task<IActionResult> ForgotPasswordSMS([FromBody] ForgotPasswordSMSDto model)
+        [HttpPost("forgot-password/email")]
+        public async Task<IActionResult> ForgotPasswordEmail([FromBody] ForgotPasswordEmailDto model)
         {
-            var user = await _userService.GeneratePasswordResetCode(model.PhoneNumber);
+            var user = await _userService.GeneratePasswordResetCode(model.Email);
             if (user == null) return NotFound("User not found.");
 
-            // Ensure phone number is correctly formatted
-            string formattedPhoneNumber = FormatPhoneNumber(model.PhoneNumber);
-
-            await _smsService.SendSmsAsync(formattedPhoneNumber, $"Your reset code is: {user.ResetPasswordCode}");
-            return Ok("Reset code sent to your phone.");
+            await _emailService.SendEmailAsync(model.Email, "Your Password Reset Code", $"Your reset code is: {user.ResetPasswordCode}", true);
+            return Ok("Reset code sent to your email.");
         }
 
-        [HttpPost("reset-password/sms")]
-        public async Task<IActionResult> ResetPasswordSMS([FromBody] ResetPasswordSMSDto model)
+        [HttpPost("reset-password/email")]
+        public async Task<IActionResult> ResetPasswordEmail([FromBody] ResetPasswordEmailDto model)
         {
-            var user = await _userService.ResetPasswordWithCode(model.PhoneNumber, model.Code, model.NewPassword);
+            var user = await _userService.ResetPasswordWithCode(model.Email, model.Code, model.NewPassword);
             if (user == null)
                 return BadRequest("Invalid code or code expired.");
 
-            // Ensure reset code and its expiration are handled correctly
-            if (user.ResetPasswordCode == null || user.ResetPasswordCodeExpires == null || user.ResetPasswordCodeExpires < DateTime.UtcNow)
-                return BadRequest("Reset code is expired or not set.");
-
             return Ok("Password has been reset successfully.");
         }
+    }
+}
 
-        private string FormatPhoneNumber(string phoneNumber)
-        {
-            // Remove any non-digit characters
-            phoneNumber = new string(phoneNumber.Where(char.IsDigit).ToArray());
+namespace BackendMedicalApplication.DTo
+{
+    public class ForgotPasswordEmailDto
+    {
+        public string Email { get; set; }
+    }
 
-            // Add the Romanian country code if not already present
-            if (!phoneNumber.StartsWith("40"))
-            {
-                if (phoneNumber.StartsWith("0"))
-                {
-                    phoneNumber = phoneNumber.TrimStart('0');
-                }
-                phoneNumber = "40" + phoneNumber;
-            }
-
-            return "+" + phoneNumber;
-        }
+    public class ResetPasswordEmailDto
+    {
+        public string Email { get; set; }
+        public string Code { get; set; }
+        public string NewPassword { get; set; }
     }
 }

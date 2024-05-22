@@ -33,12 +33,4 @@ public class NotificationController : ControllerBase
         var count = await _notificationService.GetUnreadNotificationsCount(userId);
         return Ok(count);
     }
-/*
-    [HttpPost("send-email")]
-    public async Task<IActionResult> SendEmail([FromBody] EmailDto emailDto)
-    {
-
-        await _emailService.SendEmailAsync(emailDto.To, emailDto.Subject, emailDto.Body);
-        return Ok("Email sent successfully.");
-    }*/
 }
