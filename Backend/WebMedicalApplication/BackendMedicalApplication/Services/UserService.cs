@@ -187,20 +187,14 @@ namespace BackendMedicalApplication.Services
 
         public async Task<UserDto> CreateUserAsync(UserRegistrationDto userRegistrationDto)
         {
-            // Check if a user with the same email already exists
-            var existingUser = await _context.Users
-                                             .AnyAsync(u => u.EmailAddress == userRegistrationDto.Email);
+            var existingUser = await _context.Users.AnyAsync(u => u.EmailAddress == userRegistrationDto.Email);
             if (existingUser)
-                throw new System.Exception("User with the given email already exists.");
+                throw new Exception("User with the given email already exists.");
 
-            // Check if the provided RoleId exists in the Roles table
             var roleExists = await _context.Roles.AnyAsync(r => r.RoleId == userRegistrationDto.RoleId);
             if (!roleExists)
-            {
-                throw new System.Exception("The specified Role ID does not exist.");
-            }
+                throw new Exception("The specified Role ID does not exist.");
 
-            // Create a new user with the valid RoleId
             var newUser = new User
             {
                 Username = userRegistrationDto.Username,
@@ -212,25 +206,35 @@ namespace BackendMedicalApplication.Services
                 Age = userRegistrationDto.Age,
                 RoleId = userRegistrationDto.RoleId,
                 PhoneNumber = userRegistrationDto.PhoneNumber,
-                Address = userRegistrationDto.Address
-                // Map other fields from userRegistrationDto to newUser as needed
+                Address = userRegistrationDto.Address,
+                IsVerified = false,
+                VerificationToken = Guid.NewGuid().ToString(),
+                VerificationTokenExpires = DateTime.UtcNow.AddHours(24) // Token valid for 24 hours
             };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
+            string verificationUrl = $"https://yourapp.com/api/auth/verify-email?token={newUser.VerificationToken}";
+            string emailSubject = "Verify your email address";
+            string emailBody = $"Please verify your email address by clicking the link below:\n{verificationUrl}\nThis link will expire in 24 hours.";
+            await _emailService.SendEmailAsync(newUser.EmailAddress, emailSubject, emailBody, true);
+
             return new UserDto
             {
+                UserId = newUser.UserId,
                 Username = newUser.Username,
+                EmailAddress = newUser.EmailAddress,
+                RoleId = newUser.RoleId,
                 Name = newUser.Name,
                 Surname = newUser.Surname,
-                EmailAddress = newUser.EmailAddress,
-                CNP = newUser.CNP,
                 Age = newUser.Age,
-                RoleId = newUser.RoleId,
-                // Optionally map other fields as needed, excluding sensitive data like passwords
+                CNP = newUser.CNP,
+                PhoneNumber = newUser.PhoneNumber,
+                Address = newUser.Address
             };
         }
+
 
         public UserDto UpdateUserRole(int userId, int newRoleId)
         {

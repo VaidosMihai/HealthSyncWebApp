@@ -79,6 +79,9 @@ namespace BackendMedicalApplication
                 entity.Property(e => e.EmailAddress).IsRequired().HasMaxLength(256);
                 entity.Property(e => e.ResetPasswordCode).HasMaxLength(6);
                 entity.Property(e => e.ResetPasswordCodeExpires).HasColumnType("datetime2");
+                entity.Property(e => e.VerificationToken).HasMaxLength(100).IsUnicode(false);
+                entity.Property(e => e.VerificationTokenExpires).IsUnicode(false);
+                entity.Property(e => e.IsVerified).HasDefaultValue(false);
 
                 // Unique constraints
                 entity.HasIndex(u => u.EmailAddress).IsUnique();

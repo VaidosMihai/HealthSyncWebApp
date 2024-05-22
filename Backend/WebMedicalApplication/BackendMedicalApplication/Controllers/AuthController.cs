@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using BackendMedicalApplication.Models;
 using Microsoft.Extensions.Options;
 using BackendMedicalApplication.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendMedicalApplication.Controllers
 {
@@ -20,12 +21,14 @@ namespace BackendMedicalApplication.Controllers
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly JwtConfig _jwtConfig;
+        private readonly AppDbContext _context;
 
-        public AuthController(IUserService userService, IEmailService emailService, IOptionsMonitor<JwtConfig> optionsMonitor)
+        public AuthController(IUserService userService, IEmailService emailService, IOptionsMonitor<JwtConfig> optionsMonitor, AppDbContext context)
         {
             _userService = userService;
             _emailService = emailService;
             _jwtConfig = optionsMonitor.CurrentValue;
+            _context = context;
         }
 
         [HttpPost("login")]
@@ -125,6 +128,24 @@ namespace BackendMedicalApplication.Controllers
 
             return Ok("Password has been reset successfully.");
         }
+
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.VerificationToken == token && u.VerificationTokenExpires > DateTime.UtcNow);
+            if (user == null)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
+
+            user.IsVerified = true;
+            user.VerificationToken = null;
+            user.VerificationTokenExpires = null;
+            await _context.SaveChangesAsync();
+
+            return Ok("Email verified successfully.");
+        }
+
     }
 }
 

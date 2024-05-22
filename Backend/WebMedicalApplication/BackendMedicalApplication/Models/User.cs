@@ -25,6 +25,9 @@ namespace WebMedicalApplication.Models
         public string Address { get; set; }
         public string? ResetPasswordCode { get; set; }
         public DateTime? ResetPasswordCodeExpires { get; set; }
+        public string? VerificationToken { get; set; }
+        public DateTime? VerificationTokenExpires { get; set; }
+        public bool IsVerified { get; set; }
 
         public ICollection<Appointment> DoctorAppointments { get; set; }
         public ICollection<Appointment> PatientAppointments { get; set; }
