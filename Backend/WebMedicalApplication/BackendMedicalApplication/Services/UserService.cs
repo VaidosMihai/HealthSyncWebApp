@@ -215,7 +215,7 @@ namespace BackendMedicalApplication.Services
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            string verificationUrl = $"https://yourapp.com/api/auth/verify-email?token={newUser.VerificationToken}";
+            string verificationUrl = $"https://backendmedicalapplication.azurewebsites.net/api/auth/verify-email?token={newUser.VerificationToken}";
             string emailSubject = "Verify your email address";
             string emailBody = $"Please verify your email address by clicking the link below:\n{verificationUrl}\nThis link will expire in 24 hours.";
             await _emailService.SendEmailAsync(newUser.EmailAddress, emailSubject, emailBody, true);
