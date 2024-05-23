@@ -67,13 +67,13 @@ export class AuthService {
   }
 
   public requestResetCode(email: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/password-reset/request-code`, { email }).pipe(
+    return this.http.post(`${environment.apiUrl}/Auth/password-reset/request-code`, { email }).pipe(
       catchError(this.handleError)
     );
   }
-
+  
   public resetPassword(email: string, code: string, newPassword: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/reset-password/email`, { email, code, newPassword }).pipe(
+    return this.http.post(`${environment.apiUrl}/Auth/reset-password/email`, { email, code, newPassword }).pipe(
       catchError(this.handleError)
     );
   }
