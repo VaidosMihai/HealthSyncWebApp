@@ -311,9 +311,6 @@ namespace BackendMedicalApplication.Services
             user.ResetPasswordCodeExpires = DateTime.UtcNow.AddMinutes(15); // Code expires in 15 minutes
             await _context.SaveChangesAsync();
 
-            string emailSubject = "Your Password Reset Code";
-            string emailBody = $"Your password reset code is: {user.ResetPasswordCode}. You have 15 minutes to use this code before it expires.";
-            await _emailService.SendEmailAsync(user.EmailAddress, emailSubject, emailBody, true);
             return user;
         }
 
