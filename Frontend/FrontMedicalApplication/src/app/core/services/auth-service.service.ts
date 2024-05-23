@@ -67,16 +67,24 @@ export class AuthService {
   }
 
   public requestResetCode(email: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/Auth/password-reset/request-code`, { email }).pipe(
+    return this.http.post(`${environment.apiUrl}/Auth/password-reset/request-code`, { email }, { responseType: 'text' }).pipe(
+      tap((response) => {
+        console.log('Reset code sent!', response);
+      }),
       catchError(this.handleError)
     );
   }
   
+  
   public resetPassword(email: string, code: string, newPassword: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/Auth/reset-password/email`, { email, code, newPassword }).pipe(
+    return this.http.post(`${environment.apiUrl}/Auth/reset-password/email`, { email, code, newPassword }, { responseType: 'text' }).pipe(
+      tap((response) => {
+        console.log('Password reset successful', response);
+      }),
       catchError(this.handleError)
     );
   }
+  
 
   public signUp(username: string, email: string, password: string, confirmPassword: string, name: string, surname: string, CNP: string, age: number, roleId: number, Address: string, PhoneNumber: string): Observable<UserDto> {
     const body = { username, email, password, confirmPassword, name, surname, CNP, age, roleId, Address, PhoneNumber };

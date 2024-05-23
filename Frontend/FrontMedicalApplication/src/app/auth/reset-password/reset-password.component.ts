@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,7 +13,7 @@ export class ResetPasswordComponent implements OnInit {
   resetSuccess: boolean = false;
   resetError: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) { // Add ActivatedRoute to constructor
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.resetPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
@@ -23,7 +24,8 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
   onReset(): void {
     if (this.resetPasswordForm.valid) {
@@ -33,6 +35,7 @@ export class ResetPasswordComponent implements OnInit {
           console.log('Password reset successful');
           this.resetSuccess = true;
           this.resetError = '';
+          this.router.navigate(['/login']);  // Redirect to login page
         },
         error: error => {
           console.error('Error resetting password', error);
@@ -46,15 +49,15 @@ export class ResetPasswordComponent implements OnInit {
     return (formGroup: FormGroup) => {
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];
-
+  
       if (!control || !matchingControl) {
         return null;
       }
-
+  
       if (matchingControl.errors && !matchingControl.errors['mustMatch']) {
         return null;
       }
-
+  
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({ mustMatch: true });
       } else {

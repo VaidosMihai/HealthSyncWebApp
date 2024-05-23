@@ -17,6 +17,7 @@ export class AppointmentListComponent implements OnInit {
   isPatient: boolean = false;
   isDoctor: boolean = false;
   isAdmin: boolean = false;
+  hasDiagnostics: boolean = false; // New variable
   patientNames: { [key: number]: string } = {};
   doctorNames: { [key: number]: string } = {};
   upcomingAppointments: AppointmentDto[] = [];
@@ -151,6 +152,9 @@ export class AppointmentListComponent implements OnInit {
           user => this.doctorNames[appointment.doctorId] = `${user.name} ${user.surname}`,
           error => console.error(`Failed to fetch doctor name for ID ${appointment.doctorId}`, error)
         );
+      }
+      if (appointment.patientRecordId) {
+        this.hasDiagnostics = true;
       }
     });
   }
