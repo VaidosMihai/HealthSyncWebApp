@@ -101,10 +101,24 @@ namespace BackendMedicalApplication.Services
             return true;
         }
 
-        public async Task<IEnumerable<Appointment>> GetByDoctorId(int doctorId)
+        public async Task<List<AppointmentDto>> GetByDoctorId(int doctorId)
         {
-            return await _context.Appointments.Where(a => a.DoctorId == doctorId).ToListAsync();
+            var appointments = await _context.Appointments
+                .Where(a => a.DoctorId == doctorId)
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId = a.AppointmentId,
+                    DoctorId = a.DoctorId,
+                    PatientId = a.PatientId,
+                    DateTime = a.AppointmentDate,
+                    Reason = a.Reason,
+                    PatientRecordId = a.PatientRecordId
+                })
+                .ToListAsync();
+
+            return appointments;
         }
+
 
         public async Task<List<AppointmentDto>> GetAppointmentsByPatientId(int patientId)
         {
@@ -116,7 +130,8 @@ namespace BackendMedicalApplication.Services
                     DoctorId = a.DoctorId,
                     PatientId = a.PatientId,
                     DateTime = a.AppointmentDate,
-                    Reason = a.Reason
+                    Reason = a.Reason,
+                    PatientRecordId = a.PatientRecordId,
                 })
                 .ToListAsync();
 
