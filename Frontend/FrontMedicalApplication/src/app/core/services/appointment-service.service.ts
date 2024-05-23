@@ -42,11 +42,11 @@ export class AppointmentService {
   getAppointmentsByPatient(patientId: number): Observable<AppointmentDto[]> {
     return this.http.get<AppointmentDto[]>(`${this.appointmentEndpoint}/by-patient/${patientId}`, { observe: 'body' });
   }
-  
+
   addPatientRecordToAppointment(appointmentId: number, record: MedicalRecordDto): Observable<any> {
     return this.http.post(`${this.appointmentEndpoint}/${appointmentId}/addPatientRecord`, record);
   }
-    
+
   notifyDoctor(doctorId: number): Observable<any> {
     return this.http.post(`${this.appointmentEndpoint}/notify-doctor/${doctorId}`, {});
   }

@@ -38,10 +38,10 @@ export class AppointmentListComponent implements OnInit {
     if (currentUser) {
       if (currentUser.roleId === 3) {
         this.loadAppointmentsForAdmin();
-      } else if (currentUser.roleId === 2) {
-        this.loadAppointmentsForLoggedInPatient();
-      } else if (currentUser.roleId === 1) {
-        this.loadAppointmentsForMedic();
+      } 
+      else 
+      {
+        this.loadAppointments();
       }
     }
   }
@@ -51,21 +51,6 @@ export class AppointmentListComponent implements OnInit {
     if (currentUser) {
       this.doctorName = `${currentUser.firstName} ${currentUser.lastName}`;
     }
-  }
-
-  loadAppointments() {
-    this.appointmentService.getAppointments().subscribe({
-      next: (response: HttpResponse<AppointmentDto[]>) => {
-        if (response.body) {
-          this.appointments = response.body;
-          this.categorizeAppointments(this.appointments);
-          this.populatePatientNames();
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching appointments', error);
-      }
-    });
   }
 
   loadAppointmentsForAdmin() {
@@ -83,58 +68,32 @@ export class AppointmentListComponent implements OnInit {
     });
   }
 
-  loadAppointmentsForMedic() {
+  loadAppointments() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    
+    if (currentUser) {
+      this.appointmentService.getAppointments().subscribe({
+        next: (response: HttpResponse<AppointmentDto[]>) => {
+          if (response.body) {
+            let filteredAppointments;
+            if (currentUser.roleId === 1) { // Doctor
+              filteredAppointments = response.body.filter(appt => appt.doctorId === currentUser.userId);
+            } else if (currentUser.roleId === 2) { // Patient
+              filteredAppointments = response.body.filter(appt => appt.patientId === currentUser.userId);
+            }
   
-    this.appointmentService.getAppointments().subscribe({
-      next: (response: HttpResponse<AppointmentDto[]>) => {
-        if (response.body) {
-          let filteredAppointments;
-          if (currentUser.roleId === 1) { // Doctor
-            filteredAppointments = response.body.filter(appt => appt.doctorId === currentUser.userId);
-          } else if (currentUser.roleId === 2) { // Patient
-            filteredAppointments = response.body.filter(appt => appt.patientId === currentUser.userId);
+            if (filteredAppointments) {
+              this.appointments = filteredAppointments;
+              this.populatePatientNames();
+              this.categorizeAppointments(this.appointments);
+            } else {
+              this.appointments = []; // Set appointments to empty array if no matches
+            }
           }
-  
-          if (filteredAppointments) {
-            this.appointments = filteredAppointments;
-            this.populatePatientNames();
-            this.categorizeAppointments(this.appointments);
-          } else {
-            this.appointments = []; // Set appointments to empty array if no matches
-          }
+        },
+        error: (error) => {
+          console.error('Error fetching appointments', error);
         }
-      },
-      error: (error) => {
-        console.error('Error fetching appointments', error);
-      }
-    });
-  }
-
-  loadAppointmentsForLoggedInDoctor() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    if (currentUser && currentUser.roleId === 1) {
-      this.appointmentService.getAppointmentsByDoctor(currentUser.userId).subscribe({
-        next: (appointments: AppointmentDto[]) => {
-          this.appointments = appointments;
-          this.populatePatientNames();
-          this.categorizeAppointmentsDoctor(this.appointments);
-        },
-        error: (error) => console.error('Error fetching appointments', error)
-      });
-    }
-  }
-
-  loadAppointmentsForLoggedInPatient() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    if (currentUser && currentUser.roleId === 2) {
-      this.appointmentService.getAppointmentsByPatient(currentUser.userId).subscribe({
-        next: (appointments: AppointmentDto[]) => {
-          this.appointments = appointments;
-          this.populatePatientNames();
-          this.categorizeAppointments(this.appointments);
-        },
-        error: (error) => console.error('Error fetching appointments for patient', error)
       });
     }
   }

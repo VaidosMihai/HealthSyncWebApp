@@ -34,7 +34,7 @@
               Make Diagnosis
             </button>
             <button class="btn btn-primary btn-sm"
-              *ngIf="isPatient || isDoctor"
+              *ngIf="isPatient || isDoctor || isAdmin"
               [routerLink]="['/medical-record/view', appointment.appointmentId]">
               View Diagnostics
             </button>
@@ -57,16 +57,21 @@
             <p class="card-text"><strong>Reason:</strong> {{ appointment.reason }}</p>
           </div>
           <div class="col-md-6 d-flex justify-content-end align-items-center">
+            <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
             <button class="btn btn-primary btn-sm mr-2"
-              *ngIf="isPatient || isDoctor"
+              *ngIf="isPatient || isDoctor || isAdmin"
               [routerLink]="['/medical-record/view', appointment.appointmentId]">
               View Diagnostics
             </button>
-            <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
             <button class="btn btn-primary btn-sm ml-2"
               *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && appointment.appointmentId"
               [routerLink]="['/medical-record/new', appointment.appointmentId]">
               Make Diagnosis
+            </button>
+            <button class="btn btn-danger btn-sm mr-2"
+              *ngIf="appointment.appointmentId"
+              (click)="deleteAppointment(appointment.appointmentId)">
+              Remove from list
             </button>
           </div>
         </div>
