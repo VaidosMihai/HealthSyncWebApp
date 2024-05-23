@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationService } from '../../services/notification-service.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface ContactForm {
   firstName: string;
@@ -49,10 +50,19 @@ export class ContactinfoComponent implements OnInit {
 
   onSubmit(): void {
     console.log('Form Data:', this.contactForm);
-    alert('Your contact information has been submitted successfully!');
-    this.notificationService.sendEmail(this.contactForm.email, 'Contact Form Submission', 'Thank you for contacting us!').subscribe(
-      response => console.log('Email sent successfully', response),
-      error => console.error('Error sending email', error)
+    this.notificationService.sendEmail(
+      this.contactForm.email, 
+      'Contact Form Submission', 
+      'Thank you for contacting us!'
+    ).subscribe(
+      response => {
+        console.log('Email sent successfully', response);
+        alert('Your contact information has been submitted successfully!');
+      },
+      (error: HttpErrorResponse) => {
+        console.error('Error sending email', error);
+        alert('There was an error submitting your contact information. Please try again.');
+      }
     );
   }
 }

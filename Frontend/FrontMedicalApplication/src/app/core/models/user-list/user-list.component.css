@@ -11,8 +11,26 @@
   margin-top: 1.5rem;
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 8px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.card p {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
 }
 
 .btn {
@@ -21,11 +39,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-}
-
-.btn-success {
-  background-color: #28a745;
-  color: white;
+  transition: background-color 0.3s;
 }
 
 .btn-primary {
@@ -33,50 +47,27 @@
   color: white;
 }
 
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
 .btn-danger {
   background-color: #dc3545;
   color: white;
 }
 
-.btn-sm {
-  padding: 5px 10px;
-  font-size: 12px;
+.btn-danger:hover {
+  background-color: #c82333;
 }
 
-.table-responsive {
-  overflow-x: auto;
+.d-flex {
+  display: flex;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem;
-  background-color: transparent;
+.justify-content-around {
+  justify-content: space-around;
 }
 
-.table th,
-.table td {
-  padding: 12px;  /* Increased padding for better spacing */
-  text-align: left;
-  border-top: 1px solid #dee2e6;
-}
-
-.table th {
-  font-weight: bold;
-  background-color: #f8f9fa; /* Light background for headers */
-  text-transform: uppercase; /* Capitalized headers for better readability */
-}
-
-.table tbody tr:hover {
-  background-color: #f1f1f1; /* Add hover effect to rows */
-}
-
-th, td {
-  min-width: 120px; /* Set a minimum width for each table cell */
-}
-
-h2 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.mt-3 {
+  margin-top: 1rem;
 }

@@ -20,6 +20,11 @@ export class NotificationService {
   }
 
   sendEmail(to: string, subject: string, body: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/contact`, { to, subject, body });
+    const emailPayload = {
+      to,
+      subject,
+      body
+    };
+    return this.http.post(`$${environment.apiUrl}/contact`, emailPayload);
   }
 }

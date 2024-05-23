@@ -96,14 +96,15 @@
             <button mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/dashboard">Dashboard</button>
           </li>
           <li class="dropdown">
-            <button mat-button *ngIf="isAdmin || isPatient || isDoctor" class="dropbtn">Services</button>
+            <button mat-button class="dropbtn">Services</button>
             <div class="dropdown-content">
               <a mat-button *ngIf="isAdmin || isPatient" routerLink="/doctors">Doctors</a>
               <a mat-button *ngIf="isAdmin || isDoctor" routerLink="/patients">Patients</a>
               <a mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/appointment">Appointments</a>
               <a mat-button *ngIf="isAdmin" routerLink="/users">Users</a>
               <a mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/profile">Profile</a>
-              <a *ngIf="isAdmin || isPatient || isDoctor" routerLink="/contactinfo">Contact Info</a>
+              <a mat-button routerLink="/locations">Locations</a>
+              <a routerLink="/contactinfo">Contact Info</a>
             </div>
           </li>
         </ul>

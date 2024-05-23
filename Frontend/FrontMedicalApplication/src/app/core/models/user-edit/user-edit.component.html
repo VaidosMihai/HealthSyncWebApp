@@ -30,12 +30,6 @@
         </div>
 
         <div class="form-outline mb-4">
-          <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" class="form-control" formControlName="password" required minlength="6" placeholder="Enter password"/>
-          <mat-error *ngIf="editUserForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
-        </div>
-
-        <div class="form-outline mb-4">
           <label class="form-label" for="cnp">CNP</label>
           <input type="text" id="cnp" class="form-control" formControlName="cnp" required pattern="^[0-9]+$" placeholder="Enter CNP"/>
           <mat-error *ngIf="editUserForm.get('cnp')?.hasError('min')">CNP must be a positive string</mat-error>

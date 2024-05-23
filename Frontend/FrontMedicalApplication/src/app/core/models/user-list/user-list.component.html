@@ -1,43 +1,26 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-2">
-    <h2>User List</h2>
-    <button class="btn btn-success" (click)="addUser()">New User</button>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Username</th>
-          <th>Email Address</th>
-          <th>Name</th>
-          <th>Surname</th>
-          <th>Role ID</th>
-          <th>CNP</th>
-          <th>Age</th>
-          <th>Address</th>
-          <th>Phone Number</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.userId }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.emailAddress }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.surname }}</td>
-          <td>{{ user.roleId }}</td>
-          <td>{{ user.cnp }}</td>
-          <td>{{ user.age }}</td>
-          <td>{{ user.address }}</td>
-          <td>{{ user.phoneNumber }}</td>
-          <td>
+  <h2>Users</h2>
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngFor="let user of users">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ user.name }} {{ user.surname }}</h5>
+          <p><strong>User ID:</strong> {{ user.userId }}</p>
+          <p><strong>Username:</strong> {{ user.username }}</p>
+          <p><strong>Email:</strong> {{ user.emailAddress }}</p>
+          <p><strong>Age:</strong> {{ user.age }}</p>
+          <p><strong>Phone:</strong> {{ user.phoneNumber }}</p>
+          <p><strong>Address:</strong> {{ user.address }}</p>
+          <p><strong>Role ID:</strong> {{ user.roleId }}</p>
+          <p><strong>CNP:</strong> {{ user.cnp }}</p>
+          <div class="d-flex justify-content-around mt-3">
             <button class="btn btn-primary btn-sm" *ngIf="user.userId" [routerLink]="['/user/edit', user.userId]">Edit</button>
             <button class="btn btn-danger btn-sm" *ngIf="user.userId" (click)="confirmDeleteUser(user.userId)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+            
+          
