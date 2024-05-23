@@ -109,13 +109,13 @@ namespace BackendMedicalApplication.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
-        [HttpPost("forgot-password/email")]
+        [HttpPost("password-reset/request-code")]
         public async Task<IActionResult> ForgotPasswordEmail([FromBody] ForgotPasswordEmailDto model)
         {
             var user = await _userService.GeneratePasswordResetCode(model.Email);
             if (user == null) return NotFound("User not found.");
 
-            await _emailService.SendEmailAsync(model.Email, "Your Password Reset Code", $"Your reset code is: {user.ResetPasswordCode}", true);
+            await _emailService.SendEmailAsync(model.Email, "Your Password Reset Code", $"Your reset code is: {user.ResetPasswordCode}. You have 15 minutes to use this code before it expires.", true);
             return Ok("Reset code sent to your email.");
         }
 
