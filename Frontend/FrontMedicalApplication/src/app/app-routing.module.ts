@@ -26,6 +26,7 @@ import { DashboardComponent } from './core/models/dashboard/dashboard.component'
 import { LocationComponent } from './core/models/location/location.component';
 import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.component';
 import { VerifyEmailComponent } from './core/models/verify-email/verify-email.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: 'signup', component: SignupComponent },
@@ -54,6 +55,7 @@ const routes: Routes = [
   { path: 'locations', component: LocationComponent },
   { path: 'contactinfo', component: ContactinfoComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
 
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },

@@ -33,6 +33,7 @@ import { MedicalRecordNewComponent } from './core/models/medical-records/medical
 import { NotificationListComponent } from './core/models/notification-list/notification-list.component';
 import { DashboardComponent } from './core/models/dashboard/dashboard.component';
 import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.comp
     LoginComponent,
     SignupComponent,
     ForgotPassComponent,
+    ResetPasswordComponent,
     PatientProfileComponent,
     DoctorListComponent,
     UserListComponent,
