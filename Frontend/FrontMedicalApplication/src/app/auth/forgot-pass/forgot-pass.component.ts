@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router'; // Import Router
 import { AuthService } from '../../core/services/auth-service.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -10,13 +10,10 @@ import { Router } from '@angular/router';
 })
 export class ForgotPassComponent implements OnInit {
   forgotPasswordForm: FormGroup;
+  requestCodeSent: boolean = false;
   resetError: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { // Add Router to constructor
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -30,7 +27,7 @@ export class ForgotPassComponent implements OnInit {
       this.authService.requestResetCode(emailControl.value).subscribe({
         next: data => {
           console.log('Reset code sent!');
-          this.router.navigate(['/reset-password'], { queryParams: { email: emailControl.value } });
+          this.router.navigate(['/reset-password']); // Redirect without query params
         },
         error: error => {
           console.error('Error sending reset code', error);

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth-service.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,14 +11,10 @@ export class ResetPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;
   resetSuccess: boolean = false;
   resetError: string = '';
-  email: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private route: ActivatedRoute
-  ) {
+  constructor(private fb: FormBuilder, private authService: AuthService) { // Add ActivatedRoute to constructor
     this.resetPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
@@ -28,14 +23,12 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.email = this.route.snapshot.queryParams['email'];
-  }
+  ngOnInit(): void { }
 
   onReset(): void {
     if (this.resetPasswordForm.valid) {
-      const { code, newPassword } = this.resetPasswordForm.value;
-      this.authService.resetPassword(this.email, code, newPassword).subscribe({
+      const { email, code, newPassword } = this.resetPasswordForm.value;
+      this.authService.resetPassword(email, code, newPassword).subscribe({
         next: data => {
           console.log('Password reset successful');
           this.resetSuccess = true;
@@ -44,7 +37,6 @@ export class ResetPasswordComponent implements OnInit {
         error: error => {
           console.error('Error resetting password', error);
           this.resetError = 'Invalid code or failed to reset password';
-          this.resetSuccess = false;
         }
       });
     }
@@ -55,11 +47,20 @@ export class ResetPasswordComponent implements OnInit {
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];
 
+      if (!control || !matchingControl) {
+        return null;
+      }
+
+      if (matchingControl.errors && !matchingControl.errors['mustMatch']) {
+        return null;
+      }
+
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({ mustMatch: true });
       } else {
         matchingControl.setErrors(null);
       }
+      return null;
     };
   }
 }
