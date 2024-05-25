@@ -183,6 +183,9 @@
               <button class="btn btn-primary profile-button" type="submit" [disabled]="!patientForm.valid" (ngSubmit)="onSaveProfile()">Save Profile</button>
             </div>
           </form>
+          <div class="btn-container">
+            <button class="btn btn-primary profile-button" type="button" routerLink="/forgot-password" style="background-color: #FFDE00; border-color: #FFDE00;">Change password</button>
+          </div>
         </div>
         <div class="review-section">
           <h2 *ngIf="isDoctor">Profile reviews {{ currentUser?.name }} {{ currentUser?.surname }}</h2>

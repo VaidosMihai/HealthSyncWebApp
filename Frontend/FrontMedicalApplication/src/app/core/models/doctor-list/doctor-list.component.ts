@@ -153,7 +153,7 @@ export class DoctorListComponent implements OnInit {
   submitReview(): void {
     const currentUserJson = localStorage.getItem('currentUser');
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
-
+  
     if (currentUser) {
       this.newReview.patientId = currentUser.userId;
       this.newReview.createdAt = new Date();
@@ -176,10 +176,14 @@ export class DoctorListComponent implements OnInit {
         },
         (error) => {
           console.error('Failed to submit review', error);
+          if (error.status === 400) {
+            alert('Validation error. Please check your input.');
+          }
         }
       );
     }
   }
+  
 
   markHelpful(review: ReviewDto): void {
     const currentUserJson = localStorage.getItem('currentUser');
