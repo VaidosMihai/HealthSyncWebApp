@@ -11,6 +11,7 @@ export class UserDto {
   address?: string;
   phoneNumber?: string;
   token?: string;
+  description?: string;
 
   constructor(
     username: string = '',

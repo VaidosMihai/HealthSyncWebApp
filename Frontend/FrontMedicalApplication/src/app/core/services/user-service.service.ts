@@ -26,15 +26,6 @@ export class UserService {
   createPatient(patient: UserDto): Observable<UserDto> {
     return this.http.post<UserDto>(this.apiUrl, patient);
   }
-
-  updatePatient(userId: number, patient: UserDto): Observable<UserDto> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.getStoredToken()}`
-    });
-    
-    return this.http.put<UserDto>(`${this.apiUrl}/${userId}`, patient, { headers });
-  }
   
   private getStoredToken(): string {
     return localStorage.getItem('token') || ''; // Or however you handle token retrieval
@@ -83,5 +74,23 @@ export class UserService {
 
   getNotifications(doctorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/notifications/${doctorId}`);
+  }
+
+  updatePatient(userId: number, patient: UserDto): Observable<UserDto> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getStoredToken()}`
+    });
+
+    return this.http.put<UserDto>(`${this.apiUrl}/${userId}`, patient, { headers });
+  }
+
+  updateDescription(userId: number, description: string): Observable<UserDto> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getStoredToken()}`
+    });
+
+    return this.http.put<UserDto>(`${this.apiUrl}/${userId}/description`, { description }, { headers });
   }
 }

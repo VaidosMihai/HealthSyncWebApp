@@ -15,6 +15,8 @@ import { switchMap } from 'rxjs/operators';
 })
 export class DoctorListComponent implements OnInit {
   doctors: UserDto[] = [];
+  editingDescriptionId: number | null = null;
+  newDescription: string = '';
   reviews: ReviewDto[] = [];
   newReview: ReviewDto = {
     reviewId: 0,
@@ -184,7 +186,6 @@ export class DoctorListComponent implements OnInit {
     }
   }
   
-
   markHelpful(review: ReviewDto): void {
     const currentUserJson = localStorage.getItem('currentUser');
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
@@ -264,6 +265,34 @@ export class DoctorListComponent implements OnInit {
       console.error('Event target is not an HTMLSelectElement:', event.target);
     }
   }
-  
-  
+
+  editDescription(doctor: UserDto): void {
+    if (doctor.userId !== undefined) {
+      this.editingDescriptionId = doctor.userId;
+      this.newDescription = doctor.description || '';
+    }
+  }
+
+  saveDescription(doctor: UserDto): void {
+    if (doctor.userId !== undefined) {
+      this.userService.updateDescription(doctor.userId, this.newDescription).subscribe({
+        next: (updatedDoctor) => {
+          console.log('Description updated successfully', updatedDoctor);
+          this.editingDescriptionId = null;
+          this.newDescription = '';
+          this.loadDoctors();
+          alert("Description was saved!");
+        },
+        error: (error) => {
+          console.error('Failed to update description', error);
+          alert("Description was not saved!");
+        }
+      });
+    }
+  }
+
+  cancelEdit(): void {
+    this.editingDescriptionId = null;
+    this.newDescription = '';
+  }
 }
