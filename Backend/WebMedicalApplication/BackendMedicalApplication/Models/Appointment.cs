@@ -17,5 +17,6 @@ namespace WebMedicalApplication.Models
         public string Reason { get; set; }
         public int? PatientRecordId { get; set; }
         public PatientRecord? PatientRecord { get; set; }
+        public string Status { get; set; }
     }
 }

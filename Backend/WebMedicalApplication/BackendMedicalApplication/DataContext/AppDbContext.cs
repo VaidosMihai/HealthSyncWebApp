@@ -35,10 +35,9 @@ namespace BackendMedicalApplication
 
             modelBuilder.Entity<Billing>(entity =>
             {
-                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)"); // or whatever precision and scale is appropriate
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             });
 
-            // User and Appointments (One-to-Many)
             modelBuilder.Entity<Appointment>()
                 .HasOne<User>(a => a.Doctor)
                 .WithMany(u => u.DoctorAppointments)
@@ -51,25 +50,21 @@ namespace BackendMedicalApplication
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // User and MedicalRecords (One-to-Many)
             modelBuilder.Entity<PatientRecord>()
                 .HasOne<User>(mr => mr.Patient)
                 .WithMany(p => p.MedicalRecords)
                 .HasForeignKey(mr => mr.PatientId);
 
-            // User and Billing (One-to-Many)
             modelBuilder.Entity<Billing>()
                 .HasOne<User>(b => b.Patient)
                 .WithMany(p => p.Billings)
                 .HasForeignKey(b => b.PatientId);
 
-            // User and Schedules (One-to-Many)
             modelBuilder.Entity<Schedule>()
                 .HasOne<User>(s => s.Doctor)
                 .WithMany(d => d.Schedules)
                 .HasForeignKey(s => s.DoctorId);
 
-            // Unique indices and additional configurations for User
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Username).IsRequired().HasMaxLength(256);
@@ -80,17 +75,15 @@ namespace BackendMedicalApplication
                 entity.Property(e => e.VerificationToken).HasMaxLength(100).IsUnicode(false);
                 entity.Property(e => e.VerificationTokenExpires).IsUnicode(false);
                 entity.Property(e => e.IsVerified).HasDefaultValue(false);
-                entity.Property(e => e.Description).HasMaxLength(1000); // New field configuration
+                entity.Property(e => e.Description).HasMaxLength(1000);
 
-                // Unique constraints
                 entity.HasIndex(u => u.EmailAddress).IsUnique();
-                entity.HasIndex(u => u.ResetPasswordCode).IsUnique(false);  // Non-unique index for potentially faster lookups
+                entity.HasIndex(u => u.ResetPasswordCode).IsUnique(false);
 
-                // Foreign key for Role
                 entity.HasOne(u => u.Role)
                       .WithMany()
                       .HasForeignKey(u => u.RoleId)
-                      .OnDelete(DeleteBehavior.Restrict); // Consider appropriate delete behavior
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<ReviewVote>().HasIndex(rv => new { rv.ReviewId, rv.UserId }).IsUnique();

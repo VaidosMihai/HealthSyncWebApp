@@ -15,5 +15,6 @@ namespace BackendMedicalApplication.Interfaces
         Task<List<AppointmentDto>> GetByDoctorId(int doctorId);
         Task<List<AppointmentDto>> GetAppointmentsByPatientId(int patientId);
         Task<AppointmentDto> AddPatientRecordToAppointment(int appointmentId, PatientRecordDto patientRecordDto);
+        Task<AppointmentDto> UpdateAppointmentStatus(int appointmentId, string status);
     }
 }

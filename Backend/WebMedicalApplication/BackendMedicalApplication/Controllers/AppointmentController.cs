@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BackendMedicalApplication.DTo;
 using BackendMedicalApplication.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using WebMedicalApplication.Models;
 
 namespace BackendMedicalApplication.Controllers
 {
@@ -9,10 +14,12 @@ namespace BackendMedicalApplication.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
+        private readonly AppDbContext _context;
 
-        public AppointmentController(IAppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService, AppDbContext context)
         {
             _appointmentService = appointmentService;
+            _context = context; // Initialize _context
         }
 
         [HttpGet]
@@ -37,7 +44,6 @@ namespace BackendMedicalApplication.Controllers
         public IActionResult CreateAppointment([FromBody] AppointmentDto appointmentDto)
         {
             var createdAppointment = _appointmentService.CreateAppointment(appointmentDto);
-            // Assuming CreateAppointment returns the created AppointmentDto including its ID
             return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = createdAppointment.Result.PatientId }, createdAppointment);
         }
 
@@ -60,7 +66,7 @@ namespace BackendMedicalApplication.Controllers
             {
                 return NotFound($"Appointment with ID {appointmentId} not found.");
             }
-            return NoContent(); // Standard response for a successful delete operation
+            return NoContent();
         }
 
         [HttpGet("by-doctor/{doctorId}")]
@@ -85,7 +91,6 @@ namespace BackendMedicalApplication.Controllers
             return Ok(appointments);
         }
 
-
         [HttpPost("{appointmentId}/addPatientRecord")]
         public IActionResult AddPatientRecordToAppointment(int appointmentId, [FromBody] PatientRecordDto patientRecordDto)
         {
@@ -100,5 +105,58 @@ namespace BackendMedicalApplication.Controllers
             }
         }
 
+        [HttpPut("{appointmentId}/accept")]
+        public async Task<IActionResult> AcceptAppointment(int appointmentId)
+        {
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
+            if (appointment == null)
+            {
+                return NotFound($"Appointment with ID {appointmentId} not found.");
+            }
+
+            appointment.Status = "Accepted";
+            await _context.SaveChangesAsync();
+            return Ok(appointment);
+        }
+
+        [HttpPut("{appointmentId}/decline")]
+        public async Task<IActionResult> DeclineAppointment(int appointmentId)
+        {
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
+            if (appointment == null)
+            {
+                return NotFound($"Appointment with ID {appointmentId} not found.");
+            }
+
+            appointment.Status = "Declined";
+            await _context.SaveChangesAsync();
+            return Ok(appointment);
+        }
+
+        [HttpPut("{appointmentId}/reschedule")]
+        public async Task<IActionResult> RescheduleAppointment(int appointmentId, [FromBody] DateTime newDateTime)
+        {
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
+            if (appointment == null)
+            {
+                return NotFound($"Appointment with ID {appointmentId} not found.");
+            }
+
+            appointment.Status = "Rescheduled";
+            appointment.AppointmentDate = newDateTime;
+            await _context.SaveChangesAsync();
+            return Ok(appointment);
+        }
+
+        [HttpPut("{appointmentId}/status")]
+        public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, [FromBody] string status)
+        {
+            var updatedAppointment = await _appointmentService.UpdateAppointmentStatus(appointmentId, status);
+            if (updatedAppointment == null)
+            {
+                return NotFound($"Appointment with ID {appointmentId} not found.");
+            }
+            return Ok(updatedAppointment);
+        }
     }
 }

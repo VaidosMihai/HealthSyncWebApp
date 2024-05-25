@@ -28,6 +28,7 @@ namespace BackendMedicalApplication.Services
                 DoctorId = a.DoctorId,
                 DateTime = a.AppointmentDate,
                 Reason = a.Reason,
+                Status = a.Status,
                 PatientRecordId = a.PatientRecordId
             }).ToList();
         }
@@ -44,6 +45,7 @@ namespace BackendMedicalApplication.Services
                 DoctorId = appointment.DoctorId,
                 DateTime = appointment.AppointmentDate,
                 Reason = appointment.Reason,
+                Status = appointment.Status,
                 PatientRecordId = appointment.PatientRecordId
             };
         }
@@ -56,6 +58,7 @@ namespace BackendMedicalApplication.Services
                 DoctorId = appointmentDto.DoctorId,
                 AppointmentDate = appointmentDto.DateTime,
                 Reason = appointmentDto.Reason,
+                Status = "Pending" // Set the status to "Pending"
             };
 
             _context.Appointments.Add(newAppointment);
@@ -65,8 +68,10 @@ namespace BackendMedicalApplication.Services
             await _notificationService.CreateNotification(newAppointment.DoctorId, notificationMessage);
 
             appointmentDto.AppointmentId = newAppointment.AppointmentId;
+            appointmentDto.Status = "Pending"; // Also update the DTO to reflect the status
             return appointmentDto;
         }
+
 
         public async Task<AppointmentDto> UpdateAppointment(int appointmentId, AppointmentDto appointmentDto)
         {
@@ -86,6 +91,7 @@ namespace BackendMedicalApplication.Services
             appointment.DoctorId = appointmentDto.DoctorId;
             appointment.AppointmentDate = appointmentDto.DateTime;
             appointment.Reason = appointmentDto.Reason;
+            appointment.Status = appointmentDto.Status;
 
             await _context.SaveChangesAsync();
             return appointmentDto;
@@ -112,13 +118,13 @@ namespace BackendMedicalApplication.Services
                     PatientId = a.PatientId,
                     DateTime = a.AppointmentDate,
                     Reason = a.Reason,
+                    Status = a.Status,
                     PatientRecordId = a.PatientRecordId
                 })
                 .ToListAsync();
 
             return appointments;
         }
-
 
         public async Task<List<AppointmentDto>> GetAppointmentsByPatientId(int patientId)
         {
@@ -131,6 +137,7 @@ namespace BackendMedicalApplication.Services
                     PatientId = a.PatientId,
                     DateTime = a.AppointmentDate,
                     Reason = a.Reason,
+                    Status = a.Status,
                     PatientRecordId = a.PatientRecordId,
                 })
                 .ToListAsync();
@@ -171,7 +178,28 @@ namespace BackendMedicalApplication.Services
                 PatientId = appointment.PatientId,
                 DateTime = appointment.AppointmentDate,
                 Reason = appointment.Reason,
+                Status = appointment.Status,
                 PatientRecordId = patientRecord.PatientRecordId
+            };
+        }
+
+        public async Task<AppointmentDto> UpdateAppointmentStatus(int appointmentId, string status)
+        {
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
+            if (appointment == null) return null;
+
+            appointment.Status = status;
+            await _context.SaveChangesAsync();
+
+            return new AppointmentDto
+            {
+                AppointmentId = appointment.AppointmentId,
+                PatientId = appointment.PatientId,
+                DoctorId = appointment.DoctorId,
+                DateTime = appointment.AppointmentDate,
+                Reason = appointment.Reason,
+                Status = appointment.Status,
+                PatientRecordId = appointment.PatientRecordId
             };
         }
     }
