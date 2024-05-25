@@ -132,4 +132,18 @@ public class UserController : ControllerBase
         }
         return Ok(doctors);
     }
+    [HttpPut("{userId}/description")]
+    public async Task<IActionResult> UpdateDescription(int userId, [FromBody] string description)
+    {
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return NotFound($"User with ID {userId} not found.");
+        }
+
+        user.Description = description;
+        var updatedUser = _userService.UpdateUser(userId, user);
+        return Ok(updatedUser);
+    }
+
 }
