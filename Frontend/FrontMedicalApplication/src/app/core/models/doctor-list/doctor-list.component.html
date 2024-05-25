@@ -1,6 +1,6 @@
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <div class="container">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="container">
   <h2>Doctors</h2>
   <div class="row">
     <div class="col-md-4 mb-3" *ngFor="let doctor of doctors">
@@ -78,13 +78,13 @@
                   Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
                 </span>
                 <div class="helpful-thumbs">
-                  <button class="helpful-thumb text-body-2" (click)="markHelpful(review)">
+                  <button class="helpful-thumb text-body-2" (click)="markHelpful(review)" [disabled]="isHelpfulButtonDisabled(review)">
                     <span class="fit-icon thumbs-icon">
                       <i class="fa fa-thumbs-up"></i>
                     </span>
                     <span class="thumb-title">({{ review.helpfulCount }})</span>
                   </button>
-                  <button class="helpful-thumb text-body-2 ml-3" (click)="markNotHelpful(review)">
+                  <button class="helpful-thumb text-body-2 ml-3" (click)="markNotHelpful(review)" [disabled]="isNotHelpfulButtonDisabled(review)">
                     <span class="fit-icon thumbs-icon">
                       <i class="fa fa-thumbs-down"></i>
                     </span>
@@ -138,11 +138,6 @@
     </div>
   </div>
 </div>
-
-
-
-
-
 
 <style>
   .modal {

@@ -60,10 +60,6 @@ export class PatientProfileComponent implements OnInit {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => this.currentUser = user);
     this.loadUserProfile();
-    
-    // this.isDoctor = this.currentUser?.roleId === 1;
-    // this.isAdmin = this.currentUser?.roleId === 3;
-    // this.isPatient = this.currentUser?.roleId === 2;
   }
 
   loadUserProfile() {
@@ -93,29 +89,6 @@ export class PatientProfileComponent implements OnInit {
       }
     }
   }
-
-  // loadReviewsForPatient(patientId: number): void {   ////GOOOD VERSION
-  //   this.reviewService.getReviewsByPatientId(patientId).pipe(
-  //     switchMap(reviews => {
-  //       this.reviews = reviews;
-  //       const userObservables = reviews.map(review => 
-  //         this.userService.getPatientById(review.patientId)
-  //       );
-  //       return forkJoin(userObservables);
-  //     })
-  //   ).subscribe({
-  //     next: (users) => {
-  //       this.reviews.forEach((review, index) => {
-  //         const user = users[index];
-  //         review.patientName = `${user.username} (${user.name} ${user.surname})`;
-  //       });
-  //       this.updateStarRatings();
-  //     },
-  //     error: (error) => {
-  //       console.error('Failed to load reviews', error);
-  //     }
-  //   });
-  // }
 
   loadReviewsForPatient(patientId: number): void {
     this.reviewService.getReviewsByPatientId(patientId).pipe(
@@ -210,9 +183,13 @@ export class PatientProfileComponent implements OnInit {
     const currentUserJson = localStorage.getItem('currentUser');
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
     if (currentUser) {
-      this.reviewService.updateReviewHelpfulCount(review).subscribe({
+      this.reviewService.updateReviewHelpfulCount(review.reviewId, currentUser.userId).subscribe({
         next: () => {
-          review.helpfulCount = (review.helpfulCount || 0) + 1;
+          if (review.voteType === 'not-helpful') {
+            review.notHelpfulCount = Math.max(0, review.notHelpfulCount - 1);
+          }
+          review.helpfulCount = review.voteType === 'helpful' ? Math.max(0, review.helpfulCount - 1) : review.helpfulCount + 1;
+          review.voteType = review.voteType === 'helpful' ? '' : 'helpful';
           console.log('Marked as helpful');
         },
         error: (error) => console.error('Failed to update helpful count', error)
@@ -224,9 +201,13 @@ export class PatientProfileComponent implements OnInit {
     const currentUserJson = localStorage.getItem('currentUser');
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
     if (currentUser) {
-      this.reviewService.updateReviewNotHelpfulCount(review).subscribe({
+      this.reviewService.updateReviewNotHelpfulCount(review.reviewId, currentUser.userId).subscribe({
         next: () => {
-          review.notHelpfulCount = (review.notHelpfulCount || 0) + 1;
+          if (review.voteType === 'helpful') {
+            review.helpfulCount = Math.max(0, review.helpfulCount - 1);
+          }
+          review.notHelpfulCount = review.voteType === 'not-helpful' ? Math.max(0, review.notHelpfulCount - 1) : review.notHelpfulCount + 1;
+          review.voteType = review.voteType === 'not-helpful' ? '' : 'not-helpful';
           console.log('Marked as not helpful');
         },
         error: (error) => console.error('Failed to update not helpful count', error)

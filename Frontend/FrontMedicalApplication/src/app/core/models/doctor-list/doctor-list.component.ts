@@ -27,6 +27,7 @@ export class DoctorListComponent implements OnInit {
     notHelpfulCount: 0,
     patientName: '',
     doctorName: '',
+    voteType: ''
   };
   selectedDoctor: UserDto | null = null;
   isReviewModalOpen = false;
@@ -39,8 +40,8 @@ export class DoctorListComponent implements OnInit {
     { category: 'Service as described', rating: 4.9 }
   ];
 
-  responseComment: string = ''; // Add this property
-  averageRating: number = 0; // Add averageRating property
+  responseComment: string = '';
+  averageRating: number = 0;
 
   constructor(
     private userService: UserService,
@@ -146,8 +147,9 @@ export class DoctorListComponent implements OnInit {
       notHelpfulCount: 0,
       patientName: '',
       doctorName: '',
+      voteType: ''
     };
-    this.responseComment = ''; // Reset response comment
+    this.responseComment = '';
   }
 
   submitReview(): void {
@@ -158,14 +160,12 @@ export class DoctorListComponent implements OnInit {
       this.newReview.patientId = currentUser.userId;
       this.newReview.createdAt = new Date();
 
-      // Create a copy of newReview to avoid directly modifying the component property
       const reviewToSubmit: ReviewDto = { ...this.newReview };
 
-      // Ensure responseComment is not included in the review submission if empty
       if (this.responseComment && this.responseComment.trim() !== '') {
         reviewToSubmit.responseComment = this.responseComment;
       } else {
-        delete reviewToSubmit.responseComment; // Ensure payload does not include undefined properties
+        delete reviewToSubmit.responseComment;
       }
 
       this.reviewService.addReview(reviewToSubmit).subscribe(
@@ -189,9 +189,13 @@ export class DoctorListComponent implements OnInit {
     const currentUserJson = localStorage.getItem('currentUser');
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
     if (currentUser) {
-      this.reviewService.updateReviewHelpfulCount(review).subscribe({
+      this.reviewService.updateReviewHelpfulCount(review.reviewId, currentUser.userId).subscribe({
         next: () => {
-          review.helpfulCount = (review.helpfulCount || 0) + 1;
+          if (review.voteType === 'not-helpful') {
+            review.notHelpfulCount = Math.max(0, review.notHelpfulCount - 1);
+          }
+          review.helpfulCount = review.voteType === 'helpful' ? Math.max(0, review.helpfulCount - 1) : review.helpfulCount + 1;
+          review.voteType = review.voteType === 'helpful' ? '' : 'helpful';
           console.log('Marked as helpful');
         },
         error: (error) => console.error('Failed to update helpful count', error)
@@ -203,9 +207,13 @@ export class DoctorListComponent implements OnInit {
     const currentUserJson = localStorage.getItem('currentUser');
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
     if (currentUser) {
-      this.reviewService.updateReviewNotHelpfulCount(review).subscribe({
+      this.reviewService.updateReviewNotHelpfulCount(review.reviewId, currentUser.userId).subscribe({
         next: () => {
-          review.notHelpfulCount = (review.notHelpfulCount || 0) + 1;
+          if (review.voteType === 'helpful') {
+            review.helpfulCount = Math.max(0, review.helpfulCount - 1);
+          }
+          review.notHelpfulCount = review.voteType === 'not-helpful' ? Math.max(0, review.notHelpfulCount - 1) : review.notHelpfulCount + 1;
+          review.voteType = review.voteType === 'not-helpful' ? '' : 'not-helpful';
           console.log('Marked as not helpful');
         },
         error: (error) => console.error('Failed to update not helpful count', error)
@@ -218,7 +226,7 @@ export class DoctorListComponent implements OnInit {
       this.reviewService.deleteReview(reviewId).subscribe({
         next: () => {
           console.log('Review deleted successfully');
-          this.loadReviews(this.selectedDoctor?.userId ?? 0); // Reload reviews for the current doctor
+          this.loadReviews(this.selectedDoctor?.userId ?? 0);
         },
         error: (error) => {
           console.error('Failed to delete review', error);
@@ -227,5 +235,17 @@ export class DoctorListComponent implements OnInit {
     } else {
       console.error('Invalid reviewId');
     }
+  }
+
+  isHelpfulButtonDisabled(review: ReviewDto): boolean {
+    const currentUserJson = localStorage.getItem('currentUser');
+    const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
+    return currentUser ? review.voteType === 'helpful' : false;
+  }
+
+  isNotHelpfulButtonDisabled(review: ReviewDto): boolean {
+    const currentUserJson = localStorage.getItem('currentUser');
+    const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
+    return currentUser ? review.voteType === 'not-helpful' : false;
   }
 }

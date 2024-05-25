@@ -28,12 +28,12 @@ export class ReviewService {
     return this.http.post<ReviewDto>(`${this.reviewEndpoint}`, review);
   }
 
-  updateReviewHelpfulCount(review: ReviewDto): Observable<void> {
-    return this.http.put<void>(`${this.reviewEndpoint}/${review.reviewId}/helpful`, {});
+  updateReviewHelpfulCount(reviewId: number, userId: number): Observable<void> {
+    return this.http.put<void>(`${this.reviewEndpoint}/${reviewId}/helpful?userId=${userId}`, {});
   }
 
-  updateReviewNotHelpfulCount(review: ReviewDto): Observable<void> {
-    return this.http.put<void>(`${this.reviewEndpoint}/${review.reviewId}/not-helpful`, {});
+  updateReviewNotHelpfulCount(reviewId: number, userId: number): Observable<void> {
+    return this.http.put<void>(`${this.reviewEndpoint}/${reviewId}/not-helpful?userId=${userId}`, {});
   }
 
   addResponseComment(reviewId: number, responseComment: string): Observable<ReviewDto> {
