@@ -13,6 +13,7 @@ import { UserService } from '../../../services/user-service.service';
 })
 export class AppointmentListComponent implements OnInit {
   appointments: AppointmentDto[] = [];
+  sortedAppointments: AppointmentDto[] = [];
   doctorName: string = "";
   isPatient: boolean = false;
   isDoctor: boolean = false;
@@ -58,6 +59,7 @@ export class AppointmentListComponent implements OnInit {
           this.appointments = response.body;
           this.populatePatientNames();
           this.categorizeAppointments(this.appointments);
+          this.sortedAppointments = [...this.upcomingAppointments]; // Initialize sortedAppointments
         }
       },
       error: (error) => {
@@ -84,6 +86,7 @@ export class AppointmentListComponent implements OnInit {
               this.appointments = filteredAppointments;
               this.populatePatientNames();
               this.categorizeAppointments(this.appointments);
+              this.sortedAppointments = [...this.upcomingAppointments]; // Initialize sortedAppointments
             } else {
               this.appointments = []; // Set appointments to empty array if no matches
             }
@@ -149,30 +152,63 @@ export class AppointmentListComponent implements OnInit {
   }
 
   acceptAppointment(appointmentId: number) {
-    this.updateAppointmentStatus(appointmentId, 'Accepted');
-  }
-
-  declineAppointment(appointmentId: number) {
-    this.updateAppointmentStatus(appointmentId, 'Declined');
-  }
-
-  openRescheduleModal(appointmentId: number) {
-    // Logic to open reschedule modal
-  }
-
-  updateAppointmentStatus(appointmentId: number, status: string) {
     const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
     if (appointment) {
-      appointment.status = status;
-      this.appointmentService.updateAppointment(appointmentId, appointment).subscribe({
+      appointment.status = 'Accepted';
+      this.appointmentService.acceptAppointment(appointmentId).subscribe({
         next: (updatedAppointment) => {
-          console.log(`Appointment status updated to ${status}`, updatedAppointment);
+          console.log('Appointment status updated to Accepted', updatedAppointment);
           this.ngOnInit();
         },
         error: (error) => {
           console.error('Failed to update appointment status', error);
         }
       });
+    }
+  }
+
+  declineAppointment(appointmentId: number) {
+    const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
+    if (appointment) {
+      appointment.status = 'Declined';
+      this.appointmentService.declineAppointment(appointmentId).subscribe({
+        next: (updatedAppointment) => {
+          console.log('Appointment status updated to Declined', updatedAppointment);
+          this.ngOnInit();
+        },
+        error: (error) => {
+          console.error('Failed to update appointment status', error);
+        }
+      });
+    }
+  }
+
+  openRescheduleModal(appointmentId: number) {
+    // Logic to open reschedule modal
+  }
+
+  onSortChange(event: Event): void {
+    const sortBy = (event.target as HTMLSelectElement).value;
+    this.sortAppointments(sortBy);
+  }
+
+  sortAppointments(sortBy: string): void {
+    switch (sortBy) {
+      case 'date':
+        this.sortedAppointments = this.upcomingAppointments.sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+        break;
+      case 'accepted':
+        this.sortedAppointments = this.upcomingAppointments.filter(appointment => appointment.status === 'Accepted');
+        break;
+      case 'declined':
+        this.sortedAppointments = this.upcomingAppointments.filter(appointment => appointment.status === 'Declined');
+        break;
+      case 'pending':
+        this.sortedAppointments = this.upcomingAppointments.filter(appointment => appointment.status === 'Pending');
+        break;
+      default:
+        this.sortedAppointments = [...this.upcomingAppointments];
+        break;
     }
   }
 }

@@ -26,7 +26,8 @@ export class AppointmentEditComponent implements OnInit {
       doctorId: ['', [Validators.required, Validators.min(1)]],
       patientId: ['', [Validators.required, Validators.min(1)]],
       dateTime: ['', Validators.required],
-      reason: ['']
+      reason: [''],
+      status: ['']
     });
   }
 
@@ -45,7 +46,11 @@ export class AppointmentEditComponent implements OnInit {
     if (this.appointmentForm.valid) {
       if (this.isEditMode && this.appointmentId) {
         // Update the existing appointment
-        this.appointmentService.updateAppointment(this.appointmentId, this.appointmentForm.value).subscribe({
+        const updatedAppointment: AppointmentDto = {
+          ...this.appointmentForm.value,
+          status: 'Pending' // Set status to Pending
+        };
+        this.appointmentService.updateAppointment(this.appointmentId, updatedAppointment).subscribe({
           next: () => this.router.navigate(['/appointment']),
           error: err => console.error('Error updating appointment:', err)
         });
@@ -58,4 +63,6 @@ export class AppointmentEditComponent implements OnInit {
       }
     }
   }
+  
+  
 }

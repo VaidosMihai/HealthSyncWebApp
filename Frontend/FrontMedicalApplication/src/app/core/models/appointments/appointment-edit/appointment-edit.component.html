@@ -1,15 +1,6 @@
-<!-- appointment-edit.component.html -->
 <div class="container mt-4">
-    <h2>{{ isEditMode ? 'Edit' : 'Add' }} Appointment</h2>
+    <h2>Reschedule appointment</h2>
     <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-      <!-- <div class="form-group">
-        <label for="doctorId">Doctor ID</label>
-        <input formControlName="doctorId" type="number" id="doctorId" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="patientId">Patient ID</label>
-        <input formControlName="patientId" type="number" id="patientId" class="form-control" required>
-      </div> -->
       <div class="form-group">
         <label for="dateTime">Date and Time</label>
         <input formControlName="dateTime" type="datetime-local" id="dateTime" class="form-control" required>

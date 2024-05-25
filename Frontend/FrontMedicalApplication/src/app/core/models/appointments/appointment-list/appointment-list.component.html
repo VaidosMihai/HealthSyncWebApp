@@ -5,11 +5,21 @@
   </div>
   <div class="container mt-4">
     <h2>Upcoming Appointments</h2>
-    <div class="card mb-3" *ngFor="let appointment of upcomingAppointments">
+    <!-- Combobox for sorting options -->
+    <div class="d-flex justify-content-start align-items-center mb-2">
+      <label for="sortOptions" class="mr-2">Sort By:</label>
+      <select id="sortOptions" class="form-control w-25" (change)="onSortChange($event)">
+        <option value="date">Date & Time</option>
+        <option value="accepted">Accepted</option>
+        <option value="declined">Declined</option>
+        <option value="pending">Pending</option>
+      </select>
+    </div>
+    <div class="card mb-3" *ngFor="let appointment of sortedAppointments">
       <div class="card-body" [ngClass]="{
         'text-success': appointment.status === 'Accepted',
         'text-danger': appointment.status === 'Declined',
-        'text-warning': appointment.status === 'Rescheduled'
+        'text-pending': appointment.status === 'Pending'
       }">
         <div class="row">
           <div class="col-md-3">
@@ -21,42 +31,39 @@
             <p class="card-text"><strong>Reason:</strong> {{ appointment.reason }}</p>
           </div>
           <div class="col-md-6 d-flex justify-content-end align-items-center">
-            <button class="btn btn-primary btn-sm mr-2"
-              *ngIf="appointment.appointmentId"
-              [routerLink]="['/appointment/edit', appointment.appointmentId]">
-              Amend
-            </button>
-            <button class="btn btn-danger btn-sm mr-2"
-              *ngIf="appointment.appointmentId"
-              (click)="deleteAppointment(appointment.appointmentId)">
-              Cancel
-            </button>
-            <button class="btn btn-primary btn-sm mr-2"
-              *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && appointment.appointmentId"
-              [routerLink]="['/medical-record/new', appointment.appointmentId]">
-              Make Diagnosis
-            </button>
-            <button class="btn btn-primary btn-sm"
-              *ngIf="isPatient || isDoctor || isAdmin"
-              [routerLink]="['/medical-record/view', appointment.appointmentId]">
-              View Diagnostics
-            </button>
-            <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
+            <ng-container>
+              <button class="btn btn-primary btn-sm mr-2 btn-custom"
+                *ngIf="appointment.appointmentId"
+                [routerLink]="['/appointment/edit', appointment.appointmentId]">
+                Reschedule
+              </button>
+              <button class="btn btn-danger btn-sm mr-2 btn-custom"
+                *ngIf="appointment.appointmentId"
+                (click)="deleteAppointment(appointment.appointmentId)">
+                Cancel
+              </button>
+              <button class="btn btn-primary btn-sm mr-2 btn-custom"
+                *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && (appointment.appointmentId && appointment.status === 'Accepted')"
+                [routerLink]="['/medical-record/new', appointment.appointmentId]">
+                Make Diagnosis
+              </button>
+              <button class="btn btn-primary btn-sm btn-custom"
+                *ngIf="isPatient || isDoctor || isAdmin && appointment.status === 'Accepted'"
+                [routerLink]="['/medical-record/view', appointment.appointmentId]">
+                View Diagnostics
+              </button>
+              <span *ngIf="!appointment.patientRecordId && appointment.status === 'Accepted'">No diagnostics available yet.</span>
 
-            <!-- Accept, Decline, and Reschedule Buttons for Doctors -->
-            <button *ngIf="(isDoctor || isAdmin) && appointment.status === 'Pending' && appointment.appointmentId !== undefined" class="btn btn-success btn-sm mr-2"
-            (click)="acceptAppointment(appointment.appointmentId)">
-            Accept
-            </button>
-            <button *ngIf="(isDoctor || isAdmin) && appointment.status === 'Pending' && appointment.appointmentId !== undefined" class="btn btn-danger btn-sm mr-2"
-            (click)="declineAppointment(appointment.appointmentId)">
-            Decline
-            </button>
-            <button *ngIf="(isDoctor || isAdmin) && appointment.status === 'Pending' && appointment.appointmentId !== undefined" class="btn btn-warning btn-sm"
-            (click)="openRescheduleModal(appointment.appointmentId)">
-            Reschedule
-            </button>
-
+              <!-- Accept, Decline, and Reschedule Buttons for Doctors -->
+              <button *ngIf="(isDoctor || isAdmin) && (appointment.status === 'Pending' && appointment.appointmentId !== undefined)" class="btn btn-success btn-sm mr-2 btn-custom"
+                (click)="acceptAppointment(appointment.appointmentId)">
+                Accept
+              </button>
+              <button *ngIf="(isDoctor || isAdmin) && (appointment.status === 'Pending' && appointment.appointmentId !== undefined)" class="btn btn-danger btn-sm mr-2 btn-custom"
+                (click)="declineAppointment(appointment.appointmentId)">
+                Decline
+              </button>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -67,7 +74,7 @@
       <div class="card-body" [ngClass]="{
         'text-success': appointment.status === 'Accepted',
         'text-danger': appointment.status === 'Declined',
-        'text-warning': appointment.status === 'Rescheduled'
+        'text-pending': appointment.status === 'Pending'
       }">
         <div class="row">
           <div class="col-md-3">
@@ -80,17 +87,17 @@
           </div>
           <div class="col-md-6 d-flex justify-content-end align-items-center">
             <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
-            <button class="btn btn-primary btn-sm mr-2"
-              *ngIf="isPatient || isDoctor || isAdmin"
+            <button class="btn btn-primary btn-sm mr-2 btn-custom"
+              *ngIf="isPatient || isDoctor || isAdmin && (appointment.status === 'Accepted' || appointment.status === 'Pending')"
               [routerLink]="['/medical-record/view', appointment.appointmentId]">
               View Diagnostics
             </button>
-            <button class="btn btn-primary btn-sm ml-2"
-              *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && appointment.appointmentId"
+            <button class="btn btn-primary btn-sm ml-2 btn-custom"
+              *ngIf="(isDoctor || isAdmin) && !appointment.patientRecordId && appointment.appointmentId && (appointment.status === 'Accepted' || appointment.status === 'Pending')"
               [routerLink]="['/medical-record/new', appointment.appointmentId]">
               Make Diagnosis
             </button>
-            <button class="btn btn-danger btn-sm mr-2"
+            <button class="btn btn-danger btn-sm mr-2 btn-custom"
               *ngIf="appointment.appointmentId"
               (click)="deleteAppointment(appointment.appointmentId)">
               Remove from list
