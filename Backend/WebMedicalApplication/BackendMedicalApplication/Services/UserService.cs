@@ -110,6 +110,7 @@ namespace BackendMedicalApplication.Services
             user.Age = userDto.Age;
             user.Address = userDto.Address;
             user.PhoneNumber = userDto.PhoneNumber;
+            user.Description = userDto.Description;
 
             _context.SaveChanges();
             userDto.Password = null; // Remove password from DTO after update for security

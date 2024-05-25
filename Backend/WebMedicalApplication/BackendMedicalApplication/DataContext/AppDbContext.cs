@@ -39,7 +39,6 @@ namespace BackendMedicalApplication
             });
 
             // User and Appointments (One-to-Many)
-
             modelBuilder.Entity<Appointment>()
                 .HasOne<User>(a => a.Doctor)
                 .WithMany(u => u.DoctorAppointments)
@@ -65,7 +64,6 @@ namespace BackendMedicalApplication
                 .HasForeignKey(b => b.PatientId);
 
             // User and Schedules (One-to-Many)
-
             modelBuilder.Entity<Schedule>()
                 .HasOne<User>(s => s.Doctor)
                 .WithMany(d => d.Schedules)
@@ -82,6 +80,7 @@ namespace BackendMedicalApplication
                 entity.Property(e => e.VerificationToken).HasMaxLength(100).IsUnicode(false);
                 entity.Property(e => e.VerificationTokenExpires).IsUnicode(false);
                 entity.Property(e => e.IsVerified).HasDefaultValue(false);
+                entity.Property(e => e.Description).HasMaxLength(1000); // New field configuration
 
                 // Unique constraints
                 entity.HasIndex(u => u.EmailAddress).IsUnique();

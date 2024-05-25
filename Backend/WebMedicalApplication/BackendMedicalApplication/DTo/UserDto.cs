@@ -15,5 +15,6 @@
         public string Address { get; set; }
         public string? ResetPasswordCode { get; set; }
         public DateTime? ResetPasswordCodeExpires { get; set; }
+        public string? Description { get; set; }
     }
 }  
