@@ -58,7 +58,7 @@ namespace BackendMedicalApplication.Services
                 DoctorId = appointmentDto.DoctorId,
                 AppointmentDate = appointmentDto.DateTime,
                 Reason = appointmentDto.Reason,
-                Status = "Pending" // Set the status to "Pending"
+                Status = appointmentDto.Status ?? "Pending"  // Ensure status defaults to "Pending"
             };
 
             _context.Appointments.Add(newAppointment);
@@ -68,7 +68,6 @@ namespace BackendMedicalApplication.Services
             await _notificationService.CreateNotification(newAppointment.DoctorId, notificationMessage);
 
             appointmentDto.AppointmentId = newAppointment.AppointmentId;
-            appointmentDto.Status = "Pending"; // Also update the DTO to reflect the status
             return appointmentDto;
         }
 

@@ -15,11 +15,13 @@ namespace BackendMedicalApplication.Controllers
     {
         private readonly IAppointmentService _appointmentService;
         private readonly AppDbContext _context;
+        private readonly ILogger<AppointmentController> _logger;
 
-        public AppointmentController(IAppointmentService appointmentService, AppDbContext context)
+        public AppointmentController(IAppointmentService appointmentService, AppDbContext context, ILogger<AppointmentController> logger)
         {
             _appointmentService = appointmentService;
             _context = context; // Initialize _context
+            _logger = logger;
         }
 
         [HttpGet]
@@ -41,11 +43,25 @@ namespace BackendMedicalApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAppointment([FromBody] AppointmentDto appointmentDto)
+        public async Task<IActionResult> CreateAppointment([FromBody] AppointmentDto appointmentDto)
         {
-            var createdAppointment = _appointmentService.CreateAppointment(appointmentDto);
-            return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = createdAppointment.Result.PatientId }, createdAppointment);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var createdAppointment = await _appointmentService.CreateAppointment(appointmentDto);
+                return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = createdAppointment.AppointmentId }, createdAppointment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating appointment");
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
 
         [HttpPut("{appointmentId}")]
         public IActionResult UpdateAppointment(int appointmentId, [FromBody] AppointmentDto appointmentDto)

@@ -9,7 +9,7 @@
         public string Reason { get; set; }
         public int? PatientRecordId { get; set; }
         public PatientRecordDto? PatientRecord { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = "Pending";
     }
 
 }
