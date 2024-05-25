@@ -39,7 +39,8 @@ namespace BackendMedicalApplication.Services
                                Age = u.Age,
                                CNP = u.CNP,
                                PhoneNumber = u.PhoneNumber,
-                               Address = u.Address
+                               Address = u.Address,
+                               Description = u.Description
                            })
                            .ToList();
         }
@@ -65,6 +66,7 @@ namespace BackendMedicalApplication.Services
                 Password = user.Password,
                 Address = user.Address,
                 PhoneNumber = user.PhoneNumber,
+                Description = user.Description,
                 ResetPasswordCode = user.ResetPasswordCode ?? "Not Set", // Default for nullable string
                 ResetPasswordCodeExpires = user.ResetPasswordCodeExpires // Format DateTime or provide a default
             };
@@ -83,6 +85,7 @@ namespace BackendMedicalApplication.Services
                 CNP = userDto.CNP,
                 Age = userDto.Age,
                 Address = userDto.Address,
+                Description = userDto.Description,
                 PhoneNumber = userDto.PhoneNumber
             };
 
@@ -181,6 +184,7 @@ namespace BackendMedicalApplication.Services
                 CNP = user.CNP,
                 Password = user.Password,
                 Address = user.Address,
+                Description = user.Description,
                 PhoneNumber = user.PhoneNumber
                 // Add other properties as needed but exclude the password for security reasons
             };
@@ -208,6 +212,7 @@ namespace BackendMedicalApplication.Services
                 RoleId = userRegistrationDto.RoleId,
                 PhoneNumber = userRegistrationDto.PhoneNumber,
                 Address = userRegistrationDto.Address,
+                Description = userRegistrationDto.Description,
                 IsVerified = false,
                 VerificationToken = Guid.NewGuid().ToString(),
                 VerificationTokenExpires = DateTime.UtcNow.AddHours(24) // Token valid for 24 hours
@@ -232,6 +237,7 @@ namespace BackendMedicalApplication.Services
                 Age = newUser.Age,
                 CNP = newUser.CNP,
                 PhoneNumber = newUser.PhoneNumber,
+                Description = newUser.Description,
                 Address = newUser.Address
             };
         }
@@ -260,6 +266,7 @@ namespace BackendMedicalApplication.Services
                 Age = user.Age,
                 CNP = user.CNP,
                 Password = user.Password,
+                Description = user.Description,
             };
         }
 
@@ -278,6 +285,7 @@ namespace BackendMedicalApplication.Services
                     CNP = u.CNP,
                     Surname = u.Surname,
                     Address = u.Address,
+                    Description = u.Description,
                     // Include other properties that you need, except sensitive ones like Password
                 })
                 .FirstOrDefaultAsync();
@@ -345,6 +353,7 @@ namespace BackendMedicalApplication.Services
                                Age = u.Age,
                                CNP = u.CNP,
                                PhoneNumber = u.PhoneNumber,
+                               Description = u.Description,
                                Address = u.Address
                            })
                            .ToList();
