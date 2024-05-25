@@ -2,9 +2,10 @@ export class AppointmentDto {
   appointmentId?: number;
   patientId: number;
   doctorId: number;
-  dateTime: Date; // Merge date, startTime, and endTime into dateTime
+  dateTime: Date;
   reason?: string;
-  patientRecordId?: number; // Add this line to include the PatientRecordId
+  patientRecordId?: number;
+  status?: string;
 
   constructor(
     patientId: number,
@@ -12,12 +13,14 @@ export class AppointmentDto {
     dateTime: Date = new Date(),
     reason?: string,
     appointmentId?: number,
-    patientRecordId?: number // Include PatientRecordId in the constructor
+    patientRecordId?: number,
+    status?: string
   ) {
     this.patientId = patientId;
     this.doctorId = doctorId;
     this.dateTime = dateTime;
     this.reason = reason;
+    this.status = status;
     if (appointmentId) {
       this.appointmentId = appointmentId;
     }

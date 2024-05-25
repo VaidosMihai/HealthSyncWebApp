@@ -52,10 +52,10 @@ export class AppointmentAddComponent implements OnInit {
     ).subscribe(result => {
       if (result.doctor && result.patient) {
         this.appointmentForm.patchValue({
-          doctorId: result.doctor.userId, // Make sure 'doctorId' exists in your form group
-          patientId: result.patient.userId, // Make sure 'patientId' exists in your form group /////////////////////////////
-          doctorUsername: result.doctor.username, // Make sure 'patientId' exists in your form group /////////////////////////////
-          patientUsername: result.patient.username, // Make sure 'patientId' exists in your form group /////////////////////////////
+          doctorId: result.doctor.userId,
+          patientId: result.patient.userId,
+          doctorUsername: result.doctor.username,
+          patientUsername: result.patient.username,
         });
       }
     });
@@ -69,17 +69,14 @@ export class AppointmentAddComponent implements OnInit {
           }
         );
       }
-      //const patientUsername = this.authService.getCurrentUser()?.username;
       const patientUserJson = localStorage.getItem('currentUser');
-    if (patientUserJson) {
-      const patientUser = JSON.parse(patientUserJson);
-      this.patientId = patientUser.userId; // Again, assume you have a userId field in your UserDto
-      this.appointmentForm.get('patientId')?.setValue(this.patientId);
-
-      // Set the patient's username in the form if you have such a field
-      this.appointmentForm.get('patientUsername')?.setValue(patientUser.username);
-    }
-  });
+      if (patientUserJson) {
+        const patientUser = JSON.parse(patientUserJson);
+        this.patientId = patientUser.userId; // Assume you have a userId field in your UserDto
+        this.appointmentForm.get('patientId')?.setValue(this.patientId);
+        this.appointmentForm.get('patientUsername')?.setValue(patientUser.username);
+      }
+    });
   }
 
   loadDoctors() {
@@ -91,9 +88,8 @@ export class AppointmentAddComponent implements OnInit {
   
   onSubmit() {
     if (this.appointmentForm.valid) {
-      // Create an instance of the AppointmentDto with the form values
       const formValues = this.appointmentForm.value;
-  
+
       // Convert doctorUsername and patientUsername to their respective IDs
       this.userService.getUserByUsername(formValues.doctorUsername).pipe(
         switchMap((doctor: UserDto) => {
@@ -112,13 +108,13 @@ export class AppointmentAddComponent implements OnInit {
       ).subscribe({
         next: (response) => {
           console.log('Appointment created successfully:', response);
+          alert("Appointment created successfully");
           this.router.navigate(['/appointment']);
         },
         error: (error) => {
           console.error('Error creating appointment', error);
         }
       });
-      this.router.navigate(['/appointment']);
     }
   }
 }

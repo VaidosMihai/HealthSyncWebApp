@@ -25,6 +25,7 @@ export class UserDto {
     password?: string,
     address?: string,
     phoneNumber?: string,
+    description? : string,
     token? : string
   ) {
     this.username = username;
@@ -40,6 +41,7 @@ export class UserDto {
     this.password = password;
     this.address = address;
     this.phoneNumber = phoneNumber; 
+    this.description = description;
     this.token = token;
   }
 }

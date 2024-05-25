@@ -52,6 +52,7 @@ export class PatientProfileComponent implements OnInit {
       password: [''],
       address: ['', [Validators.required, Validators.minLength(6)]],
       phoneNumber: ['', [Validators.required, Validators.minLength(10)]],
+      description: ['', [Validators.required]]
     });
 
     this.patientData = new UserDto('', '', 0, '', '', '', 0);
@@ -60,7 +61,13 @@ export class PatientProfileComponent implements OnInit {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => this.currentUser = user);
     this.loadUserProfile();
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    if (currentUser && currentUser.name && currentUser.surname) {
+      this.isDoctor = currentUser.roleId === 1;
+      this.isAdmin = currentUser.roleId === 3;
+      this.isPatient = currentUser.roleId === 2;
   }
+}
 
   loadUserProfile() {
     const currentUserJson = localStorage.getItem('currentUser');
@@ -80,6 +87,7 @@ export class PatientProfileComponent implements OnInit {
           address: currentUser.address,
           phoneNumber: currentUser.phoneNumber,
           password: localStorage.getItem('token'),
+          description: currentUser.description
         });
         if (currentUser.roleId === 1) {
           this.loadReviewsForDoctor(currentUser.userId);
@@ -165,6 +173,7 @@ export class PatientProfileComponent implements OnInit {
       this.userService.updatePatient(userId, formData).subscribe({
         next: (updatedUser) => {
           localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+          alert("Personal information was updated.")
         },
         error: (error) => {
           if (error.status === 400) {

@@ -50,4 +50,16 @@ export class AppointmentService {
   notifyDoctor(doctorId: number): Observable<any> {
     return this.http.post(`${this.appointmentEndpoint}/notify-doctor/${doctorId}`, {});
   }
+  
+  acceptAppointment(appointmentId: number): Observable<any> {
+    return this.http.put(`${this.appointmentEndpoint}/${appointmentId}/accept`, {});
+  }
+
+  declineAppointment(appointmentId: number): Observable<any> {
+    return this.http.put(`${this.appointmentEndpoint}/${appointmentId}/decline`, {});
+  }
+
+  rescheduleAppointment(appointmentId: number, newDateTime: Date): Observable<any> {
+    return this.http.put(`${this.appointmentEndpoint}/${appointmentId}/reschedule`, newDateTime);
+  }
 }

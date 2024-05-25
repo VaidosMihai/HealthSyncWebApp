@@ -17,7 +17,7 @@ export class AppointmentListComponent implements OnInit {
   isPatient: boolean = false;
   isDoctor: boolean = false;
   isAdmin: boolean = false;
-  hasDiagnostics: boolean = false; // New variable
+  hasDiagnostics: boolean = false;
   patientNames: { [key: number]: string } = {};
   doctorNames: { [key: number]: string } = {};
   upcomingAppointments: AppointmentDto[] = [];
@@ -38,9 +38,7 @@ export class AppointmentListComponent implements OnInit {
     if (currentUser) {
       if (currentUser.roleId === 3) {
         this.loadAppointmentsForAdmin();
-      } 
-      else 
-      {
+      } else {
         this.loadAppointments();
       }
     }
@@ -150,9 +148,31 @@ export class AppointmentListComponent implements OnInit {
     this.pastAppointments = appointments.filter(appt => new Date(appt.dateTime) <= now);
   }
 
-  categorizeAppointmentsDoctor(appointments: AppointmentDto[]) {
-    const now = new Date();
-    this.upcomingAppointments = appointments.filter(appt => new Date(appt.dateTime) > now);
-    this.pastAppointments = appointments.filter(appt => new Date(appt.dateTime) <= now);
+  acceptAppointment(appointmentId: number) {
+    this.updateAppointmentStatus(appointmentId, 'Accepted');
+  }
+
+  declineAppointment(appointmentId: number) {
+    this.updateAppointmentStatus(appointmentId, 'Declined');
+  }
+
+  openRescheduleModal(appointmentId: number) {
+    // Logic to open reschedule modal
+  }
+
+  updateAppointmentStatus(appointmentId: number, status: string) {
+    const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
+    if (appointment) {
+      appointment.status = status;
+      this.appointmentService.updateAppointment(appointmentId, appointment).subscribe({
+        next: (updatedAppointment) => {
+          console.log(`Appointment status updated to ${status}`, updatedAppointment);
+          this.ngOnInit();
+        },
+        error: (error) => {
+          console.error('Failed to update appointment status', error);
+        }
+      });
+    }
   }
 }

@@ -1,4 +1,3 @@
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <h2 *ngIf="!isPatient">Appointments List</h2>
@@ -7,7 +6,11 @@
   <div class="container mt-4">
     <h2>Upcoming Appointments</h2>
     <div class="card mb-3" *ngFor="let appointment of upcomingAppointments">
-      <div class="card-body">
+      <div class="card-body" [ngClass]="{
+        'text-success': appointment.status === 'Accepted',
+        'text-danger': appointment.status === 'Declined',
+        'text-warning': appointment.status === 'Rescheduled'
+      }">
         <div class="row">
           <div class="col-md-3">
             <h5 class="card-title">Doctor: {{ doctorNames[appointment.doctorId] || 'Unknown' }}</h5>
@@ -39,6 +42,21 @@
               View Diagnostics
             </button>
             <span *ngIf="!appointment.patientRecordId">No diagnostics available yet.</span>
+
+            <!-- Accept, Decline, and Reschedule Buttons for Doctors -->
+            <button *ngIf="(isDoctor || isAdmin) && appointment.status === 'Pending' && appointment.appointmentId !== undefined" class="btn btn-success btn-sm mr-2"
+            (click)="acceptAppointment(appointment.appointmentId)">
+            Accept
+            </button>
+            <button *ngIf="(isDoctor || isAdmin) && appointment.status === 'Pending' && appointment.appointmentId !== undefined" class="btn btn-danger btn-sm mr-2"
+            (click)="declineAppointment(appointment.appointmentId)">
+            Decline
+            </button>
+            <button *ngIf="(isDoctor || isAdmin) && appointment.status === 'Pending' && appointment.appointmentId !== undefined" class="btn btn-warning btn-sm"
+            (click)="openRescheduleModal(appointment.appointmentId)">
+            Reschedule
+            </button>
+
           </div>
         </div>
       </div>
@@ -46,7 +64,11 @@
 
     <h2>Past Appointments</h2>
     <div class="card mb-3" *ngFor="let appointment of pastAppointments">
-      <div class="card-body">
+      <div class="card-body" [ngClass]="{
+        'text-success': appointment.status === 'Accepted',
+        'text-danger': appointment.status === 'Declined',
+        'text-warning': appointment.status === 'Rescheduled'
+      }">
         <div class="row">
           <div class="col-md-3">
             <h5 class="card-title">Doctor: {{ doctorNames[appointment.doctorId] || 'Unknown' }}</h5>

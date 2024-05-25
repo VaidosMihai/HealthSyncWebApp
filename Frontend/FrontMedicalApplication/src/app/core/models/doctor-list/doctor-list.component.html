@@ -7,20 +7,10 @@
       <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title">{{ doctor.name }} {{ doctor.surname }}</h5>
-          <p><strong>Email:</strong> {{ doctor.emailAddress }}</p>
           <p><strong>Phone:</strong> {{ doctor.phoneNumber }}</p>
+          <p><strong>Email:</strong> {{ doctor.emailAddress }}</p>
           <p><strong>Address:</strong> {{ doctor.address }}</p>
-          <p><strong>Specialization:</strong> {{ doctor.description }}</p>
-
-          <div *ngIf="editingDescriptionId === doctor.userId; else viewMode">
-            <textarea [(ngModel)]="newDescription" class="form-control" rows="3"></textarea>
-            <button class="btn btn-primary mt-2" (click)="saveDescription(doctor)">Save</button>
-            <button class="btn btn-secondary mt-2" (click)="cancelEdit()">Cancel</button>
-          </div>
-          <ng-template #viewMode>
-            <p><strong>Description:</strong> {{ doctor.description }}</p>
-            <button class="btn btn-secondary" (click)="editDescription(doctor)">Edit Description</button>
-          </ng-template>
+          <p>{{ doctor.description }}</p>
           <button class="btn btn-primary" (click)="scheduleAppointment(doctor.username)">Schedules</button>
           <button class="btn btn-secondary" (click)="openReviewModal(doctor)">Reviews</button>
         </div>
