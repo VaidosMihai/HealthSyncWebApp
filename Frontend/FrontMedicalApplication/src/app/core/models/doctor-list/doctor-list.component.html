@@ -23,14 +23,10 @@
     <div class="modal-content">
       <span class="close" (click)="closeReviewModal()">&times;</span>
       <h2>Reviews for {{ selectedDoctor?.name }} {{ selectedDoctor?.surname }}</h2>
-
+  
       <div id="reviews" class="review-section">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <h4 class="m-0">{{ reviews.length }} Reviews ({{ averageRating.toFixed(1) }} &#11088;)</h4>
-          <select class="custom-select custom-select-sm border-0 shadow-sm ml-2">
-            <option>Most Relevant</option>
-            <option>Most Recent</option>
-          </select>
         </div>
         <div class="row">
           <div class="col-md-6">
@@ -52,9 +48,15 @@
               </tbody>
             </table>
           </div>
+          <div class="col-md-6 text-right">
+            <select class="custom-select custom-select-sm border-0 shadow-sm ml-2" (change)="sortReviews($event)">
+              <option value="relevant">Most Relevant</option>
+              <option value="recent">Most Recent</option>
+            </select>
+          </div>
         </div>
       </div>
-
+  
       <div class="review-list">
         <ul>
           <li *ngFor="let review of reviews">
@@ -97,7 +99,7 @@
           </li>
         </ul>
       </div>
-
+  
       <h3>Submit a Review</h3>
       <div class="form-group">
         <label for="rating">Rating:</label>
@@ -112,32 +114,33 @@
         <textarea id="comment" class="form-control" [(ngModel)]="newReview.comment" maxlength="250"></textarea>
       </div>
       <button class="btn btn-primary" (click)="submitReview()">Submit Review</button>
-
-    <style>
-      .star-rating {
-        display: flex;
-        gap: 5px;
-      }
-      
-      .star {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 24px;
-      }
-      
-      .star span {
-        color: #ffffff; /* Grey color for unselected stars */
-      }
-      
-      .star span.selected {
-        color: #febf00; /* Yellow color for selected stars */
-      }
-    </style>
-
+      <button class="btn btn-primary" (click)="closeReviewModal()" style="background-color: #f44336">Close</button>
+  
+      <style>
+        .star-rating {
+          display: flex;
+          gap: 5px;
+        }
+        
+        .star {
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 24px;
+        }
+        
+        .star span {
+          color: #ffffff; /* Grey color for unselected stars */
+        }
+        
+        .star span.selected {
+          color: #febf00; /* Yellow color for selected stars */
+        }
+      </style>
+  
     </div>
   </div>
-</div>
+  
 
 <style>
   .modal {
@@ -168,21 +171,22 @@
 }
 
 .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: red; /* Set the color to red */
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+  color: darkred; /* Change the color to dark red on hover/focus */
+  text-decoration: none;
+  cursor: pointer;
 }
+
 
 body {
     margin-top: 20px;

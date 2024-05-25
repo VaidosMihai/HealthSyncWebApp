@@ -210,6 +210,12 @@
               </div>
             </div>
           </div>
+          <div class="col-md-6 text-right" style="margin:auto">
+            <select class="custom-select custom-select-sm border-0 shadow-sm ml-2"(change)="sortReviews($event)">
+              <option value="relevant">Most Relevant</option>
+              <option value="recent">Most Recent</option>
+            </select>
+          </div>
           
           <div class="review-list">
             <ul>

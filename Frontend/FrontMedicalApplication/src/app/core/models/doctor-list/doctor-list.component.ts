@@ -248,4 +248,22 @@ export class DoctorListComponent implements OnInit {
     const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
     return currentUser ? review.voteType === 'not-helpful' : false;
   }
+
+  sortReviews(event: Event): void {
+    const target = event.target as HTMLSelectElement | null;
+  
+    if (target) {
+      const criteria = target.value;
+  
+      if (criteria === 'relevant') {
+        this.reviews.sort((a, b) => b.helpfulCount - a.helpfulCount);
+      } else if (criteria === 'recent') {
+        this.reviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      }
+    } else {
+      console.error('Event target is not an HTMLSelectElement:', event.target);
+    }
+  }
+  
+  
 }

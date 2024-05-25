@@ -9,10 +9,6 @@
           <ul class="list-unstyled">
             <li><strong>Username:</strong> {{ patient.username }}</li>
             <li><strong>Email:</strong> {{ patient.emailAddress }}</li>
-            <li><strong>CNP:</strong> {{ patient.cnp }}</li>
-            <li><strong>Age:</strong> {{ patient.age }}</li>
-            <li><strong>Address:</strong> {{ patient.address }}</li>
-            <li><strong>Phone:</strong> {{ patient.phoneNumber }}</li>
             <li><strong>Next Appointment:</strong> {{ getNextAppointment(patient.userId)?.dateTime | date: 'short' || 'No upcoming appointments' }}</li>
           </ul>
           <div class="text-center">
@@ -26,15 +22,15 @@
   <!-- Modal -->
   <div id="patientModal" class="modal" [class.show]="isModalOpen">
     <div class="modal-content">
-      <span class="close" (click)="closeModal()">&times;</span>
+      <span class="close" (click)="closeModal()" routerLink="/patients">&times;</span>
       <h2>{{ selectedPatient?.name }} {{ selectedPatient?.surname }}</h2>
       <ul class="list-unstyled">
-        <li><strong>Username:</strong> {{ selectedPatient?.username }}</li>
-        <li><strong>Email:</strong> {{ selectedPatient?.emailAddress }}</li>
-        <li><strong>CNP:</strong> {{ selectedPatient?.cnp }}</li>
-        <li><strong>Age:</strong> {{ selectedPatient?.age }}</li>
-        <li><strong>Address:</strong> {{ selectedPatient?.address }}</li>
-        <li><strong>Phone:</strong> {{ selectedPatient?.phoneNumber }}</li>
+        <li><strong>Username:</strong> <input title="username" type="text" [value]="selectedPatient?.username" readonly></li>
+        <li><strong>Email:</strong> <input title="emailAddress" type="text" [value]="selectedPatient?.emailAddress" readonly></li>
+        <li><strong>CNP:</strong> <input title="cnp" type="text" [value]="selectedPatient?.cnp" readonly></li>
+        <li><strong>Age:</strong> <input title="age" type="text" [value]="selectedPatient?.age" readonly></li>
+        <li><strong>Address:</strong> <input title="address" type="text" [value]="selectedPatient?.address" readonly></li>
+        <li><strong>Phone:</strong> <input title="phone" type="text" [value]="selectedPatient?.phoneNumber" readonly></li>
       </ul>
       <h3>Appointments</h3>
       <ul class="list-unstyled">
@@ -42,7 +38,7 @@
           <strong>{{ appointment.dateTime | date: 'short' }}:</strong> {{ appointment.reason }}
         </li>
       </ul>
-      <button class="btn btn-primary" (click)="closeModal()">Close</button>
+      <button class="btn btn-primary" (click)="closeModal()" routerLink="/patients">Close</button>
     </div>
   </div>
 </div>

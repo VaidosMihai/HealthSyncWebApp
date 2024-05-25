@@ -1,33 +1,3 @@
-// import { Component, OnInit } from '@angular/core';
-// import { UserService } from '../../../services/user-service.service';
-// import { UserDto } from '../../../dtos/user.dto';
-// import { Router } from '@angular/router';
-
-// @Component({
-//   selector: 'app-patient-list',
-//   templateUrl: './patient-record-list.component.html',
-//   styleUrls: ['./patient-record-list.component.css']
-// })
-// export class PatientListComponent implements OnInit {
-//   patients: UserDto[] = [];
-
-//   constructor(private userService: UserService, private router: Router) {}
-
-//   ngOnInit(): void {
-//     this.userService.getAllUsersWithRoleId(2).subscribe(
-//       (data) => {
-//         this.patients = data.filter(user => user.roleId === 2); // Assuming roleId 2 is for patients
-//       },
-//       (error) => {
-//         console.error('There was an error fetching the patients', error);
-//       }
-//     );
-//   }
-
-//   viewPatientDetails(patientId: number): void {
-//     this.router.navigate(['/patients/details'], { queryParams: { patientId: patientId } });
-//   }
-// }
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user-service.service';
 import { AppointmentService } from '../../../services/appointment-service.service';
@@ -36,19 +6,20 @@ import { AppointmentDto } from '../../../dtos/appointment.dto';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-patient-list',
-    templateUrl: './patient-record-list.component.html',
-    styleUrls: ['./patient-record-list.component.css']
+  selector: 'app-patient-list',
+  templateUrl: './patient-record-list.component.html',
+  styleUrls: ['./patient-record-list.component.css']
 })
 export class PatientListComponent implements OnInit {
   patients: UserDto[] = [];
   patientAppointments: AppointmentDto[] = [];
+  filteredAppointments: AppointmentDto[] = [];
   isModalOpen = false;
   selectedPatient: UserDto | null = null;
 
   constructor(
-    private userService: UserService, 
-    private appointmentService: AppointmentService, 
+    private userService: UserService,
+    private appointmentService: AppointmentService,
     private router: Router
   ) {}
 
@@ -93,13 +64,14 @@ export class PatientListComponent implements OnInit {
 
   openModal(patient: UserDto): void {
     this.selectedPatient = patient;
-    this.patientAppointments = this.patientAppointments.filter(appt => appt.patientId === patient.userId);
+    this.filteredAppointments = this.patientAppointments.filter(appt => appt.patientId === patient.userId);
     this.isModalOpen = true;
   }
 
   closeModal(): void {
     this.isModalOpen = false;
     this.selectedPatient = null;
-    this.patientAppointments = [];
+    this.filteredAppointments = [];
+    this.router.navigate(['/patients']);
   }
 }
