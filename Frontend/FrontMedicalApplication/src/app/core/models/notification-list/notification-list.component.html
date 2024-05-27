@@ -1,13 +1,16 @@
 <div class="notification-modal">
-    <h2>Notifications</h2>
-    <ul>
+  <h2>Notifications</h2>
+  <button (click)="markAllAsRead()" class="mark-all-read-btn">Mark all as read</button>
+  <ul class="notification-list">
       <li *ngFor="let notification of notifications">
-        <div class="notification-item">
-          <p>{{ notification.message }}</p>
-          <span>{{ notification.createdAt | date: 'short' }}</span>
-        </div>
+          <div class="notification-item">
+              <div class="notification-details">
+                  <p>{{ notification.message }}</p>
+                  <span>{{ notification.createdAt | date: 'short' }}</span>
+              </div>
+              <button (click)="markAsRead(notification)" class="mark-as-read-btn">Mark as Read</button>
+          </div>
       </li>
-    </ul>
-    <button (click)="closeModal()">Close</button>
-  </div>
-  
+  </ul>
+  <button (click)="closeModal()" class="close-modal-btn">Close</button>
+</div>

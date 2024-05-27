@@ -19,6 +19,7 @@ export class PatientProfileComponent implements OnInit {
   patientForm: FormGroup;
   patientData: UserDto;
   reviews: ReviewDto[] = [];
+  filteredReviews: ReviewDto[] = [];
   isDoctor: boolean = false;
   isAdmin: boolean = false;
   isPatient: boolean = false;
@@ -102,6 +103,7 @@ export class PatientProfileComponent implements OnInit {
     this.reviewService.getReviewsByPatientId(patientId).pipe(
       switchMap(reviews => {
         this.reviews = reviews;
+        this.filteredReviews = [...this.reviews];
         const doctorObservables = reviews.map(review =>
           this.userService.getUserById(review.doctorId)
         );
@@ -125,6 +127,7 @@ export class PatientProfileComponent implements OnInit {
     this.reviewService.getReviewsByDoctorId(doctorId).pipe(
       switchMap(reviews => {
         this.reviews = reviews;
+        this.filteredReviews = [...this.reviews];
         const userObservables = reviews.map(review =>
           this.userService.getPatientById(review.patientId)
         );
@@ -163,6 +166,14 @@ export class PatientProfileComponent implements OnInit {
     }));
 
     this.averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
+  }
+
+  filterReviews(starCount: number): void {
+    this.filteredReviews = this.reviews.filter(review => review.rating === starCount);
+  }
+
+  clearFilter(): void {
+    this.filteredReviews = [...this.reviews];
   }
 
   onSaveProfile() {
@@ -252,9 +263,9 @@ export class PatientProfileComponent implements OnInit {
       const criteria = target.value;
 
       if (criteria === 'relevant') {
-        this.reviews.sort((a, b) => b.helpfulCount - a.helpfulCount);
+        this.filteredReviews.sort((a, b) => b.helpfulCount - a.helpfulCount);
       } else if (criteria === 'recent') {
-        this.reviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        this.filteredReviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       }
     } else {
       console.error('Event target is not an HTMLSelectElement:', event.target);

@@ -12,12 +12,7 @@ export class ProfileService {
 
   constructor(private http: HttpClient) { }
 
-  // getUserByEmail(email: string): Observable<UserDto> {
-  //   return this.http.get<UserDto>(`${this.apiUrl}/email/${email}`);
-  // }
-
   getUserByEmail(email: string): Observable<UserDto> {
-    // Assuming you store your token in local storage
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 

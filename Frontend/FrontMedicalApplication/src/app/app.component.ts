@@ -5,6 +5,7 @@ import { AuthService } from './core/services/auth-service.service';
 import { ProfileService } from './core/services/profile.service';
 import { SearchService } from './core/services/search-service.service';
 import { NotificationService } from './core/services/notification-service.service';
+import { NotificationDto } from './core/dtos/notification.dto';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private userSubscription?: Subscription;
   private notificationIntervalSubscription?: Subscription;
   currentUserFullName: string = '';
-  notifications: any[] = [];
+  notifications: NotificationDto[] = [];
   unreadNotificationsCount: number = 0;
   showNotifications: boolean = false;
   currentUserId: number = 0;
@@ -72,6 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isAdmin = currentUser.roleId === 3;
       this.isPatient = currentUser.roleId === 2;
       this.currentUserId = currentUser.userId ?? 0; // Ensure currentUserId is set
+      this.startNotificationPolling(this.currentUserId); // Start polling
     }
   }
 
@@ -176,28 +178,34 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   viewNotifications(): void {
-  this.showNotifications = !this.showNotifications;
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.showNotifications = !this.showNotifications;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   
-  if (currentUser && currentUser.userId) {
-    this.notificationService.getNotificationsByUserId(currentUser.userId).subscribe(
-      (notifications: Notification[]) => {
-        this.notifications = notifications;
-        console.log('Fetched notifications:', notifications);
-        const notificationList = document.querySelector('app-notification-list') as any;
-        if (notificationList) {
-          notificationList.toggleModal();
+    if (currentUser && currentUser.userId) {
+      this.notificationService.getNotificationsByUserId(currentUser.userId).subscribe(
+        (notifications: NotificationDto[]) => {
+          this.notifications = notifications;
+          console.log('Fetched notifications:', notifications);
+          const notificationList = document.querySelector('app-notification-list') as any;
+          if (notificationList) {
+            notificationList.toggleModal();
+          }
+        },
+        error => {
+          console.error('Failed to fetch notifications', error);
+          alert('Failed to load notifications: ' + error.message);
         }
-      },
-      error => {
-        console.error('Failed to fetch notifications', error);
-        alert('Failed to load notifications: ' + error.message);
-      }
-    );
-  } else {
-    console.error('No current user found in localStorage.');
-    alert('User not found. Please log in again.');
+      );
+    } else {
+      console.error('No current user found in localStorage.');
+      alert('User not found. Please log in again.');
+    }
   }
-}
 
+  updateUnreadCount(): void {
+    this.notificationService.getUnreadNotificationsCount(this.currentUserId).subscribe(
+      (count: number) => this.unreadNotificationsCount = count,
+      error => console.error('Failed to update unread notifications count', error)
+    );
+  }
 }

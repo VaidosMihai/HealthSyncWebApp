@@ -51,7 +51,10 @@ export class AppointmentEditComponent implements OnInit {
           status: 'Pending' // Set status to Pending
         };
         this.appointmentService.updateAppointment(this.appointmentId, updatedAppointment).subscribe({
-          next: () => this.router.navigate(['/appointment']),
+          next: () => {
+            this.sendNotification(updatedAppointment.patientId, `Your appointment has been rescheduled to ${updatedAppointment.dateTime}.`);
+            this.router.navigate(['/appointment']);
+          },
           error: err => console.error('Error updating appointment:', err)
         });
       } else {
@@ -63,6 +66,11 @@ export class AppointmentEditComponent implements OnInit {
       }
     }
   }
-  
-  
+
+  sendNotification(userId: number, message: string): void {
+    this.appointmentService.notifyUser(userId, message).subscribe({
+      next: () => console.log('Notification sent'),
+      error: err => console.error('Error sending notification:', err)
+    });
+  }
 }

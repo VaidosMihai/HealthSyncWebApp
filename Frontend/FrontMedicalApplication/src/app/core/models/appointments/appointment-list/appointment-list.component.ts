@@ -5,6 +5,8 @@ import { AppointmentDto } from '../../../dtos/appointment.dto';
 import { HttpResponse } from '@angular/common/http';
 import { AuthService } from '../../../services/auth-service.service';
 import { UserService } from '../../../services/user-service.service';
+import { NotificationService } from '../../../services/notification-service.service'; // Import NotificationService
+import { NotificationDto } from '../../../dtos/notification.dto'; // Import NotificationDto
 
 @Component({
   selector: 'app-appointment-list',
@@ -28,7 +30,8 @@ export class AppointmentListComponent implements OnInit {
     private appointmentService: AppointmentService,
     private router: Router,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService // Inject NotificationService
   ) {}
 
   ngOnInit() {
@@ -131,10 +134,23 @@ export class AppointmentListComponent implements OnInit {
   }
 
   deleteAppointment(appointmentId: number): void {
-    if (confirm('Are you sure you want to delete this appointment?')) {
+    if (confirm('Are you sure you want to cancel this appointment?')) {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
+      if (!appointment) {
+        console.error('Appointment not found');
+        return;
+      }
+
       this.appointmentService.deleteAppointment(appointmentId).subscribe({
         next: () => {
-          alert(`Appointment with id ${appointmentId} deleted successfully.`);
+          // Send notification
+          if (currentUser.roleId === 1) { // Doctor cancels
+            this.sendNotification(appointment.patientId, `The appointment scheduled for ${appointment.dateTime} has been canceled by the doctor.`);
+          } else if (currentUser.roleId === 2) { // Patient cancels
+            this.sendNotification(appointment.doctorId, `The appointment scheduled for ${appointment.dateTime} has been canceled by the patient.`);
+          }
+
           this.ngOnInit();
         },
         error: (error) => {
@@ -143,6 +159,25 @@ export class AppointmentListComponent implements OnInit {
         }
       });
     }
+  }
+
+  sendNotification(userId: number, message: string): void {
+    const notification: NotificationDto = {
+      notificationId: 0, // Will be set by the backend
+      userId,
+      message,
+      createdAt: new Date(),
+      isRead: false
+    };
+
+    this.notificationService.createNotification(notification).subscribe({
+      next: (createdNotification) => {
+        console.log('Notification sent', createdNotification);
+      },
+      error: (error) => {
+        console.error('Failed to send notification', error);
+      }
+    });
   }
 
   categorizeAppointments(appointments: AppointmentDto[]) {
@@ -158,6 +193,7 @@ export class AppointmentListComponent implements OnInit {
       this.appointmentService.acceptAppointment(appointmentId).subscribe({
         next: (updatedAppointment) => {
           console.log('Appointment status updated to Accepted', updatedAppointment);
+          this.sendNotification(appointment.patientId, `The appointment scheduled for ${appointment.dateTime} has been accepted by the doctor.`);
           this.ngOnInit();
         },
         error: (error) => {
@@ -174,6 +210,7 @@ export class AppointmentListComponent implements OnInit {
       this.appointmentService.declineAppointment(appointmentId).subscribe({
         next: (updatedAppointment) => {
           console.log('Appointment status updated to Declined', updatedAppointment);
+          this.sendNotification(appointment.patientId, `The appointment scheduled for ${appointment.dateTime} has been declined by the doctor.`);
           this.ngOnInit();
         },
         error: (error) => {
@@ -185,6 +222,30 @@ export class AppointmentListComponent implements OnInit {
 
   openRescheduleModal(appointmentId: number) {
     // Logic to open reschedule modal
+  }
+
+  rescheduleAppointment(appointmentId: number, newDateTime: Date) {
+    const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
+    if (appointment) {
+      this.appointmentService.rescheduleAppointment(appointmentId, newDateTime).subscribe({
+        next: (updatedAppointment) => {
+          console.log('Appointment rescheduled successfully', updatedAppointment);
+          this.sendNotification(appointment.patientId, `The appointment has been rescheduled to ${newDateTime}.`);
+          this.ngOnInit();
+        },
+        error: (error) => {
+          console.error('Failed to reschedule appointment', error);
+        }
+      });
+    }
+  }
+
+  makeDiagnosis(appointmentId: number) {
+    const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
+    if (appointment) {
+      // Logic to make diagnosis
+      this.sendNotification(appointment.patientId, `The doctor has made a diagnosis for the appointment scheduled on ${appointment.dateTime}.`);
+    }
   }
 
   onSortChange(event: Event): void {

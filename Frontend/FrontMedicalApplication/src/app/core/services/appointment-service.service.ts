@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -50,7 +49,7 @@ export class AppointmentService {
   notifyDoctor(doctorId: number): Observable<any> {
     return this.http.post(`${this.appointmentEndpoint}/notify-doctor/${doctorId}`, {});
   }
-  
+
   acceptAppointment(appointmentId: number): Observable<any> {
     return this.http.put(`${this.appointmentEndpoint}/${appointmentId}/accept`, {});
   }
@@ -61,5 +60,9 @@ export class AppointmentService {
 
   rescheduleAppointment(appointmentId: number, newDateTime: Date): Observable<any> {
     return this.http.put(`${this.appointmentEndpoint}/${appointmentId}/reschedule`, newDateTime);
+  }
+
+  notifyUser(userId: number, message: string): Observable<any> {
+    return this.http.post(`${this.appointmentEndpoint}/notify-user`, { userId, message });
   }
 }

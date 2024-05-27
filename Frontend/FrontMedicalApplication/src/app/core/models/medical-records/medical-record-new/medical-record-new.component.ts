@@ -9,7 +9,7 @@ import { AppointmentService } from '../../../services/appointment-service.servic
   styleUrls: ['./medical-record-new.component.css']
 })
 export class MedicalRecordNewComponent implements OnInit {
-  medicalRecord: MedicalRecordDto = new MedicalRecordDto(0, 0, new Date(), '', "");
+  medicalRecord: MedicalRecordDto = new MedicalRecordDto(0, 0, new Date(), '', '');
   appointmentId!: number;
 
   constructor(
@@ -25,7 +25,8 @@ export class MedicalRecordNewComponent implements OnInit {
   onSubmit(): void {
     this.appointmentService.addPatientRecordToAppointment(this.appointmentId, this.medicalRecord)
       .subscribe({
-        next: () => {
+        next: (response) => {
+          this.sendNotification(response.patientId, 'A new medical diagnosis has been added to your appointment.');
           alert('Medical record added successfully');
           this.router.navigate(['/appointment']);
         },
@@ -33,5 +34,12 @@ export class MedicalRecordNewComponent implements OnInit {
           alert('Failed to add medical record: ' + error.message);
         }
       });
+  }
+
+  sendNotification(userId: number, message: string): void {
+    this.appointmentService.notifyUser(userId, message).subscribe({
+      next: () => console.log('Notification sent'),
+      error: err => console.error('Error sending notification:', err)
+    });
   }
 }

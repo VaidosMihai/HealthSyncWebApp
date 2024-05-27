@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppointmentService } from '../../../services/appointment-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { UserService } from '../../../services/user-service.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { UserDto } from '../../../dtos/user.dto';
 import { AppointmentDto } from '../../../dtos/appointment.dto';
 import { AuthService } from '../../../services/auth-service.service';
@@ -37,7 +37,7 @@ export class AppointmentAddComponent implements OnInit {
       reason: ['', Validators.required]
     });
   }
-  
+
   ngOnInit() {
     this.loadDoctors();
     this.route.queryParams.pipe(
@@ -85,34 +85,49 @@ export class AppointmentAddComponent implements OnInit {
       error => console.error('Error fetching doctors:', error)
     );
   }
-  
+
   onSubmit() {
     if (this.appointmentForm.valid) {
       const formValues = this.appointmentForm.value;
+      let doctorId: number;
+      let patientId: number;
 
-      // Convert doctorUsername and patientUsername to their respective IDs
+      // Fetch the doctor and patient details
       this.userService.getUserByUsername(formValues.doctorUsername).pipe(
         switchMap((doctor: UserDto) => {
-          formValues.doctorId = doctor.userId; // Set doctorId to the fetched doctor's ID
+          if (!doctor.userId) throw new Error('Doctor ID not found');
+          doctorId = doctor.userId!;
+          formValues.doctorId = doctorId; // Set doctorId to the fetched doctor's ID
           return this.userService.getUserByUsername(formValues.patientUsername);
         }),
         switchMap((patient: UserDto) => {
-          formValues.patientId = patient.userId; // Set patientId to the fetched patient's ID
+          if (!patient.userId) throw new Error('Patient ID not found');
+          patientId = patient.userId!;
+          formValues.patientId = patientId; // Set patientId to the fetched patient's ID
           return this.appointmentService.createAppointment(new AppointmentDto(
-            formValues.patientId,
-            formValues.doctorId,
+            patientId,
+            doctorId,
             new Date(formValues.date), // Make sure this is a Date object
             formValues.reason
           ));
+        }),
+        switchMap((appointment: AppointmentDto) => {
+          // Notify the doctor after creating the appointment
+          return this.appointmentService.notifyDoctor(doctorId);
+        }),
+        catchError((error) => {
+          console.error('Error in the appointment creation process:', error);
+          return of(null); // Handle error gracefully
         })
       ).subscribe({
         next: (response) => {
-          console.log('Appointment created successfully:', response);
-          alert("Appointment created successfully");
+          console.log('Appointment created and doctor notified successfully:', response);
+          alert("Appointment created and doctor notified successfully");
           this.router.navigate(['/appointment']);
         },
         error: (error) => {
-          console.error('Error creating appointment', error);
+          console.error('Error creating appointment and notifying doctor', error);
+          alert("Failed to create appointment and notify doctor");
         }
       });
     }
