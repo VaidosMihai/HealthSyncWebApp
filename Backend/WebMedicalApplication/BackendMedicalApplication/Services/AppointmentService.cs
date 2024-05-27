@@ -1,5 +1,6 @@
 ﻿using BackendMedicalApplication.DTo;
 using BackendMedicalApplication.Interfaces;
+using BackendMedicalApplication.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,19 +73,26 @@ namespace BackendMedicalApplication.Services
         }
 
 
+        public async Task NotifyUserAsync(int userId, string message)
+        {
+            var notification = new Notification
+            {
+                UserId = userId,
+                Message = message,
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<AppointmentDto> UpdateAppointment(int appointmentId, AppointmentDto appointmentDto)
         {
             var appointment = await _context.Appointments.FindAsync(appointmentId);
             if (appointment == null) return null;
 
-            if (appointment.DoctorId != appointmentDto.DoctorId)
-            {
-                var doctorExists = await _context.Users.AnyAsync(u => u.UserId == appointmentDto.DoctorId && u.RoleId == 1);
-                if (!doctorExists)
-                {
-                    throw new Exception($"Doctor with ID {appointmentDto.DoctorId} does not exist or is not a doctor.");
-                }
-            }
+            var originalDateTime = appointment.AppointmentDate;
 
             appointment.PatientId = appointmentDto.PatientId;
             appointment.DoctorId = appointmentDto.DoctorId;
@@ -93,8 +101,16 @@ namespace BackendMedicalApplication.Services
             appointment.Status = appointmentDto.Status;
 
             await _context.SaveChangesAsync();
+
+            if (originalDateTime != appointmentDto.DateTime)
+            {
+                var message = $"Your appointment has been rescheduled to {appointmentDto.DateTime}.";
+                await NotifyUserAsync(appointment.PatientId, message);
+            }
+
             return appointmentDto;
         }
+
 
         public async Task<bool> DeleteAppointment(int appointmentId)
         {

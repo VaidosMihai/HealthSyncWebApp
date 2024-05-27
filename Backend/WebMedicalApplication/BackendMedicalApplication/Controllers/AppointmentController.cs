@@ -64,15 +64,24 @@ namespace BackendMedicalApplication.Controllers
 
 
         [HttpPut("{appointmentId}")]
-        public IActionResult UpdateAppointment(int appointmentId, [FromBody] AppointmentDto appointmentDto)
+        public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentDto appointmentDto)
         {
-            var updatedAppointment = _appointmentService.UpdateAppointment(appointmentId, appointmentDto);
-            if (updatedAppointment == null)
+            try
             {
-                return NotFound($"Appointment with ID {appointmentId} not found.");
+                var updatedAppointment = await _appointmentService.UpdateAppointment(appointmentId, appointmentDto);
+                if (updatedAppointment == null)
+                {
+                    return NotFound($"Appointment with ID {appointmentId} not found.");
+                }
+                return Ok(updatedAppointment);
             }
-            return Ok(updatedAppointment);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating appointment");
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
 
         [HttpDelete("{appointmentId}")]
         public async Task<IActionResult> DeleteAppointment(int appointmentId)
