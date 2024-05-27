@@ -66,8 +66,8 @@ export class PatientProfileComponent implements OnInit {
       this.isDoctor = currentUser.roleId === 1;
       this.isAdmin = currentUser.roleId === 3;
       this.isPatient = currentUser.roleId === 2;
+    }
   }
-}
 
   loadUserProfile() {
     const currentUserJson = localStorage.getItem('currentUser');
@@ -91,7 +91,7 @@ export class PatientProfileComponent implements OnInit {
         });
         if (currentUser.roleId === 1) {
           this.loadReviewsForDoctor(currentUser.userId);
-        }if(currentUser.roleId === 2 || currentUser.roleId === 3){
+        } else if (currentUser.roleId === 2 || currentUser.roleId === 3) {
           this.loadReviewsForPatient(currentUser.userId);
         }
       }
@@ -102,7 +102,7 @@ export class PatientProfileComponent implements OnInit {
     this.reviewService.getReviewsByPatientId(patientId).pipe(
       switchMap(reviews => {
         this.reviews = reviews;
-        const doctorObservables = reviews.map(review => 
+        const doctorObservables = reviews.map(review =>
           this.userService.getUserById(review.doctorId)
         );
         return forkJoin(doctorObservables);
@@ -125,7 +125,7 @@ export class PatientProfileComponent implements OnInit {
     this.reviewService.getReviewsByDoctorId(doctorId).pipe(
       switchMap(reviews => {
         this.reviews = reviews;
-        const userObservables = reviews.map(review => 
+        const userObservables = reviews.map(review =>
           this.userService.getPatientById(review.patientId)
         );
         return forkJoin(userObservables);
@@ -173,7 +173,7 @@ export class PatientProfileComponent implements OnInit {
       this.userService.updatePatient(userId, formData).subscribe({
         next: (updatedUser) => {
           localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-          alert("Personal information was updated.")
+          alert("Personal information was updated.");
         },
         error: (error) => {
           if (error.status === 400) {
@@ -232,7 +232,6 @@ export class PatientProfileComponent implements OnInit {
           window.location.reload();
           if (this.currentUser?.roleId === 1) {
             this.loadReviewsForDoctor(this.currentUser?.userId ?? 0);
-          this.loadReviewsForDoctor(this.currentUser?.userId ?? 0);
           } else {
             this.loadReviewsForPatient(this.currentUser?.userId ?? 0);
           }
@@ -245,13 +244,13 @@ export class PatientProfileComponent implements OnInit {
       console.error('Invalid reviewId');
     }
   }
-  
+
   sortReviews(event: Event): void {
     const target = event.target as HTMLSelectElement | null;
-  
+
     if (target) {
       const criteria = target.value;
-  
+
       if (criteria === 'relevant') {
         this.reviews.sort((a, b) => b.helpfulCount - a.helpfulCount);
       } else if (criteria === 'recent') {
@@ -260,5 +259,24 @@ export class PatientProfileComponent implements OnInit {
     } else {
       console.error('Event target is not an HTMLSelectElement:', event.target);
     }
+  }
+
+  confirmDeleteUser(userId: number | undefined) {
+    if (userId !== undefined && confirm('Are you sure you want to delete this user?')) {
+      this.deleteUser(userId);
+    }
+  }
+
+  deleteUser(userId: number) {
+    this.userService.deletePatient(userId).subscribe(() => {
+    }, error => {
+      console.error('Failed to delete user:', error);
+    });
+    this.logout();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

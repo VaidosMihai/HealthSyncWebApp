@@ -141,152 +141,134 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Personal Information</h2>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="p-3 py-5">
-          <form [formGroup]="patientForm" (ngSubmit)="onSaveProfile()">
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" class="form-control" placeholder="Username" formControlName="username">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" class="form-control" placeholder="Email" formControlName="emailAddress">
-            </div>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" placeholder="Name" formControlName="name">
-            </div>
-            <div class="form-group">
-              <label for="surname">Surname</label>
-              <input type="text" class="form-control" placeholder="Surname" formControlName="surname">
-            </div>
-            <div class="form-group">
-              <label for="cnp">CNP</label>
-              <input type="text" class="form-control" placeholder="CNP" formControlName="cnp">
-            </div>
-            <div class="form-group">
-              <label for="age">Age</label>
-              <input type="number" class="form-control" placeholder="Age" formControlName="age">
-            </div>
-            <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" class="form-control" placeholder="Address" formControlName="address">
-            </div>
-            <div class="form-group">
-              <label for="phoneNumber">Phone Number</label>
-              <input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber">
-            </div>
-            <div class="form-group" *ngIf="isDoctor || isAdmin">
-              <label for="phoneNumber">Specialization</label>
-              <input type="text" class="form-control" placeholder="Description" formControlName="description">
-            </div>
-            <div class="btn-container">
-              <button class="btn btn-primary profile-button" type="submit" [disabled]="!patientForm.valid" (ngSubmit)="onSaveProfile()">Save Profile</button>
-            </div>
-          </form>
+<div class="container">
+  <h2>Personal Information</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="p-3 py-5">
+        <form [formGroup]="patientForm" (ngSubmit)="onSaveProfile()">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" placeholder="Username" formControlName="username">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" placeholder="Email" formControlName="emailAddress">
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" placeholder="Name" formControlName="name">
+          </div>
+          <div class="form-group">
+            <label for="surname">Surname</label>
+            <input type="text" class="form-control" placeholder="Surname" formControlName="surname">
+          </div>
+          <div class="form-group">
+            <label for="cnp">CNP</label>
+            <input type="text" class="form-control" placeholder="CNP" formControlName="cnp">
+          </div>
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" placeholder="Age" formControlName="age">
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" placeholder="Address" formControlName="address">
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber">
+          </div>
+          <div class="form-group" *ngIf="isDoctor || isAdmin">
+            <label for="phoneNumber">Specialization</label>
+            <input type="text" class="form-control" placeholder="Description" formControlName="description">
+          </div>
           <div class="btn-container">
-            <button class="btn btn-primary profile-button" type="button" routerLink="/forgot-password" style="background-color: #FFDE00; border-color: #FFDE00;">Change password</button>
+            <button class="btn btn-primary profile-button" type="submit" [disabled]="!patientForm.valid">Save Profile</button>
           </div>
+        </form>
+        <div class="btn-container">
+          <button class="btn btn-primary profile-button" type="button" routerLink="/forgot-password" style="background-color: #FFDE00; border-color: #FFDE00;">Change password</button>
         </div>
-        <div class="review-section">
-          <h2 *ngIf="isDoctor">Profile reviews {{ currentUser?.name }} {{ currentUser?.surname }}</h2>
-          <h2 *ngIf="!isDoctor">Reviews made by you</h2>
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <h4 class="m-0">{{ reviews.length }} Reviews ({{ averageRating.toFixed(1) }} &#11088;)</h4>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="d-flex justify-content-between stars-counters">
-                <div *ngFor="let star of starRatings" class="star-rating-item">
-                  <button class="fit-button fit-button-color-blue fit-button-fill-ghost fit-button-size-medium stars-filter">
-                    {{ star.stars }} &#11088;
-                  </button>
-                  <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
-                    <div class="fit-progressbar-background">
-                      <span class="progress-fill" [style.width.%]="star.percentage"></span>
-                    </div>
+        <div class="btn-container">
+          <button class="btn btn-danger profile-button" type="button" *ngIf="currentUser?.userId !== undefined" (click)="confirmDeleteUser(currentUser?.userId)" style="background-color: #ff0000; border-color: #000000;">Delete account</button>
+        </div>
+      </div>
+      <div class="review-section">
+        <h2 *ngIf="isDoctor">Profile reviews {{ currentUser?.name }} {{ currentUser?.surname }}</h2>
+        <h2 *ngIf="!isDoctor">Reviews made by you</h2>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h4 class="m-0">{{ reviews.length }} Reviews ({{ averageRating.toFixed(1) }} &#11088;)</h4>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between stars-counters">
+              <div *ngFor="let star of starRatings" class="star-rating-item">
+                <button class="fit-button fit-button-color-blue fit-button-fill-ghost fit-button-size-medium stars-filter">
+                  {{ star.stars }} &#11088;
+                </button>
+                <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
+                  <div class="fit-progressbar-background">
+                    <span class="progress-fill" [style.width.%]="star.percentage"></span>
                   </div>
-                  <span class="star-num">({{ star.count }})</span>
                 </div>
+                <span class="star-num">({{ star.count }})</span>
               </div>
             </div>
           </div>
-          <div class="col-md-6 text-right" style="margin:auto">
-            <select class="custom-select custom-select-sm border-0 shadow-sm ml-2"(change)="sortReviews($event)">
-              <option value="relevant">Most Relevant</option>
-              <option value="recent">Most Recent</option>
-            </select>
-          </div>
-          
-          <div class="review-list">
-            <ul>
-              <li *ngFor="let review of reviews" class="review-item">
-                <div class="d-flex">
-                  <div class="left">
-                    <span>
-                        <img src="../../../../assets/UserProfilePhoto.png" class="profile-pict-img img-fluid" alt="" />
-                        <!-- <img *ngIf="isPatient" src="../../../../assets/UserProfilePhoto.png" class="profile-pict-img img-fluid" alt="Profile" />
-                        <img *ngIf="isDoctor" src="../../../../assets/DoctorProfilePhoto.png" class="profile-pict-img img-fluid" alt="Profile" />
-                        <img *ngIf="isAdmin" src="../../../../assets/AdminProfilePhoto.png" class="profile-pict-img img-fluid" alt="Profile" /> -->
+        </div>
+        <div class="col-md-6 text-right" style="margin:auto">
+          <select class="custom-select custom-select-sm border-0 shadow-sm ml-2" (change)="sortReviews($event)">
+            <option value="relevant">Most Relevant</option>
+            <option value="recent">Most Recent</option>
+          </select>
+        </div>
+        
+        <div class="review-list">
+          <ul>
+            <li *ngFor="let review of reviews" class="review-item">
+              <div class="d-flex">
+                <div class="left">
+                  <span>
+                      <img src="../../../../assets/UserProfilePhoto.png" class="profile-pict-img img-fluid" alt="" />
+                  </span>
+                </div>
+                <div class="right">
+                  <h4>{{ review.patientName  }}
+                    <span class="gig-rating text-body-2">
+                      <h1>&#11088;</h1>
+                      {{ review.rating }}
                     </span>
+                  </h4>
+                  <div class="review-description">
+                    <p>{{ review.comment }}</p>
                   </div>
-                  <div class="right">
-                    <h4>{{ review.patientName  }}
-                      <span class="gig-rating text-body-2">
-                        <h1>&#11088;</h1>
-                        {{ review.rating }}
+                  <span class="publish py-3 d-inline-block w-100">
+                    Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
+                  </span>
+                  <div class="helpful-thumbs">
+                    <button class="helpful-thumb text-body-2" (click)="markHelpful(review)">
+                      <span class="fit-icon thumbs-icon">
+                        <i class="fa fa-thumbs-up"></i>
                       </span>
-                    </h4>
-                    <div class="review-description">
-                      <p>{{ review.comment }}</p>
-                    </div>
-                    <span class="publish py-3 d-inline-block w-100">
-                      Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
-                    </span>
-                    <div class="helpful-thumbs">
-                      <button class="helpful-thumb text-body-2" (click)="markHelpful(review)">
-                        <span class="fit-icon thumbs-icon">
-                          <i class="fa fa-thumbs-up"></i>
-                        </span>
-                        <span class="thumb-title">({{ review.helpfulCount }})</span>
-                      </button>
-                      <button class="helpful-thumb text-body-2 ml-3" (click)="markNotHelpful(review)">
-                        <span class="fit-icon thumbs-icon">
-                          <i class="fa fa-thumbs-down"></i>
-                        </span>
-                        <span class="thumb-title">({{ review.notHelpfulCount }})</span>
-                      </button>
-                      <button (click)="deleteReview(review.reviewId!)" class="delete-button"><i class="material-icons">&#xe872;</i></button>
-                    </div>
+                      <span class="thumb-title">({{ review.helpfulCount }})</span>
+                    </button>
+                    <button class="helpful-thumb text-body-2 ml-3" (click)="markNotHelpful(review)">
+                      <span class="fit-icon thumbs-icon">
+                        <i class="fa fa-thumbs-down"></i>
+                      </span>
+                      <span class="thumb-title">({{ review.notHelpfulCount }})</span>
+                    </button>
+                    <button (click)="deleteReview(review.reviewId!)" class="delete-button"><i class="material-icons">&#xe872;</i></button>
                   </div>
                 </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Success!</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Your profile has been successfully saved.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 </body>
 </html>
