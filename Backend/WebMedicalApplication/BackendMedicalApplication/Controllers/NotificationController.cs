@@ -47,4 +47,19 @@ public class NotificationController : ControllerBase
         await _notificationService.MarkAsRead(notificationId);
         return Ok();
     }
+
+    [HttpPost("mark-all-as-read/{userId}")]
+    public async Task<ActionResult> MarkAllAsRead(int userId)
+    {
+        try
+        {
+            await _notificationService.MarkAllAsRead(userId);
+            return Ok(new { message = "All notifications marked as read" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
 }

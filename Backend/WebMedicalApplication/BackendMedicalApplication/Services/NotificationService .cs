@@ -52,4 +52,12 @@ public class NotificationService : INotificationService
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task MarkAllAsRead(int userId)
+    {
+        var notifications = await _context.Notifications.Where(n => n.UserId == userId && !n.IsRead).ToListAsync();
+        notifications.ForEach(n => n.IsRead = true);
+        await _context.SaveChangesAsync();
+    }
+
 }
