@@ -15,6 +15,13 @@ public class NotificationService : INotificationService
         _context = context;
     }
 
+    public async Task<int> GetUnreadNotificationsCount(int userId)
+    {
+        return await _context.Notifications
+            .Where(n => n.UserId == userId && !n.IsRead)
+            .CountAsync();
+    }
+
     public async Task CreateNotification(int userId, string message)
     {
         var notification = new Notification
@@ -36,10 +43,13 @@ public class NotificationService : INotificationService
             .ToListAsync();
     }
 
-    public async Task<int> GetUnreadNotificationsCount(int userId)
+    public async Task MarkAsRead(int notificationId)
     {
-        return await _context.Notifications
-            .Where(n => n.UserId == userId && !n.IsRead)
-            .CountAsync();
+        var notification = await _context.Notifications.FindAsync(notificationId);
+        if (notification != null)
+        {
+            notification.IsRead = true;
+            await _context.SaveChangesAsync();
+        }
     }
 }

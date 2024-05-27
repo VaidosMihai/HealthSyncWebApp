@@ -9,5 +9,6 @@ namespace BackendMedicalApplication.Interfaces
         Task CreateNotification(int userId, string message);
         Task<List<Notification>> GetNotificationsByUserId(int userId);
         Task<int> GetUnreadNotificationsCount(int userId);
+        Task MarkAsRead(int notificationId);
     }
 }

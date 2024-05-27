@@ -33,4 +33,18 @@ public class NotificationController : ControllerBase
         var count = await _notificationService.GetUnreadNotificationsCount(userId);
         return Ok(count);
     }
+
+    [HttpPost]
+    public async Task<ActionResult> CreateNotification([FromBody] NotificationDto notificationDto)
+    {
+        await _notificationService.CreateNotification(notificationDto.UserId, notificationDto.Message);
+        return Ok();
+    }
+
+    [HttpPut("{notificationId}/mark-as-read")]
+    public async Task<ActionResult> MarkAsRead(int notificationId)
+    {
+        await _notificationService.MarkAsRead(notificationId);
+        return Ok();
+    }
 }
