@@ -44,12 +44,16 @@ export class NotificationService {
     };
   }
   
-  sendEmail(to: string, subject: string, body: string): Observable<any> {
-    const emailPayload = {
-      to,
-      subject,
-      body
-    };
-    return this.http.post(`$${environment.apiUrl}/contact`, emailPayload);
+  // sendEmail(to: string, subject: string, body: string): Observable<any> {
+  //   const emailPayload = {
+  //     to,
+  //     subject,
+  //     body
+  //   };
+  //   return this.http.post(`${environment.apiUrl}/contact`, emailPayload);
+  // }
+
+  sendEmail(contactForm: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/contact`, contactForm);
   }
 }

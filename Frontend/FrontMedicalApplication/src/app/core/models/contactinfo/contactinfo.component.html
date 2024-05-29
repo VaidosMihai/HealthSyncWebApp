@@ -4,61 +4,72 @@
     <p><strong>Call Center:</strong> 0800-123-456</p>
     <p><strong>Email:</strong> contact&commat;healthsync.com</p>
   
-    <h2>Our Locations</h2>
-    <div class="location-details">
-      <div class="location-card" *ngFor="let location of locations">
-        <h3>{{ location.title }}</h3>
-        <p><strong>Address:</strong> {{ location.description }}</p>
-        <p>Working hours: 8:00 - 20:00</p>
+    
+  <h2>Our Locations</h2>
+  <div class="location-details">
+    <div class="location-card" *ngFor="let location of locations">
+      <h3>{{ location.title }}</h3>
+      <p><strong>Address:</strong> {{ location.description }}</p>
+      <p>Working hours: 8:00 - 20:00</p>
+    </div>
+  </div>
+<br>
+  <h2>Contact Form</h2>
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" formControlName="firstName" required>
+      <div *ngIf="contactForm.get('firstName')?.invalid && contactForm.get('firstName')?.touched" class="error">
+        First name must start with an uppercase letter and contain only letters.
       </div>
     </div>
-  
-    <h2>Contact Form</h2>
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" id="firstName" [(ngModel)]="contactForm.firstName" name="firstName" required>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" formControlName="lastName" required>
+      <div *ngIf="contactForm.get('lastName')?.invalid && contactForm.get('lastName')?.touched" class="error">
+        Last name must start with an uppercase letter and contain only letters.
       </div>
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" [(ngModel)]="contactForm.lastName" name="lastName" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" formControlName="phone" required>
+      <div *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched" class="error">
+        Phone number must contain only numbers.
       </div>
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" [(ngModel)]="contactForm.phone" name="phone" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" required>
+      <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="error">
+        Please enter a valid email address.
       </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" [(ngModel)]="contactForm.email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label for="dob">Date of Birth</label>
-        <input type="date" id="dob" [(ngModel)]="contactForm.dob" name="dob" required>
-      </div>
-      <div class="form-group">
-        <label for="comments">Comments (optional)</label>
-        <textarea id="comments" [(ngModel)]="contactForm.comments" name="comments"></textarea>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" [(ngModel)]="contactForm.agreeTerms" name="agreeTerms" required>
-          I agree to the <a href="#">Terms and Conditions</a>
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" [(ngModel)]="contactForm.agreePrivacy" name="agreePrivacy" required>
-          I have read and agree to the <a href="#">Privacy Policy</a>
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" [(ngModel)]="contactForm.agreeMarketing" name="agreeMarketing">
-          I agree to receive marketing communications
-        </label>
-      </div>
-      <button type="submit" class="submit-btn">Submit</button>
-    </form>
-      
-  </div>
-  
+    </div>
+    <div class="form-group">
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" formControlName="dob" required>
+    </div>
+    <div class="form-group">
+      <label for="comments">Comments (optional)</label>
+      <textarea id="comments" formControlName="comments"></textarea>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="agreeTerms" required>
+        I agree to the <a href="#">Terms and Conditions</a>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="agreePrivacy" required>
+        I have read and agree to the <a href="#">Privacy Policy</a>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="agreeMarketing">
+        I agree to receive marketing communications
+      </label>
+    </div>
+    <button type="submit" class="submit-btn">Submit</button>
+  </form>
+</div>
