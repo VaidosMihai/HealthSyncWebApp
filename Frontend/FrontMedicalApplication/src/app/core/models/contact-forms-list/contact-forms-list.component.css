@@ -1,0 +1,93 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
+  
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .card.checked {
+    background-color: #d4edda;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .card-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .card p {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .justify-content-between {
+    justify-content: space-between;
+  }
+  
+  .mt-3 {
+    margin-top: 1rem;
+  }
+  
+  h2, h3, h5 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .btn {
+    margin-top: 10px;
+  }
+  
+  .btn-block {
+    width: 100%;
+  }
+  
+  .mx-1 {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+  
+  .btn-primary {
+    margin-right: 5px;
+  }
+  
+  .btn-unchecked {
+    background-color: #a93737;
+    color: white;
+    border: none;
+  }
+  
+  .btn-unchecked:hover {
+    background-color: #922b2b;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  

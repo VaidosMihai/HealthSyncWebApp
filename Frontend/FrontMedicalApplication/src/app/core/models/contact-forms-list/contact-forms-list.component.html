@@ -1,0 +1,28 @@
+<div class="container mt-4">
+    <h2>Inquiries Received via Contact Form</h2>
+    <div class="row">
+      <div class="col-md-4 mb-3" *ngFor="let form of contactForms">
+        <div class="card" [ngClass]="{ 'checked': form.checked }">
+          <div class="card-body">
+            <h5 class="card-title">{{ form.firstName }} {{ form.lastName }}</h5>
+            <p><strong>Form ID:</strong> {{ form.id }}</p>
+            <p><strong>First Name:</strong> {{ form.firstName }}</p>
+            <p><strong>Last Name:</strong> {{ form.lastName }}</p>
+            <p><strong>Phone:</strong> {{ form.phone }}</p>
+            <p><strong>Email:</strong> {{ form.email }}</p>
+            <p><strong>Date of Birth:</strong> {{ form.dob | date }}</p>
+            <p><strong>Comments:</strong> {{ form.comments }}</p>
+            <p><strong>Submission Date:</strong> {{ form.submissionDate | date }}</p>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-primary btn-block mx-1" (click)="toggleChecked(form)">
+                {{ form.checked ? 'Unchecked' : 'Checked' }}
+              </button>
+              <button class="btn btn-secondary btn-block mx-1" (click)="sendEmail(form.email)">Send Email</button>
+              <button class="btn btn-danger btn-block mx-1" (click)="deleteForm(form)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
