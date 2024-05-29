@@ -5,6 +5,7 @@ namespace BackendMedicalApplication.Interfaces
     public interface IContactFormService
     {
         Task SaveContactFormSubmissionAsync(ContactFormSubmission submission);
+        Task<IEnumerable<ContactFormSubmission>> GetAllContactFormSubmissionsAsync();
     }
 
 }

@@ -1,5 +1,8 @@
-﻿using BackendMedicalApplication.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BackendMedicalApplication.Interfaces;
 using BackendMedicalApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendMedicalApplication.Services
 {
@@ -17,6 +20,10 @@ namespace BackendMedicalApplication.Services
             _context.ContactFormSubmissions.Add(submission);
             await _context.SaveChangesAsync();
         }
-    }
 
+        public async Task<IEnumerable<ContactFormSubmission>> GetAllContactFormSubmissionsAsync()
+        {
+            return await _context.ContactFormSubmissions.ToListAsync();
+        }
+    }
 }

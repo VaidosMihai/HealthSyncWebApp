@@ -63,5 +63,13 @@ namespace ContactApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet]
+        [Route("all")]
+        public async Task<IActionResult> GetAll()
+        {
+            var submissions = await _contactFormService.GetAllContactFormSubmissionsAsync();
+            return Ok(submissions);
+        }
     }
 }
