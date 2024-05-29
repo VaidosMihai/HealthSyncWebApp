@@ -1,6 +1,5 @@
-// signup-component.component.ts
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth-service.service';
 import { Router } from '@angular/router';
 import { UserDto } from '../../core/dtos/user.dto';
@@ -23,16 +22,21 @@ export class SignupComponent {
   ) {
     this.signupForm = this.fb.group({
       username: ['', Validators.required],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      CNP: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(0)]],
+      name: ['', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z]*$')]],
+      surname: ['', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z]*$')]],
+      CNP: ['', [Validators.required, Validators.pattern('^[0-9]{13}$')]],
+      age: ['', [Validators.required, Validators.min(0), Validators.max(150)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[A-Z])(?=.*[0-9]{3,})(?=.*[!@#$%^&*]).+$')]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(8), this.passwordMatchValidator]],
       Address: ['', [Validators.required, Validators.minLength(6)]],
-      PhoneNumber: ['', [Validators.required, Validators.minLength(6)]],
+      PhoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
     });
+  }
+
+  passwordMatchValidator(control: FormControl) {
+    const password = control.root.get('password');
+    return password && control.value !== password.value ? { mismatch: true } : null;
   }
 
   onSignup() {
@@ -45,7 +49,6 @@ export class SignupComponent {
         next: (response) => {
           this.message = 'Registration successful! Please check your email to verify your account.';
           if (typeof response.token === 'string') {
-            //localStorage.setItem('token', response.token);
             localStorage.setItem('token', JSON.stringify(response));
             this.router.navigate(['/login']);
           } else {
@@ -54,12 +57,10 @@ export class SignupComponent {
           this.loading = false;
         },
         error: (error) => {
-          // Handle any errors that occur during registration
           this.error = error;
           this.loading = false;
         }
       });
     }
   }
-  
 }

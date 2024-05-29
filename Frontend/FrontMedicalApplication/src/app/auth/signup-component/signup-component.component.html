@@ -79,10 +79,12 @@
                 <div class="form-group">
                   <label for="name">Name</label>
                   <input placeholder="Name" type="text" id="name" class="form-control" formControlName="name" required />
+                  <mat-error *ngIf="signupForm.get('name')?.hasError('pattern')">Name must start with an uppercase letter</mat-error>
                 </div>
                 <div class="form-group">
                   <label for="surname">Surname</label>
                   <input placeholder="Surname" type="text" id="surname" class="form-control" formControlName="surname" required />
+                  <mat-error *ngIf="signupForm.get('surname')?.hasError('pattern')">Surname must start with an uppercase letter</mat-error>
                 </div>
                 <div class="form-group">
                   <label for="email">Email</label>
@@ -91,37 +93,40 @@
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input placeholder="Password" type="password" id="password" class="form-control" formControlName="password" required minlength="6" />
-                  <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
+                  <input placeholder="Password" type="password" id="password" class="form-control" formControlName="password" required minlength="8" />
+                  <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">Password must be at least 8 characters</mat-error>
+                  <br>
+                  <mat-error *ngIf="signupForm.get('password')?.hasError('pattern')">Password must contain 1 uppercase letter, 1 special character, and at least 3 numbers</mat-error>
                 </div>
                 <div class="form-group">
                   <label for="confirmPassword">Confirm Password</label>
-                  <input placeholder="Confirm password" type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" required minlength="6" />
-                  <mat-error *ngIf="signupForm.get('confirmPassword')?.hasError('minlength')">Confirmation Password must be at least 6 characters</mat-error>
+                  <input placeholder="Confirm password" type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" required minlength="8" />
+                  <mat-error *ngIf="signupForm.get('confirmPassword')?.hasError('mismatch')">Passwords must match</mat-error>
                 </div>
                 <div class="form-group">
                   <label for="CNP">CNP</label>
-                  <input placeholder="CNP" type="text" id="CNP" class="form-control" formControlName="CNP" required pattern="^[0-9]+$" />
-                  <mat-error *ngIf="signupForm.get('CNP')?.hasError('min')">CNP must be a positive string</mat-error>
+                  <input placeholder="CNP" type="text" id="CNP" class="form-control" formControlName="CNP" required pattern="^[0-9]{13}$" />
+                  <mat-error *ngIf="signupForm.get('CNP')?.hasError('pattern')">CNP must be exactly 13 characters long and contain only numbers</mat-error>
                 </div>
                 <div class="form-group">
                   <label for="age">Age</label>
-                  <input placeholder="Age" type="number" id="age" class="form-control" formControlName="age" required min="0" />
+                  <input placeholder="Age" type="number" id="age" class="form-control" formControlName="age" required min="0" max="150" />
                   <mat-error *ngIf="signupForm.get('age')?.hasError('min')">Age must be a positive number</mat-error>
+                  <mat-error *ngIf="signupForm.get('age')?.hasError('max')">Age cannot be more than 150</mat-error>
                 </div>
                 <div class="form-group">
-                  <label for="Address">Address</label>
+                  <label for="Address">Address (Format: country, state, city, address)</label>
                   <input placeholder="Address" type="text" id="Address" class="form-control" formControlName="Address" required />
-                  <mat-error *ngIf="signupForm.get('Address')?.hasError('min')">Address must be completed</mat-error>
+                  <mat-error *ngIf="signupForm.get('Address')?.hasError('minlength')">Address must be completed in the format: country, state, city, address</mat-error>
                 </div>
                 <div class="form-group">
                   <label for="PhoneNumber">Phone Number</label>
-                  <input placeholder="Phone Number" type="text" id="PhoneNumber" class="form-control" formControlName="PhoneNumber" required />
-                  <mat-error *ngIf="signupForm.get('PhoneNumber')?.hasError('min')">Phone number must be completed</mat-error>
+                  <input placeholder="Phone Number" type="text" id="PhoneNumber" class="form-control" formControlName="PhoneNumber" required pattern="^[0-9]+$" />
+                  <mat-error *ngIf="signupForm.get('PhoneNumber')?.hasError('pattern')">Phone number must contain only numbers</mat-error>
                 </div>
                 <div class="btn-container">
                   <button type="submit" class="btn btn-primary btn-block mb-4" [disabled]="loading">Sign up</button>
-                  <button type="submit" mat-button routerLink="/login">Already have an account? Login</button>
+                  <button type="button" class="btn btn-link" routerLink="/login">Already have an account? Login</button>
                 </div>
                 <div *ngIf="message" class="alert alert-success">
                   {{ message }}
