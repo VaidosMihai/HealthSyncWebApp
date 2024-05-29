@@ -31,7 +31,7 @@ export class AppointmentListComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
-    private notificationService: NotificationService // Inject NotificationService
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
