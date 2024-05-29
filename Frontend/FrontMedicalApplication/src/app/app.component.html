@@ -29,7 +29,8 @@
               <a mat-button *ngIf="isAdmin" routerLink="/users">Users</a>
               <a mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/profile">Profile</a>
               <a mat-button routerLink="/locations">Locations</a>
-              <a routerLink="/contactinfo">Contact Info</a>
+              <a mat-button routerLink="/contactinfo">Contact Info</a>
+              <a mat-button *ngIf="isAdmin || isDoctor" routerLink="/contact-forms" >Contact Forms</a>
             </div>
           </li>
         </ul>

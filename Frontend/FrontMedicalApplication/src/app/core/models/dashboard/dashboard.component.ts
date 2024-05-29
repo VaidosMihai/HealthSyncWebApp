@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
       case 'Users': return '/users';
       case 'Patients': return '/patients';
       case 'ContactInfo': return '/contactinfo';
+      case 'ContactForms': return '/contact-forms';
       default: return '/';
     }
   }

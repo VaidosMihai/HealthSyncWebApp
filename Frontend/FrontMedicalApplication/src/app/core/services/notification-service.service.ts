@@ -43,17 +43,16 @@ export class NotificationService {
       isRead: notification.isRead
     };
   }
-  
-  // sendEmail(to: string, subject: string, body: string): Observable<any> {
-  //   const emailPayload = {
-  //     to,
-  //     subject,
-  //     body
-  //   };
-  //   return this.http.post(`${environment.apiUrl}/contact`, emailPayload);
-  // }
 
   sendEmail(contactForm: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/contact`, contactForm);
+  }
+
+  getContactForms(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/contact/all`);
+  }
+  
+  deleteContactForm(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/contact/${id}`);
   }
 }

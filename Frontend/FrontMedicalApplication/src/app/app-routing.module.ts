@@ -27,11 +27,12 @@ import { LocationComponent } from './core/models/location/location.component';
 import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.component';
 import { VerifyEmailComponent } from './core/models/verify-email/verify-email.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { ContactFormsListComponent } from './core/models/contact-forms-list/contact-forms-list.component';
 
 const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'patients', component: PatientListComponent, canActivate: [roleGuard], data: { roles: [1, 3] } },  // Example: Accessible by Patient (2) and Admin (3)
+  { path: 'patients', component: PatientListComponent, canActivate: [roleGuard], data: { roles: [1, 3] } },
   { path: 'profile', component: PatientProfileComponent },
   { path: 'appointment', component: AppointmentListComponent },
   { path: 'appointment/edit/:id', component: AppointmentEditComponent },
@@ -41,8 +42,8 @@ const routes: Routes = [
   { path: 'schedule', component: ScheduleListComponent },
   { path: 'schedule/edit/:id', component: ScheduleEditComponent },
   { path: 'forgot-password', component: ForgotPassComponent },
-  { path: 'doctors', component: DoctorListComponent, canActivate: [roleGuard], data: { roles: [2, 3] } },  // Example: Accessible by Doctor (1) and Admin (3)
-  { path: 'users', component: UserListComponent, canActivate: [roleGuard], data: { roles: [3] } },  // Example: Accessible by Admin (3) only
+  { path: 'doctors', component: DoctorListComponent, canActivate: [roleGuard], data: { roles: [2, 3] } },
+  { path: 'users', component: UserListComponent, canActivate: [roleGuard], data: { roles: [3] } },
   { path: 'user/edit/:id', component: UserEditComponent },
   { path: 'user/add', component: UserAddComponent },
   { path: 'search', component: SearchResultComponent },
@@ -56,7 +57,7 @@ const routes: Routes = [
   { path: 'contactinfo', component: ContactinfoComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
-
+  { path: 'contact-forms', component: ContactFormsListComponent, canActivate: [roleGuard], data: { roles: [1, 3] } },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

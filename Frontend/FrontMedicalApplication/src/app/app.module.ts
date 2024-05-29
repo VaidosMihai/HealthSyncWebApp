@@ -34,6 +34,7 @@ import { NotificationListComponent } from './core/models/notification-list/notif
 import { DashboardComponent } from './core/models/dashboard/dashboard.component';
 import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { ContactFormsListComponent } from './core/models/contact-forms-list/contact-forms-list.component';
 
 @NgModule({
   declarations: [
@@ -55,11 +56,12 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     NotificationListComponent,
     DashboardComponent,
     LoginComponent,
-    ContactinfoComponent
+    ContactinfoComponent,
+    ContactFormsListComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,  // Ensure FormsModule is imported
+    FormsModule,
     CommonModule, 
     HttpClientModule,
     AppRoutingModule,
