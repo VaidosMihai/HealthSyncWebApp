@@ -71,5 +71,16 @@ namespace ContactApi.Controllers
             var submissions = await _contactFormService.GetAllContactFormSubmissionsAsync();
             return Ok(submissions);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _contactFormService.DeleteContactFormSubmissionAsync(id);
+            if (result)
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 }

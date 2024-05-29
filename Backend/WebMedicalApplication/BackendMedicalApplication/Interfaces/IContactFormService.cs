@@ -6,6 +6,7 @@ namespace BackendMedicalApplication.Interfaces
     {
         Task SaveContactFormSubmissionAsync(ContactFormSubmission submission);
         Task<IEnumerable<ContactFormSubmission>> GetAllContactFormSubmissionsAsync();
+        Task<bool> DeleteContactFormSubmissionAsync(int id);
     }
 
 }

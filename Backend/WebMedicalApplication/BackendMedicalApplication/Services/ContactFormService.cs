@@ -25,5 +25,18 @@ namespace BackendMedicalApplication.Services
         {
             return await _context.ContactFormSubmissions.ToListAsync();
         }
+
+        public async Task<bool> DeleteContactFormSubmissionAsync(int id)
+        {
+            var submission = await _context.ContactFormSubmissions.FindAsync(id);
+            if (submission == null)
+            {
+                return false;
+            }
+
+            _context.ContactFormSubmissions.Remove(submission);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
