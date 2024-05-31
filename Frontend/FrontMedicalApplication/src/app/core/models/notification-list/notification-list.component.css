@@ -9,15 +9,15 @@
   z-index: 1000;
   width: 80%;
   max-width: 600px;
-  border-radius: 10px; /* Added border-radius for rounded corners */
+  border-radius: 10px;
 }
 
 .notification-list {
-  max-height: 300px; /* Adjust this value as needed */
+  max-height: 300px;
   overflow-y: auto;
   padding: 0;
   list-style-type: none;
-  margin-top: 10px; /* Added space between the mark all as read button and the notifications */
+  margin-top: 10px;
 }
 
 .notification-item {
@@ -36,25 +36,25 @@
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 5px; /* Added border-radius for rounded corners */
+  border-radius: 5px;
   display: inline-block;
 }
 
 .mark-all-read-btn {
-  background: #007bff; /* Different color for mark all as read button */
-  margin-bottom: 10px; /* Added space below the mark all as read button */
+  background: #007bff;
+  margin-bottom: 10px;
 }
 
 .mark-as-read-btn {
-  margin-left: 10px; /* Space between hour and mark as read button */
+  margin-left: 10px;
 }
 
 .close-modal-btn {
-  background: #f44336; /* Red color for close button */
+  background: #f44336;
   margin-top: 20px;
   display: block;
   width: 100%;
-  text-align: center; /* Center align the close button */
+  text-align: center;
 }
 
 .notification-details {

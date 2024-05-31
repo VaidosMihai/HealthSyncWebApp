@@ -5,7 +5,6 @@
   </div>
   <div class="container mt-4">
     <h2>Upcoming Appointments</h2>
-    <!-- Combobox for sorting options -->
     <div class="d-flex justify-content-start align-items-center mb-2">
       <label for="sortOptions" class="mr-2">Sort By:</label>
       <select id="sortOptions" class="form-control w-25" (change)="onSortChange($event)">
@@ -54,7 +53,6 @@
               </button>
               <span *ngIf="!appointment.patientRecordId && appointment.status === 'Accepted'">No diagnostics available yet.</span>
 
-              <!-- Accept, Decline, and Reschedule Buttons for Doctors -->
               <button *ngIf="(isDoctor || isAdmin) && (appointment.status === 'Pending' && appointment.appointmentId !== undefined)" class="btn btn-success btn-sm mr-2 btn-custom"
                 (click)="acceptAppointment(appointment.appointmentId)">
                 Accept

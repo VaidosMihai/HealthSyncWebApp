@@ -1,5 +1,5 @@
 export class ScheduleDto {
-    scheduleId?: number; // Optional for creation
+    scheduleId?: number;
     doctorId: number;
     date: Date;
     startTime: string;

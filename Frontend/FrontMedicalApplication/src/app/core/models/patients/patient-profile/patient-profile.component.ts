@@ -49,7 +49,7 @@ export class PatientProfileComponent implements OnInit {
       age: ['', [Validators.required, Validators.min(0)]],
       emailAddress: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
-      roleId: [2], // Default role id can be set based on the application's logic
+      roleId: [2],
       password: [''],
       address: ['', [Validators.required, Validators.minLength(6)]],
       phoneNumber: ['', [Validators.required, Validators.minLength(10)]],

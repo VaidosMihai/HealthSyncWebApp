@@ -28,7 +28,7 @@ export class MedicalRecordNewComponent implements OnInit {
 
   sendNotification(userId: number, message: string): void {
     const notification: NotificationDto = {
-      notificationId: 0, // Will be set by the backend
+      notificationId: 0,
       userId,
       message,
       createdAt: new Date(),

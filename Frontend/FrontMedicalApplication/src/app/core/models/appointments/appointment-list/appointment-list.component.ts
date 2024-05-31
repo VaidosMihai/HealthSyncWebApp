@@ -62,7 +62,7 @@ export class AppointmentListComponent implements OnInit {
           this.appointments = response.body;
           this.populatePatientNames();
           this.categorizeAppointments(this.appointments);
-          this.sortedAppointments = [...this.upcomingAppointments]; // Initialize sortedAppointments
+          this.sortedAppointments = [...this.upcomingAppointments];
         }
       },
       error: (error) => {
@@ -79,9 +79,9 @@ export class AppointmentListComponent implements OnInit {
         next: (response: HttpResponse<AppointmentDto[]>) => {
           if (response.body) {
             let filteredAppointments;
-            if (currentUser.roleId === 1) { // Doctor
+            if (currentUser.roleId === 1) {
               filteredAppointments = response.body.filter(appt => appt.doctorId === currentUser.userId);
-            } else if (currentUser.roleId === 2) { // Patient
+            } else if (currentUser.roleId === 2) {
               filteredAppointments = response.body.filter(appt => appt.patientId === currentUser.userId);
             }
   
@@ -89,9 +89,9 @@ export class AppointmentListComponent implements OnInit {
               this.appointments = filteredAppointments;
               this.populatePatientNames();
               this.categorizeAppointments(this.appointments);
-              this.sortedAppointments = [...this.upcomingAppointments]; // Initialize sortedAppointments
+              this.sortedAppointments = [...this.upcomingAppointments];
             } else {
-              this.appointments = []; // Set appointments to empty array if no matches
+              this.appointments = [];
             }
           }
         },
@@ -144,10 +144,9 @@ export class AppointmentListComponent implements OnInit {
 
       this.appointmentService.deleteAppointment(appointmentId).subscribe({
         next: () => {
-          // Send notification
-          if (currentUser.roleId === 1) { // Doctor cancels
+          if (currentUser.roleId === 1) {
             this.sendNotification(appointment.patientId, `The appointment scheduled for ${appointment.dateTime} has been canceled by the doctor.`);
-          } else if (currentUser.roleId === 2) { // Patient cancels
+          } else if (currentUser.roleId === 2) {
             this.sendNotification(appointment.doctorId, `The appointment scheduled for ${appointment.dateTime} has been canceled by the patient.`);
           }
 
@@ -163,7 +162,7 @@ export class AppointmentListComponent implements OnInit {
 
   sendNotification(userId: number, message: string): void {
     const notification: NotificationDto = {
-      notificationId: 0, // Will be set by the backend
+      notificationId: 0,
       userId,
       message,
       createdAt: new Date(),
@@ -220,10 +219,6 @@ export class AppointmentListComponent implements OnInit {
     }
   }
 
-  openRescheduleModal(appointmentId: number) {
-    // Logic to open reschedule modal
-  }
-
   rescheduleAppointment(appointmentId: number, newDateTime: Date) {
     const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
     if (appointment) {
@@ -243,7 +238,6 @@ export class AppointmentListComponent implements OnInit {
   makeDiagnosis(appointmentId: number) {
     const appointment = this.appointments.find(appt => appt.appointmentId === appointmentId);
     if (appointment) {
-      // Logic to make diagnosis
       this.sendNotification(appointment.patientId, `The doctor has made a diagnosis for the appointment scheduled on ${appointment.dateTime}.`);
     }
   }

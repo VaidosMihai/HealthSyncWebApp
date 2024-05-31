@@ -8,7 +8,7 @@ import { NotificationDto } from '../../dtos/notification.dto';
   styleUrls: ['./notification-list.component.css']
 })
 export class NotificationListComponent implements OnInit {
-  @Input() userId!: number; // Use the ! operator to assert that userId will be provided
+  @Input() userId!: number;
   @Output() notificationUpdated = new EventEmitter<void>();
   notifications: NotificationDto[] = [];
 
@@ -30,7 +30,6 @@ export class NotificationListComponent implements OnInit {
   }
 
   closeModal(): void {
-    // Cast the modal to HTMLElement to access the style property
     const modal = document.querySelector('.notification-modal') as HTMLElement;
     if (modal) {
       modal.style.display = 'none';
@@ -38,13 +37,12 @@ export class NotificationListComponent implements OnInit {
   }
 
   markAsRead(notification: NotificationDto): void {
-    // Logic to mark a single notification as read
     if (notification.notificationId !== undefined) {
       this.notificationService.markAsRead(notification.notificationId).subscribe({
         next: () => {
-          notification.isRead = true; // Update the local state
-          this.notifications = this.notifications.filter(n => n.notificationId !== notification.notificationId); // Remove read notification from list
-          this.notificationUpdated.emit(); // Emit event to update unread count
+          notification.isRead = true;
+          this.notifications = this.notifications.filter(n => n.notificationId !== notification.notificationId);
+          this.notificationUpdated.emit();
         },
         error: (error) => {
           console.error('Failed to mark notification as read', error);
@@ -56,12 +54,11 @@ export class NotificationListComponent implements OnInit {
   }
 
   markAllAsRead(): void {
-    // Logic to mark all notifications as read
     this.notificationService.markAllAsRead(this.userId).subscribe({
       next: () => {
-        this.notifications.forEach(notification => notification.isRead = true); // Update the local state
-        this.notifications = []; // Clear all notifications from the list
-        this.notificationUpdated.emit(); // Emit event to update unread count
+        this.notifications.forEach(notification => notification.isRead = true);
+        this.notifications = [];
+        this.notificationUpdated.emit();
       },
       error: (error) => {
         console.error('Failed to mark all notifications as read', error);

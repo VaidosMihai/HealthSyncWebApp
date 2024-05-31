@@ -7,42 +7,42 @@
   
   .login-container {
     background-color: #333;
-    padding: 40px; /* Increased padding */
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 500px; /* Adjust width as needed */
+    width: 500px;
     color: white;
   }
   
   .mat-card-title {
     text-align: center;
-    margin-bottom: 30px; /* Increased space below title */
-    font-size: 50px; /* Increased font size */
+    margin-bottom: 30px;
+    font-size: 50px;
   }
   
   .mat-form-field {
-    width: 100%; /* Form fields full width */
-    margin-bottom: 30px; /* Increased space between fields */
+    width: 100%;
+    margin-bottom: 30px;
   }
   
   input.mat-input-element {
-    font-size: 18px; /* Increased font size */
-    padding: 10px; /* Increased padding for input */
+    font-size: 18px;
+    padding: 10px;
   }
   
   button.mat-raised-button {
-    width: 100%; /* Full width button */
-    padding: 15px 0; /* Increased padding for larger button */
-    font-size: 18px; /* Increased font size */
-    margin-top: 20px; /* Space above the button */
+    width: 100%;
+    padding: 15px 0;
+    font-size: 18px;
+    margin-top: 20px;
   }
   
   .social-login button {
-    margin-right: 15px; /* Space between social buttons */
+    margin-right: 15px;
   }
   
   .social-login img {
-    width: 24px; /* Adjust image size */
+    width: 24px;
     height: auto;
   }
   

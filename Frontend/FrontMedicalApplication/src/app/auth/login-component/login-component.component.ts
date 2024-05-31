@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service.service';
-import { UserDto } from '../../core/dtos/user.dto';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +11,6 @@ import { UserDto } from '../../core/dtos/user.dto';
 export class LoginComponent {
   loginForm: FormGroup;
   loading = false;
-  error = '';
   loginError = '';
 
   constructor(
@@ -37,6 +35,7 @@ export class LoginComponent {
             userData => {
               this.router.navigate(['/dashboard']);
               this.loading = false;
+              this.loginError = ''; // Clear any previous error messages
             },
             userError => {
               console.error('Failed to load user data:', userError);
@@ -45,7 +44,7 @@ export class LoginComponent {
           );
         },
         error: (error) => {
-          this.error = error;
+          this.loginError = 'Incorrect username or password. Please try again.'; // Set the error message
           this.loading = false;
         }
       });

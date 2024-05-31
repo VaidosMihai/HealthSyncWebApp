@@ -8,7 +8,7 @@ import { MedicalRecordDto } from '../dtos/medical-record.dto';
   providedIn: 'root'
 })
 export class MedicalRecordService {
-  private apiUrl = `${environment.apiUrl}/PatientRecord`; // Updated endpoint
+  private apiUrl = `${environment.apiUrl}/PatientRecord`;
 
   constructor(private http: HttpClient) { }
 

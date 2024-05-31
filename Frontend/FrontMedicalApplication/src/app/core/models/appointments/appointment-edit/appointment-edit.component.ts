@@ -1,4 +1,3 @@
-// appointment-edit.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -21,7 +20,6 @@ export class AppointmentEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // Initialize the form
     this.appointmentForm = this.fb.group({
       doctorId: ['', [Validators.required, Validators.min(1)]],
       patientId: ['', [Validators.required, Validators.min(1)]],
@@ -35,7 +33,6 @@ export class AppointmentEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.isEditMode = true;
       this.appointmentId = Number(this.route.snapshot.params['id']);
-      // If in edit mode, load the existing appointment details
       this.appointmentService.getAppointmentById(this.appointmentId).subscribe(appointment => {
         this.appointmentForm.patchValue(appointment);
       });
@@ -45,10 +42,9 @@ export class AppointmentEditComponent implements OnInit {
   onSubmit() {
     if (this.appointmentForm.valid) {
       if (this.isEditMode && this.appointmentId) {
-        // Update the existing appointment
         const updatedAppointment: AppointmentDto = {
           ...this.appointmentForm.value,
-          status: 'Pending' // Set status to Pending
+          status: 'Pending'
         };
         this.appointmentService.updateAppointment(this.appointmentId, updatedAppointment).subscribe({
           next: () => {
@@ -58,7 +54,6 @@ export class AppointmentEditComponent implements OnInit {
           error: err => console.error('Error updating appointment:', err)
         });
       } else {
-        // Create a new appointment
         this.appointmentService.createAppointment(this.appointmentForm.value).subscribe({
           next: () => this.router.navigate(['/appointment']),
           error: err => console.error('Error creating new appointment:', err)

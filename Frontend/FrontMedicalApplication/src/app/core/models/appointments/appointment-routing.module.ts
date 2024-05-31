@@ -6,7 +6,6 @@ import { AppointmentEditComponent } from './appointment-edit/appointment-edit.co
 const routes: Routes = [
   { path: 'appointment', component: AppointmentListComponent },
   { path: 'appointment/edit/:id', component: AppointmentEditComponent },
-  // Add additional routes as needed
 ];
 
 @NgModule({

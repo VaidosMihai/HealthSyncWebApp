@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { roleGuard } from './role.guard';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth-service.service'; // Update the path as necessary
+import { AuthService } from '../../services/auth-service.service';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 describe('RoleGuard', () => {
@@ -43,7 +43,7 @@ describe('RoleGuard', () => {
     expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
   });
   it('should block access when currentUserRole is null', () => {
-    authServiceMock.getCurrentUserRole.and.returnValue(null);  // Simulate no role being found
+    authServiceMock.getCurrentUserRole.and.returnValue(null);
     expect(guard.canActivate(routeMock, stateMock)).toBe(false);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
   });

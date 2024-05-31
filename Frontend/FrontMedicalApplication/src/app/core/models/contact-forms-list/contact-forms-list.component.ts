@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { NotificationService } from '../../services/notification-service.service';
 
 interface ContactFormSubmission {
@@ -15,7 +14,7 @@ interface ContactFormSubmission {
   agreePrivacy: boolean;
   agreeMarketing: boolean;
   submissionDate: Date;
-  checked?: boolean;  // Added this property to track if the form is checked
+  checked?: boolean;
 }
 
 @Component({
@@ -54,7 +53,6 @@ export class ContactFormsListComponent implements OnInit {
   deleteForm(form: ContactFormSubmission): void {
     this.contactForms = this.contactForms.filter(f => f.id !== form.id);
     this.saveCheckedStatus();
-    // Send a request to the backend to delete the form from the server/database
     this.notificationService.deleteContactForm(form.id).subscribe(
       () => console.log(`Form with id ${form.id} deleted`),
       error => console.error(`Error deleting form with id ${form.id}`, error)

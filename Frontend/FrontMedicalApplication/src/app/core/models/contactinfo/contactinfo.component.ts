@@ -16,11 +16,8 @@ export class ContactinfoComponent implements OnInit {
     { title: 'Cluj Napoca', description: 'Bulevardul Eroilor, Nr. 21, Cluj Napoca' },
     { title: 'Timisoara', description: 'Piața Victoriei, Nr. 3, Timisoara' },
     { title: 'Brasov', description: 'Strada Republicii, Nr. 12, Brasov' },
-    { title: 'Constanta', description: 'Bulevardul Tomis, Nr. 5, Constanta' },
     { title: 'Miercurea Ciuc', description: 'Strada Petőfi Sándor, Nr. 1, Miercurea Ciuc' },
-    { title: 'Satu Mare', description: 'Strada Ștefan cel Mare, Nr. 4, Satu Mare' },
-    { title: 'Iasi', description: 'Bulevardul Ștefan cel Mare, Nr. 10, Iasi' },
-    { title: 'Craiova', description: 'Calea Unirii, Nr. 15, Craiova' }
+    { title: 'Iasi', description: 'Bulevardul Ștefan cel Mare, Nr. 10, Iasi' }
   ];
 
   constructor(private fb: FormBuilder, private notificationService: NotificationService) {

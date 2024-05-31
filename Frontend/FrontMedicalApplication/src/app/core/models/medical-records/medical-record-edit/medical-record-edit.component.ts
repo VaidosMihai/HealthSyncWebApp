@@ -37,7 +37,7 @@ export class MedicalRecordEditComponent implements OnInit {
     if (this.appointmentId) {
       this.medicalRecordService.getMedicalRecordByAppointmentId(this.appointmentId).subscribe(
         (medicalRecord: MedicalRecordDto) => {
-          this.medicalRecordId = medicalRecord.medicalRecordId; // Set the medicalRecordId
+          this.medicalRecordId = medicalRecord.medicalRecordId;
           const { date, time } = this.splitDateTime(medicalRecord.dateRecorded);
           this.medicalRecordForm.patchValue({
             patientId: medicalRecord.patientId,

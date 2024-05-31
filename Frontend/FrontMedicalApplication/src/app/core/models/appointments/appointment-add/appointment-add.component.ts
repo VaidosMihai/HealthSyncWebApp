@@ -17,7 +17,7 @@ import { AuthService } from '../../../services/auth-service.service';
 export class AppointmentAddComponent implements OnInit {
   appointmentForm: FormGroup;
   doctorId: number | undefined;
-  patientId: number | undefined; // Optional if you want to auto-fill patientId too
+  patientId: number | undefined;
   doctors: UserDto[] = [];
 
   constructor(
@@ -43,7 +43,7 @@ export class AppointmentAddComponent implements OnInit {
     this.route.queryParams.pipe(
       switchMap(params => {
         const doctorUsername = params['doctorUsername'];
-        const patientUsername = params['patientUsername']; // Assuming you have the patient's username
+        const patientUsername = params['patientUsername'];
         return forkJoin({
           doctor: this.userService.getUserByUsername(doctorUsername),
           patient: this.userService.getUserByUsername(patientUsername),
@@ -64,7 +64,7 @@ export class AppointmentAddComponent implements OnInit {
       if (doctorUsername) {
         this.userService.getUserByUsername(doctorUsername).subscribe(
           doctor => {
-            this.doctorId = doctor.userId; // Store the doctor's ID
+            this.doctorId = doctor.userId;
             this.appointmentForm.get('doctorId')?.setValue(this.doctorId);
           }
         );
@@ -72,7 +72,7 @@ export class AppointmentAddComponent implements OnInit {
       const patientUserJson = localStorage.getItem('currentUser');
       if (patientUserJson) {
         const patientUser = JSON.parse(patientUserJson);
-        this.patientId = patientUser.userId; // Assume you have a userId field in your UserDto
+        this.patientId = patientUser.userId;
         this.appointmentForm.get('patientId')?.setValue(this.patientId);
         this.appointmentForm.get('patientUsername')?.setValue(patientUser.username);
       }
@@ -92,32 +92,30 @@ export class AppointmentAddComponent implements OnInit {
       let doctorId: number;
       let patientId: number;
 
-      // Fetch the doctor and patient details
       this.userService.getUserByUsername(formValues.doctorUsername).pipe(
         switchMap((doctor: UserDto) => {
           if (!doctor.userId) throw new Error('Doctor ID not found');
           doctorId = doctor.userId!;
-          formValues.doctorId = doctorId; // Set doctorId to the fetched doctor's ID
+          formValues.doctorId = doctorId;
           return this.userService.getUserByUsername(formValues.patientUsername);
         }),
         switchMap((patient: UserDto) => {
           if (!patient.userId) throw new Error('Patient ID not found');
           patientId = patient.userId!;
-          formValues.patientId = patientId; // Set patientId to the fetched patient's ID
+          formValues.patientId = patientId;
           return this.appointmentService.createAppointment(new AppointmentDto(
             patientId,
             doctorId,
-            new Date(formValues.date), // Make sure this is a Date object
+            new Date(formValues.date),
             formValues.reason
           ));
         }),
         switchMap((appointment: AppointmentDto) => {
-          // Notify the doctor after creating the appointment
           return this.appointmentService.notifyDoctor(doctorId);
         }),
         catchError((error) => {
           console.error('Error in the appointment creation process:', error);
-          return of(null); // Handle error gracefully
+          return of(null);
         })
       ).subscribe({
         next: (response) => {

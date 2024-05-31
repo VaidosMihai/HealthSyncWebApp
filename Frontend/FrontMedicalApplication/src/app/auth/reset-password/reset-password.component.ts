@@ -35,7 +35,7 @@ export class ResetPasswordComponent implements OnInit {
           console.log('Password reset successful');
           this.resetSuccess = true;
           this.resetError = '';
-          this.router.navigate(['/login']);  // Redirect to login page
+          this.router.navigate(['/login']);
         },
         error: error => {
           console.error('Error resetting password', error);

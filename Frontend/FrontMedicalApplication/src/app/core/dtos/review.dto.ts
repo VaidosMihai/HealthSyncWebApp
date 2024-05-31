@@ -1,5 +1,5 @@
 export interface ReviewDto {
-  reviewId: number; // Make reviewId non-optional
+  reviewId: number;
   doctorId: number;
   patientId: number;
   rating: number;
@@ -10,5 +10,5 @@ export interface ReviewDto {
   responseComment?: string;
   patientName?: string;
   doctorName?: string;
-  voteType?: 'helpful' | 'not-helpful' | ''; // New property
+  voteType?: 'helpful' | 'not-helpful' | '';
 }

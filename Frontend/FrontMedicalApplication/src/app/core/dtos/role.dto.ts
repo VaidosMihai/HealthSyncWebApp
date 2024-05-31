@@ -1,5 +1,5 @@
 export class RoleDto {
-    roleId?: number; // Optional for creation
+    roleId?: number;
     name: string;
   
     constructor(name: string = '', roleId?: number) {
