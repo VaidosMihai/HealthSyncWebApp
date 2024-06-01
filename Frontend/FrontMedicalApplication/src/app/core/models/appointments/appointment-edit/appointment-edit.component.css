@@ -1,0 +1,11 @@
+.custom-margin {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+  
+  .reason-textarea {
+    height: 400px;
+    resize: vertical;
+    white-space: pre-wrap;
+  }
+  

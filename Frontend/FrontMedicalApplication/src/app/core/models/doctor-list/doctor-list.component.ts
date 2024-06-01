@@ -15,6 +15,9 @@ import { switchMap } from 'rxjs/operators';
 })
 export class DoctorListComponent implements OnInit {
   doctors: UserDto[] = [];
+  filteredDoctors: UserDto[] = [];
+  cities: string[] = ['Miercurea Ciuc', 'București', 'Cluj', 'Timișoara', 'Brașov'];
+  selectedCity: string = '';
   editingDescriptionId: number | null = null;
   newDescription: string = '';
   reviews: ReviewDto[] = [];
@@ -59,6 +62,7 @@ export class DoctorListComponent implements OnInit {
     this.userService.getAllUsersWithRoleId(1).subscribe({
       next: (data) => {
         this.doctors = data.filter(user => user.roleId === 1);
+        this.filteredDoctors = this.doctors;
       },
       error: (error) => {
         console.error('There was an error fetching the doctors', error);
@@ -288,6 +292,14 @@ export class DoctorListComponent implements OnInit {
           alert("Description was not saved!");
         }
       });
+    }
+  }
+
+  filterByCity(): void {
+    if (this.selectedCity) {
+      this.filteredDoctors = this.doctors.filter(doctor => doctor.address?.includes(this.selectedCity));
+    } else {
+      this.filteredDoctors = this.doctors;
     }
   }
 

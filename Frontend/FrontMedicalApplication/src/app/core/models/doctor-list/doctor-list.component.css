@@ -271,7 +271,10 @@
     font-size: 24px;
   }
   
-h2, h3 {
-  text-align: center;
-  color: #333;
-}
+  h2, h3 {
+    text-align: center;
+    color: #333;
+  }
+  .custom-margin {
+    margin-right: 10px; 
+  }

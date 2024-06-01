@@ -2,8 +2,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
   <h2>Doctors</h2>
+
+  <div class="row mb-3">
+    <label for="cityFilter"><b>Filter by City:</b></label>
+    <div class="col-md-4">
+      <select class="form-control" [(ngModel)]="selectedCity" (change)="filterByCity()" style="font-size: 20px;">
+        <option value="">All Cities</option>
+        <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+      </select>
+    </div>
+  </div>
+
   <div class="row">
-    <div class="col-md-4 mb-3" *ngFor="let doctor of doctors">
+    <div class="col-md-4 mb-3" *ngFor="let doctor of filteredDoctors">
       <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title">{{ doctor.name }} {{ doctor.surname }}</h5>
@@ -11,7 +22,7 @@
           <p><strong>Email:</strong> {{ doctor.emailAddress }}</p>
           <p><strong>Address:</strong> {{ doctor.address }}</p>
           <p>{{ doctor.description }}</p>
-          <button class="btn btn-primary" (click)="scheduleAppointment(doctor.username)">Schedules</button>
+          <button class="btn btn-primary custom-margin" (click)="scheduleAppointment(doctor.username)">Schedules</button>
           <button class="btn btn-secondary" (click)="openReviewModal(doctor)">Reviews</button>
         </div>
       </div>

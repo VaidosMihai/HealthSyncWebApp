@@ -6,17 +6,31 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    .login-container {
+      padding-top: 50px; /* Add some padding to push the form down */
+    }
+    .login-title {
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-style: oblique;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-<section class="text-center text-lg-start">
+<section class="text-center text-lg-start login-container">
   <div class="card mb-3">
     <div class="row g-0 d-flex align-items-center">
       <div class="col-lg-4 d-none d-lg-flex">
-        <img src="/assets/loginImage.png" alt="Trendy Pants and Shoes"
+        <img src="/assets/loginImage.png" alt="Medical Image"
           class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
       </div>
       <div class="col-lg-8">
         <div class="card-body py-5 px-md-5">
+
+          <div class="login-title">Welcome to HealthSync</div> <!-- Add a title here -->
 
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <div class="form-outline mb-4">

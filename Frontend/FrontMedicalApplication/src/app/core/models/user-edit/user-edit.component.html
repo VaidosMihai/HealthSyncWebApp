@@ -5,8 +5,12 @@
   <h2>Edit User</h2>
   <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="roleId">Role ID</label>
-      <input type="number" class="form-control" id="roleId" formControlName="roleId" placeholder="Enter role ID">
+      <label for="roleId">Role</label>
+      <select class="form-control" id="roleId" formControlName="roleId">
+        <option value="1">Doctor</option>
+        <option value="2">Patient</option>
+        <option value="3">Administrator</option>
+      </select>
     </div>
         <div class="form-outline mb-4">
           <label class="form-label" for="username" >Username</label>
@@ -50,6 +54,13 @@
           <label class="form-label" for="phoneNumber">Phone Number</label>
           <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber" required placeholder="Enter phone number"/>
         </div>
+        <div class="form-group mb-4">
+          <label for="phoneNumber">Specialization</label>
+          <input type="text" class="form-control" placeholder="Description" formControlName="description">
+        </div>
+        <button type="button" class="btn btn-primary" [routerLink]="['/users']">
+            Back
+        </button>
     <button type="submit" class="btn btn-primary">Edit User</button>
   </form>
 </div>

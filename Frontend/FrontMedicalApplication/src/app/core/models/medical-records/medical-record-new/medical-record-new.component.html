@@ -7,9 +7,9 @@
       </div>
       <div class="mb-3">
         <label for="notes" class="form-label">Notes</label>
-        <textarea class="form-control" id="notes" [(ngModel)]="medicalRecord.notes" name="notes"></textarea>
+        <textarea class="form-control reason-textarea" id="notes" [(ngModel)]="medicalRecord.notes" name="notes"></textarea>
       </div>
-      <button type="button" class="btn btn-primary" [routerLink]="['/appointment']">
+      <button type="button" class="btn btn-primary  custom-margin" [routerLink]="['/appointment']">
         Back
     </button>
       <button type="submit" class="btn btn-primary">Submit</button>

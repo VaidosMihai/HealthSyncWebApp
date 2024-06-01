@@ -33,6 +33,7 @@ export class UserEditComponent implements OnInit {
       address: ['', [Validators.required, Validators.minLength(6)]],
       phoneNumber: ['', [Validators.required]],
       roleId: ['', Validators.required],
+      description: ['', [Validators.required]]
     });
   }
 
@@ -54,6 +55,7 @@ export class UserEditComponent implements OnInit {
     if (this.editUserForm.valid) {
       this.userService.updatePatient(this.userId, this.editUserForm.value).subscribe({
         next: (updatedUser) => {
+          alert("User updated successfully");
           console.log('User updated successfully', updatedUser);
           this.router.navigate(['/users']); // Redirect to the users list
         },

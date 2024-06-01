@@ -12,6 +12,8 @@ export class UserListComponent implements OnInit {
   users: UserDto[] = [];
   user: UserDto = new UserDto("","",0,"");
 
+  constructor(private userService: UserService, private router: Router) { }
+
   ngOnInit() {
     this.fetchUsers();
   }
@@ -19,6 +21,8 @@ export class UserListComponent implements OnInit {
   fetchUsers() {
     this.userService.getAllUsers().subscribe(users => {
       this.users = users;
+    }, error => {
+      console.error('Error fetching users:', error);
     });
   }
 
@@ -26,27 +30,27 @@ export class UserListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this user?')) {
       this.deleteUser(userId);
     }
-    window.location.reload();
   }
 
   deleteUser(userId: number) {
     this.userService.deletePatient(userId).subscribe(() => {
-      this.fetchUsers();
+      this.fetchUsers(); // Reload users after deletion
     }, error => {
       console.error('Failed to delete user:', error);
     });
   }
 
-  constructor(private userService: UserService,private router: Router) {
-    this.userService.getAllUsers().subscribe(users => this.users = users);
-  }
-
-  get roleId() {
-    return this.user.roleId; 
-  }
-
-  set roleId(value: number) {
-    this.user.roleId = value;
+  getRoleName(roleId: number): string {
+    switch (roleId) {
+      case 1:
+        return 'Doctor';
+      case 2:
+        return 'Patient';
+      case 3:
+        return 'Administrator';
+      default:
+        return 'Unknown';
+    }
   }
 
   addUser(): void {
