@@ -14,6 +14,8 @@ export class PatientListComponent implements OnInit {
   patients: UserDto[] = [];
   patientAppointments: AppointmentDto[] = [];
   filteredAppointments: AppointmentDto[] = [];
+  upcomingAppointments: AppointmentDto[] = [];
+  pastAppointments: AppointmentDto[] = [];
   isModalOpen = false;
   selectedPatient: UserDto | null = null;
 
@@ -65,6 +67,7 @@ export class PatientListComponent implements OnInit {
   openModal(patient: UserDto): void {
     this.selectedPatient = patient;
     this.filteredAppointments = this.patientAppointments.filter(appt => appt.patientId === patient.userId);
+    this.categorizeAppointments();
     this.isModalOpen = true;
   }
 
@@ -72,6 +75,14 @@ export class PatientListComponent implements OnInit {
     this.isModalOpen = false;
     this.selectedPatient = null;
     this.filteredAppointments = [];
+    this.upcomingAppointments = [];
+    this.pastAppointments = [];
     this.router.navigate(['/patients']);
+  }
+
+  categorizeAppointments(): void {
+    const now = new Date();
+    this.upcomingAppointments = this.filteredAppointments.filter(appt => new Date(appt.dateTime) > now);
+    this.pastAppointments = this.filteredAppointments.filter(appt => new Date(appt.dateTime) <= now);
   }
 }

@@ -1,4 +1,3 @@
-<!-- patient-list.component.html -->
 <div class="container mt-3">
   <h2>Patients</h2>
   <div class="row">
@@ -32,12 +31,29 @@
         <li><strong>Address:</strong> <input title="address" type="text" [value]="selectedPatient?.address" readonly></li>
         <li><strong>Phone:</strong> <input title="phone" type="text" [value]="selectedPatient?.phoneNumber" readonly></li>
       </ul>
-      <h3>Appointments</h3>
-      <ul class="list-unstyled">
-        <li *ngFor="let appointment of patientAppointments">
+
+      <h3>Upcoming Appointments</h3>
+      <div *ngIf="upcomingAppointments.length === 0" class="text-center mt-5">
+        <h4>No upcoming appointments scheduled.</h4>
+        <p>Please book an appointment to see your doctor.</p>
+      </div>
+      <ul class="list-unstyled" *ngIf="upcomingAppointments.length > 0">
+        <li *ngFor="let appointment of upcomingAppointments">
           <strong>{{ appointment.dateTime | date: 'short' }}:</strong> {{ appointment.reason }}
         </li>
       </ul>
+
+      <h3>Past Appointments</h3>
+      <div *ngIf="pastAppointments.length === 0" class="text-center mt-5">
+        <h4>No past appointments found.</h4>
+        <p>Your past appointments will be listed here.</p>
+      </div>
+      <ul class="list-unstyled" *ngIf="pastAppointments.length > 0">
+        <li *ngFor="let appointment of pastAppointments">
+          <strong>{{ appointment.dateTime | date: 'short' }}:</strong> {{ appointment.reason }}
+        </li>
+      </ul>
+
       <button class="btn btn-primary" (click)="closeModal()" routerLink="/patients" style="background-color: #f44336">Close</button>
     </div>
   </div>

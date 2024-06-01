@@ -7,9 +7,15 @@
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: 1000;
-  width: 80%;
-  max-width: 600px;
+  width: 90%; /* Increase the width by 10% */
+  max-width: 700px; /* Increase max-width by 100px */
   border-radius: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .notification-list {
@@ -28,6 +34,13 @@
   align-items: center;
 }
 
+.notification-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 70%; /* Set a max-width for the text */
+}
+
 .mark-all-read-btn,
 .mark-as-read-btn,
 .close-modal-btn {
@@ -38,15 +51,11 @@
   cursor: pointer;
   border-radius: 5px;
   display: inline-block;
+  width: 120px; /* Fixed width for consistency */
 }
 
 .mark-all-read-btn {
   background: #007bff;
-  margin-bottom: 10px;
-}
-
-.mark-as-read-btn {
-  margin-left: 10px;
 }
 
 .close-modal-btn {
@@ -57,11 +66,6 @@
   text-align: center;
 }
 
-.notification-details {
-  display: flex;
-  flex-direction: column;
-}
-
 button {
   margin-top: 20px;
   padding: 10px 20px;
@@ -69,4 +73,10 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+}
+.no-notifications {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #888;
 }

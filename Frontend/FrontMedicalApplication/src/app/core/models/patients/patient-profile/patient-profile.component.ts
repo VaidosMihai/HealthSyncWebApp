@@ -43,17 +43,17 @@ export class PatientProfileComponent implements OnInit {
   ) {
     this.patientForm = this.fb.group({
       userId: [''],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      cnp: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(0)]],
+      name: ['', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z]*$')]],
+      surname: ['', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z]*$')]],
+      cnp: ['', [Validators.required, Validators.pattern('^[0-9]{13}$')]],
+      age: ['', [Validators.required, Validators.min(0), Validators.max(150)]],
       emailAddress: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
       roleId: [2],
       password: [''],
       address: ['', [Validators.required, Validators.minLength(6)]],
-      phoneNumber: ['', [Validators.required, Validators.minLength(10)]],
-      description: ['', [Validators.required]]
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      description: ['', Validators.required]
     });
 
     this.patientData = new UserDto('', '', 0, '', '', '', 0);
@@ -240,7 +240,9 @@ export class PatientProfileComponent implements OnInit {
       this.reviewService.deleteReview(reviewId).subscribe({
         next: () => {
           console.log('Review deleted successfully');
-          window.location.reload();
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/profile']);
+          });
           if (this.currentUser?.roleId === 1) {
             this.loadReviewsForDoctor(this.currentUser?.userId ?? 0);
           } else {
@@ -255,6 +257,7 @@ export class PatientProfileComponent implements OnInit {
       console.error('Invalid reviewId');
     }
   }
+  
 
   sortReviews(event: Event): void {
     const target = event.target as HTMLSelectElement | null;
