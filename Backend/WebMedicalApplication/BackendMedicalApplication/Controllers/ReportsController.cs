@@ -13,6 +13,20 @@ public class ReportsController : ControllerBase
         _reportService = reportService;
     }
 
+    [HttpGet("patient-most-appointments")]
+    public async Task<ActionResult<UserDto>> GetPatientWithMostAppointments()
+    {
+        var patient = await _reportService.GetPatientWithMostAppointmentsAsync();
+        return Ok(patient);
+    }
+
+    [HttpGet("doctor-most-reviews")]
+    public async Task<ActionResult<UserDto>> GetDoctorWithMostReviews()
+    {
+        var doctor = await _reportService.GetDoctorWithMostReviewsAsync();
+        return Ok(doctor);
+    }
+
     [HttpGet("oldest-patient")]
     public async Task<ActionResult<UserDto>> GetOldestPatient()
     {
@@ -27,17 +41,17 @@ public class ReportsController : ControllerBase
         return Ok(patient);
     }
 
-    [HttpGet("patient-most-appointments")]
-    public async Task<ActionResult<UserDto>> GetPatientWithMostAppointments()
+    [HttpGet("oldest-doctor")]
+    public async Task<ActionResult<UserDto>> GetOldestDoctor()
     {
-        var patient = await _reportService.GetPatientWithMostAppointmentsAsync();
-        return Ok(patient);
+        var doctor = await _reportService.GetOldestDoctorAsync();
+        return Ok(doctor);
     }
 
-    [HttpGet("doctor-most-reviews")]
-    public async Task<ActionResult<UserDto>> GetDoctorWithMostReviews()
+    [HttpGet("youngest-doctor")]
+    public async Task<ActionResult<UserDto>> GetYoungestDoctor()
     {
-        var doctor = await _reportService.GetDoctorWithMostReviewsAsync();
+        var doctor = await _reportService.GetYoungestDoctorAsync();
         return Ok(doctor);
     }
 }

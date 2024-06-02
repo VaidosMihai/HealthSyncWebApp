@@ -16,34 +16,6 @@ namespace BackendMedicalApplication.Services
             _context = context;
         }
 
-        public async Task<UserDto> GetOldestPatientAsync()
-        {
-            return await _context.Users
-                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
-                .OrderByDescending(p => p.Age)
-                .Select(p => new UserDto
-                {
-                    UserId = p.UserId,
-                    Name = p.Name,
-                    Age = p.Age,
-                    EmailAddress = p.EmailAddress
-                }).FirstOrDefaultAsync();
-        }
-
-        public async Task<UserDto> GetYoungestPatientAsync()
-        {
-            return await _context.Users
-                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
-                .OrderBy(p => p.Age)
-                .Select(p => new UserDto
-                {
-                    UserId = p.UserId,
-                    Name = p.Name,
-                    Age = p.Age,
-                    EmailAddress = p.EmailAddress
-                }).FirstOrDefaultAsync();
-        }
-
         public async Task<UserDto> GetPatientWithMostAppointmentsAsync()
         {
             return await _context.Users
@@ -84,5 +56,70 @@ namespace BackendMedicalApplication.Services
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<UserDto> GetOldestPatientAsync()
+        {
+            return await _context.Users
+                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+                .OrderByDescending(u => u.Age)
+                .Select(p => new UserDto
+                {
+                    UserId = p.UserId,
+                    Name = p.Name,
+                    Age = p.Age,
+                    EmailAddress = p.EmailAddress,
+                    Description = $"Age: {p.Age}"
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDto> GetYoungestPatientAsync()
+        {
+            return await _context.Users
+                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+                .OrderBy(u => u.Age)
+                .Select(p => new UserDto
+                {
+                    UserId = p.UserId,
+                    Name = p.Name,
+                    Age = p.Age,
+                    EmailAddress = p.EmailAddress,
+                    Description = $"Age: {p.Age}"
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDto> GetOldestDoctorAsync()
+        {
+            return await _context.Users
+                .Where(u => u.RoleId == 1) // Assuming roleId 1 is for Doctors
+                .OrderByDescending(u => u.Age)
+                .Select(d => new UserDto
+                {
+                    UserId = d.UserId,
+                    Name = d.Name,
+                    Age = d.Age,
+                    EmailAddress = d.EmailAddress,
+                    Description = $"Age: {d.Age}"
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDto> GetYoungestDoctorAsync()
+        {
+            return await _context.Users
+                .Where(u => u.RoleId == 1) // Assuming roleId 1 is for Doctors
+                .OrderBy(u => u.Age)
+                .Select(d => new UserDto
+                {
+                    UserId = d.UserId,
+                    Name = d.Name,
+                    Age = d.Age,
+                    EmailAddress = d.EmailAddress,
+                    Description = $"Age: {d.Age}"
+                })
+                .FirstOrDefaultAsync();
+        }
     }
+
 }
