@@ -33,16 +33,12 @@ namespace WebMedicalApplication.Models
         public ICollection<Appointment> DoctorAppointments { get; set; }
         public ICollection<Appointment> PatientAppointments { get; set; }
         public ICollection<PatientRecord> MedicalRecords { get; set; }
-        public ICollection<Billing> Billings { get; set; }
-        public ICollection<Schedule> Schedules { get; set; }
 
         public User()
         {
             DoctorAppointments = new HashSet<Appointment>();
             PatientAppointments = new HashSet<Appointment>();
             MedicalRecords = new HashSet<PatientRecord>();
-            Billings = new HashSet<Billing>();
-            Schedules = new HashSet<Schedule>();
         }
     }
 }

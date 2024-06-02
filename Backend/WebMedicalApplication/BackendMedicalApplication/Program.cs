@@ -65,13 +65,6 @@ builder.Services.Configure<JwtConfig>(options =>
     options.RefreshTokenExpirationDays = 7;
 });
 
-builder.Services.Configure<TwilioSettings>(options =>
-{
-    options.AccountSid = twilioAccountSid;
-    options.AuthToken = twilioAuthToken;
-    options.FromNumber = twilioFromNumber;
-});
-
 builder.Services.Configure<EmailSettings>(options =>
 {
     options.SmtpServer = smtpServer;
@@ -82,17 +75,13 @@ builder.Services.Configure<EmailSettings>(options =>
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.Configure<SMSApiSettings>(builder.Configuration.GetSection("SMSApiSettings"));
 builder.Services.Configure<MailerSendSettings>(builder.Configuration.GetSection("MailerSendSettings"));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPatientRecordService, PatientRecordService>();
-builder.Services.AddScoped<IBillingService, BillingService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
-builder.Services.AddScoped<ITwilioService, TwilioService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
-builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailService, MailerSendEmailService>();
 builder.Services.AddScoped<IContactFormService, ContactFormService>();

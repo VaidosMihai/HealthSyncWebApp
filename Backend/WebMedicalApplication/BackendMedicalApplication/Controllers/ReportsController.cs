@@ -31,6 +31,10 @@ public class ReportsController : ControllerBase
     public async Task<ActionResult<UserDto>> GetOldestPatient()
     {
         var patient = await _reportService.GetOldestPatientAsync();
+        if (patient == null)
+        {
+            return NotFound();
+        }
         return Ok(patient);
     }
 
@@ -38,6 +42,10 @@ public class ReportsController : ControllerBase
     public async Task<ActionResult<UserDto>> GetYoungestPatient()
     {
         var patient = await _reportService.GetYoungestPatientAsync();
+        if (patient == null)
+        {
+            return NotFound();
+        }
         return Ok(patient);
     }
 
@@ -45,6 +53,10 @@ public class ReportsController : ControllerBase
     public async Task<ActionResult<UserDto>> GetOldestDoctor()
     {
         var doctor = await _reportService.GetOldestDoctorAsync();
+        if (doctor == null)
+        {
+            return NotFound();
+        }
         return Ok(doctor);
     }
 
@@ -52,6 +64,10 @@ public class ReportsController : ControllerBase
     public async Task<ActionResult<UserDto>> GetYoungestDoctor()
     {
         var doctor = await _reportService.GetYoungestDoctorAsync();
+        if (doctor == null)
+        {
+            return NotFound();
+        }
         return Ok(doctor);
     }
 }

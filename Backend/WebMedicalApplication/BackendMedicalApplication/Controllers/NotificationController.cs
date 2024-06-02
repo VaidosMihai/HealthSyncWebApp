@@ -11,13 +11,11 @@ public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
     private readonly IEmailService _emailService;
-    private readonly ISmsService _smsService;
 
-    public NotificationController(INotificationService notificationService, IEmailService emailService, ISmsService smsService)
+    public NotificationController(INotificationService notificationService, IEmailService emailService)
     {
         _notificationService = notificationService;
         _emailService = emailService;
-        _smsService = smsService;
     }
 
     [HttpGet("user/{userId}")]

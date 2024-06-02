@@ -59,8 +59,8 @@ namespace BackendMedicalApplication.Services
 
         public async Task<UserDto> GetOldestPatientAsync()
         {
-            return await _context.Users
-                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+            var patient = await _context.Users
+                .Where(u => u.RoleId == 2)
                 .OrderByDescending(u => u.Age)
                 .Select(p => new UserDto
                 {
@@ -71,12 +71,19 @@ namespace BackendMedicalApplication.Services
                     Description = $"Age: {p.Age}"
                 })
                 .FirstOrDefaultAsync();
+
+            if (patient == null)
+            {
+                return null; // Or handle appropriately
+            }
+
+            return patient;
         }
 
         public async Task<UserDto> GetYoungestPatientAsync()
         {
-            return await _context.Users
-                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+            var patient = await _context.Users
+                .Where(u => u.RoleId == 2)
                 .OrderBy(u => u.Age)
                 .Select(p => new UserDto
                 {
@@ -87,12 +94,19 @@ namespace BackendMedicalApplication.Services
                     Description = $"Age: {p.Age}"
                 })
                 .FirstOrDefaultAsync();
+
+            if (patient == null)
+            {
+                return null; // Or handle appropriately
+            }
+
+            return patient;
         }
 
         public async Task<UserDto> GetOldestDoctorAsync()
         {
-            return await _context.Users
-                .Where(u => u.RoleId == 1) // Assuming roleId 1 is for Doctors
+            var doctor = await _context.Users
+                .Where(u => u.RoleId == 1)
                 .OrderByDescending(u => u.Age)
                 .Select(d => new UserDto
                 {
@@ -103,12 +117,19 @@ namespace BackendMedicalApplication.Services
                     Description = $"Age: {d.Age}"
                 })
                 .FirstOrDefaultAsync();
+
+            if (doctor == null)
+            {
+                return null; // Or handle appropriately
+            }
+
+            return doctor;
         }
 
         public async Task<UserDto> GetYoungestDoctorAsync()
         {
-            return await _context.Users
-                .Where(u => u.RoleId == 1) // Assuming roleId 1 is for Doctors
+            var doctor = await _context.Users
+                .Where(u => u.RoleId == 1)
                 .OrderBy(u => u.Age)
                 .Select(d => new UserDto
                 {
@@ -119,6 +140,13 @@ namespace BackendMedicalApplication.Services
                     Description = $"Age: {d.Age}"
                 })
                 .FirstOrDefaultAsync();
+
+            if (doctor == null)
+            {
+                return null; // Or handle appropriately
+            }
+
+            return doctor;
         }
     }
 

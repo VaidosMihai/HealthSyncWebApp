@@ -19,8 +19,6 @@ namespace BackendMedicalApplication
         public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<PatientRecord> PatientRecords { get; set; }
-        public DbSet<Billing> Billings { get; set; }
-        public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -32,11 +30,6 @@ namespace BackendMedicalApplication
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Billing>(entity =>
-            {
-                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
-            });
 
             modelBuilder.Entity<Appointment>()
                 .HasOne<User>(a => a.Doctor)
@@ -54,16 +47,6 @@ namespace BackendMedicalApplication
                 .HasOne<User>(mr => mr.Patient)
                 .WithMany(p => p.MedicalRecords)
                 .HasForeignKey(mr => mr.PatientId);
-
-            modelBuilder.Entity<Billing>()
-                .HasOne<User>(b => b.Patient)
-                .WithMany(p => p.Billings)
-                .HasForeignKey(b => b.PatientId);
-
-            modelBuilder.Entity<Schedule>()
-                .HasOne<User>(s => s.Doctor)
-                .WithMany(d => d.Schedules)
-                .HasForeignKey(s => s.DoctorId);
 
             modelBuilder.Entity<User>(entity =>
             {
