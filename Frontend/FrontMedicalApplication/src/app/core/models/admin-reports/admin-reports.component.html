@@ -1,0 +1,40 @@
+<div class="reports-container">
+    <h2>Admin Reports</h2>
+  
+    <div class="report">
+      <h3>Patient with Most Appointments</h3>
+      <p *ngIf="patientWithMostAppointments">{{ patientWithMostAppointments.name }} ({{ patientWithMostAppointments.description }})</p>
+      <p *ngIf="!patientWithMostAppointments">Loading...</p>
+    </div>
+  
+    <div class="report">
+      <h3>Doctor with Most Reviews</h3>
+      <p *ngIf="doctorWithMostReviews">{{ doctorWithMostReviews.name }} ({{ doctorWithMostReviews.description }})</p>
+      <p *ngIf="!doctorWithMostReviews">Loading...</p>
+    </div>
+  
+    <div class="report">
+      <h3>Oldest Patient</h3>
+      <p *ngIf="oldestPatient">{{ oldestPatient.name }} ({{ oldestPatient.description }})</p>
+      <p *ngIf="!oldestPatient">Loading...</p>
+    </div>
+  
+    <div class="report">
+      <h3>Youngest Patient</h3>
+      <p *ngIf="youngestPatient">{{ youngestPatient.name }} ({{ youngestPatient.description }})</p>
+      <p *ngIf="!youngestPatient">Loading...</p>
+    </div>
+  
+    <div class="report">
+      <h3>Oldest Doctor</h3>
+      <p *ngIf="oldestDoctor">{{ oldestDoctor.name }} ({{ oldestDoctor.description }})</p>
+      <p *ngIf="!oldestDoctor">Loading...</p>
+    </div>
+  
+    <div class="report">
+      <h3>Youngest Doctor</h3>
+      <p *ngIf="youngestDoctor">{{ youngestDoctor.name }} ({{ youngestDoctor.description }})</p>
+      <p *ngIf="!youngestDoctor">Loading...</p>
+    </div>
+  </div>
+  

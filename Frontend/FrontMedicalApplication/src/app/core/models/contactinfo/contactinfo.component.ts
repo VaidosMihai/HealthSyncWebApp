@@ -17,7 +17,6 @@ export class ContactinfoComponent implements OnInit {
     { title: 'Timisoara', description: 'Piața Victoriei, Nr. 3, Timisoara' },
     { title: 'Brasov', description: 'Strada Republicii, Nr. 12, Brasov' },
     { title: 'Miercurea Ciuc', description: 'Strada Petőfi Sándor, Nr. 1, Miercurea Ciuc' },
-    // { title: 'Iasi', description: 'Bulevardul Ștefan cel Mare, Nr. 10, Iasi' }
   ];
 
   constructor(private fb: FormBuilder, private notificationService: NotificationService) {

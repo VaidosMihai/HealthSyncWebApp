@@ -35,6 +35,7 @@ import { DashboardComponent } from './core/models/dashboard/dashboard.component'
 import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { ContactFormsListComponent } from './core/models/contact-forms-list/contact-forms-list.component';
+import { AdminReportsComponent } from './core/models/admin-reports/admin-reports.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ContactFormsListComponent } from './core/models/contact-forms-list/cont
     DashboardComponent,
     LoginComponent,
     ContactinfoComponent,
-    ContactFormsListComponent
+    ContactFormsListComponent,
+    AdminReportsComponent
   ],
   imports: [
     BrowserModule,

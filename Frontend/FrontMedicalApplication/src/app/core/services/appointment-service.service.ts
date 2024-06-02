@@ -34,8 +34,8 @@ export class AppointmentService {
     return this.http.get<AppointmentDto[]>(this.appointmentEndpoint, { observe: 'response' });
   }
 
-  getAppointmentsByDoctor(doctorId: number): Observable<AppointmentDto[]> {
-    return this.http.get<AppointmentDto[]>(`${this.appointmentEndpoint}/by-doctor/${doctorId}`, { observe: 'body' });
+  getAppointmentsByDoctor(doctorId: number): Observable<HttpResponse<AppointmentDto[]>> {
+    return this.http.get<AppointmentDto[]>(`${this.appointmentEndpoint}/by-doctor/${doctorId}`, { observe: 'response' });
   }
 
   getAppointmentsByPatient(patientId: number): Observable<AppointmentDto[]> {

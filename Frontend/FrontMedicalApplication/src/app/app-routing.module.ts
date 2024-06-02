@@ -24,6 +24,7 @@ import { ContactinfoComponent } from './core/models/contactinfo/contactinfo.comp
 import { VerifyEmailComponent } from './core/models/verify-email/verify-email.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { ContactFormsListComponent } from './core/models/contact-forms-list/contact-forms-list.component';
+import { AdminReportsComponent } from './core/models/admin-reports/admin-reports.component';
 
 const routes: Routes = [
   { path: 'signup', component: SignupComponent },
@@ -50,6 +51,8 @@ const routes: Routes = [
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'contact-forms', component: ContactFormsListComponent, canActivate: [roleGuard], data: { roles: [1, 3] } },
+  //{ path: 'admin-reports', component: AdminReportsComponent, canActivate: [roleGuard], data: { roles: [3] } },
+  { path: 'admin-reports', component: AdminReportsComponent },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

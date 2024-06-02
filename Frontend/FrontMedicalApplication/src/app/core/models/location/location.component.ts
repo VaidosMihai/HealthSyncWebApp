@@ -15,7 +15,6 @@ export class LocationComponent implements OnInit, AfterViewInit {
     { lat: 45.7489, lng: 21.2087, title: 'Timisoara' },
     { lat: 45.6579, lng: 25.6012, title: 'Brasov' },
     { lat: 46.3607, lng: 25.8015, title: 'Miercurea Ciuc' },
-    // { lat: 47.1585, lng: 27.6014, title: 'Iasi' },
   ];
 
   constructor() {}
@@ -35,7 +34,6 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
     this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
 
-    // Adding markers to the map
     this.locations.forEach(location => {
       const marker = new google.maps.Marker({
         position: { lat: location.lat, lng: location.lng },

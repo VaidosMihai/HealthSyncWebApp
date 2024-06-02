@@ -62,7 +62,7 @@
         </a>
     </div>
 
-    <div class="card" *ngIf="isAdmin">
+    <div class="card" *ngIf="isAdmin || isDoctor">
       <a [routerLink]="getLink('ContactForms')" class="card-link">
         <div class="card-icon">
           <img src="assets/ContactFormSubmission.png" alt="Users icon" width="150" height="150">

@@ -18,6 +18,8 @@ export class PatientListComponent implements OnInit {
   pastAppointments: AppointmentDto[] = [];
   isModalOpen = false;
   selectedPatient: UserDto | null = null;
+  currentDoctorId: number | null = null;
+  currentUserRoleId: number | null = null;
 
   constructor(
     private userService: UserService,
@@ -26,7 +28,36 @@ export class PatientListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadPatients();
+    this.currentDoctorId = this.getCurrentUserIdFromLocalStorage();
+    this.currentUserRoleId = this.getCurrentUserRoleIdFromLocalStorage();
+
+    if (this.currentUserRoleId === 3) {
+      // Admin view: Load all patients and appointments
+      this.loadAllPatientsAndAppointments();
+    } else if (this.currentDoctorId !== null) {
+      // Doctor view: Load patients and appointments for the current doctor
+      this.loadPatients();
+    } else {
+      console.error('Current user ID or role ID not found in local storage');
+    }
+  }
+
+  getCurrentUserIdFromLocalStorage(): number | null {
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const user = JSON.parse(currentUser) as UserDto;
+      return user.userId ?? null;
+    }
+    return null;
+  }
+
+  getCurrentUserRoleIdFromLocalStorage(): number | null {
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const user = JSON.parse(currentUser) as UserDto;
+      return user.roleId ?? null;
+    }
+    return null;
   }
 
   loadPatients(): void {
@@ -41,7 +72,35 @@ export class PatientListComponent implements OnInit {
     );
   }
 
+  loadAllPatientsAndAppointments(): void {
+    this.userService.getAllUsersWithRoleId(2).subscribe(
+      (data) => {
+        this.patients = data.filter(user => user.roleId === 2); // Assuming roleId 2 is for patients
+        this.loadAllAppointments();
+      },
+      (error) => {
+        console.error('There was an error fetching the patients', error);
+      }
+    );
+  }
+
   loadAppointments(): void {
+    if (this.currentDoctorId === null) return;
+
+    this.appointmentService.getAppointmentsByDoctor(this.currentDoctorId).subscribe({
+      next: (response) => {
+        if (response.body) {
+          this.patientAppointments = response.body;
+          this.filterPatientsByDoctorAppointments();
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching appointments', error);
+      }
+    });
+  }
+
+  loadAllAppointments(): void {
     this.appointmentService.getAppointments().subscribe({
       next: (response) => {
         if (response.body) {
@@ -52,6 +111,11 @@ export class PatientListComponent implements OnInit {
         console.error('Error fetching appointments', error);
       }
     });
+  }
+
+  filterPatientsByDoctorAppointments(): void {
+    const patientIdsWithAppointments = this.patientAppointments.map(appt => appt.patientId);
+    this.patients = this.patients.filter(patient => patient.userId !== undefined && patientIdsWithAppointments.includes(patient.userId));
   }
 
   getNextAppointment(patientId: number | undefined): AppointmentDto | undefined {
