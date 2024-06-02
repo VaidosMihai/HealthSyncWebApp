@@ -1,67 +1,43 @@
-﻿using BackendMedicalApplication.Interfaces;
+﻿using BackendMedicalApplication.DTo;
+using BackendMedicalApplication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace BackendMedicalApplication.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class ReportsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ReportsController : ControllerBase
+    private readonly IReportService _reportService;
+
+    public ReportsController(IReportService reportService)
     {
-        private readonly IReportService _reportService;
+        _reportService = reportService;
+    }
 
-        public ReportsController(IReportService reportService)
-        {
-            _reportService = reportService;
-        }
+    [HttpGet("oldest-patient")]
+    public async Task<ActionResult<UserDto>> GetOldestPatient()
+    {
+        var patient = await _reportService.GetOldestPatientAsync();
+        return Ok(patient);
+    }
 
-        [HttpGet("most-appointments-patients")]
-        public async Task<IActionResult> GetPatientsWithMostAppointments()
-        {
-            var result = await _reportService.GetPatientsWithMostAppointments();
-            return Ok(result);
-        }
+    [HttpGet("youngest-patient")]
+    public async Task<ActionResult<UserDto>> GetYoungestPatient()
+    {
+        var patient = await _reportService.GetYoungestPatientAsync();
+        return Ok(patient);
+    }
 
-        [HttpGet("oldest-patient")]
-        public async Task<IActionResult> GetOldestPatient()
-        {
-            var result = await _reportService.GetOldestPatient();
-            return Ok(result);
-        }
+    [HttpGet("patient-most-appointments")]
+    public async Task<ActionResult<UserDto>> GetPatientWithMostAppointments()
+    {
+        var patient = await _reportService.GetPatientWithMostAppointmentsAsync();
+        return Ok(patient);
+    }
 
-        [HttpGet("youngest-patient")]
-        public async Task<IActionResult> GetYoungestPatient()
-        {
-            var result = await _reportService.GetYoungestPatient();
-            return Ok(result);
-        }
-
-        [HttpGet("most-reviews-doctors")]
-        public async Task<IActionResult> GetDoctorsWithMostReviews()
-        {
-            var result = await _reportService.GetDoctorsWithMostReviews();
-            return Ok(result);
-        }
-
-        [HttpGet("most-reviews-patients")]
-        public async Task<IActionResult> GetPatientsWithMostReviews()
-        {
-            var result = await _reportService.GetPatientsWithMostReviews();
-            return Ok(result);
-        }
-
-        [HttpGet("most-medical-records-patients")]
-        public async Task<IActionResult> GetPatientsWithMostMedicalRecords()
-        {
-            var result = await _reportService.GetPatientsWithMostMedicalRecords();
-            return Ok(result);
-        }
-
-        [HttpGet("most-appointments-doctors")]
-        public async Task<IActionResult> GetDoctorsWithMostAppointments()
-        {
-            var result = await _reportService.GetDoctorsWithMostAppointments();
-            return Ok(result);
-        }
+    [HttpGet("doctor-most-reviews")]
+    public async Task<ActionResult<UserDto>> GetDoctorWithMostReviews()
+    {
+        var doctor = await _reportService.GetDoctorWithMostReviewsAsync();
+        return Ok(doctor);
     }
 }

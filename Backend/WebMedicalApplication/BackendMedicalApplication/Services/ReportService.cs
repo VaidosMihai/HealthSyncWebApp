@@ -16,133 +16,73 @@ namespace BackendMedicalApplication.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<object>> GetPatientsWithMostAppointments()
+        public async Task<UserDto> GetOldestPatientAsync()
         {
-            var result = await _context.Appointments
-                .GroupBy(a => new { a.PatientId, a.Patient.Name })
-                .Select(g => new
+            return await _context.Users
+                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+                .OrderByDescending(p => p.Age)
+                .Select(p => new UserDto
                 {
-                    g.Key.PatientId,
-                    g.Key.Name,
-                    AppointmentsCount = g.Count()
-                })
-                .OrderByDescending(g => g.AppointmentsCount)
-                .Take(10)
-                .ToListAsync();
-
-            return result;
+                    UserId = p.UserId,
+                    Name = p.Name,
+                    Age = p.Age,
+                    EmailAddress = p.EmailAddress
+                }).FirstOrDefaultAsync();
         }
 
-        public async Task<object> GetOldestPatient()
+        public async Task<UserDto> GetYoungestPatientAsync()
         {
-            var result = await _context.Users
-                .Where(u => u.RoleId == 2) // Assuming RoleId 2 is for patients
-                .OrderByDescending(u => u.Age)
-                .Select(u => new
+            return await _context.Users
+                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+                .OrderBy(p => p.Age)
+                .Select(p => new UserDto
                 {
-                    u.UserId,
-                    u.Name,
-                    u.Age
+                    UserId = p.UserId,
+                    Name = p.Name,
+                    Age = p.Age,
+                    EmailAddress = p.EmailAddress
+                }).FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDto> GetPatientWithMostAppointmentsAsync()
+        {
+            return await _context.Users
+                .Where(u => u.RoleId == 2) // Assuming roleId 2 is for Patients
+                .Select(p => new
+                {
+                    Patient = p,
+                    AppointmentCount = _context.Appointments.Count(a => a.PatientId == p.UserId)
+                })
+                .OrderByDescending(p => p.AppointmentCount)
+                .Select(p => new UserDto
+                {
+                    UserId = p.Patient.UserId,
+                    Name = p.Patient.Name,
+                    Age = p.Patient.Age,
+                    EmailAddress = p.Patient.EmailAddress,
+                    Description = $"Appointments: {p.AppointmentCount}"
                 })
                 .FirstOrDefaultAsync();
-
-            return result;
         }
 
-        public async Task<object> GetYoungestPatient()
+        public async Task<UserDto> GetDoctorWithMostReviewsAsync()
         {
-            var result = await _context.Users
-                .Where(u => u.RoleId == 2) // Assuming RoleId 2 is for patients
-                .OrderBy(u => u.Age)
-                .Select(u => new
+            return await _context.Users
+                .Where(u => u.RoleId == 1) // Assuming roleId 1 is for Doctors
+                .Select(d => new
                 {
-                    u.UserId,
-                    u.Name,
-                    u.Age
+                    Doctor = d,
+                    ReviewCount = _context.Reviews.Count(r => r.DoctorId == d.UserId)
+                })
+                .OrderByDescending(d => d.ReviewCount)
+                .Select(d => new UserDto
+                {
+                    UserId = d.Doctor.UserId,
+                    Name = d.Doctor.Name,
+                    EmailAddress = d.Doctor.EmailAddress,
+                    Description = $"Reviews: {d.ReviewCount}"
                 })
                 .FirstOrDefaultAsync();
-
-            return result;
-        }
-
-        public async Task<IEnumerable<object>> GetDoctorsWithMostReviews()
-        {
-            var result = await _context.Reviews
-                .Join(_context.Users,
-                    review => review.DoctorId,
-                    user => user.UserId,
-                    (review, user) => new { review, user })
-                .Where(ru => ru.user.RoleId == 1) // Assuming RoleId 1 is for doctors
-                .GroupBy(ru => new { ru.review.DoctorId, ru.user.Name })
-                .Select(g => new
-                {
-                    g.Key.DoctorId,
-                    g.Key.Name,
-                    ReviewCount = g.Count()
-                })
-                .OrderByDescending(g => g.ReviewCount)
-                .Take(10)
-                .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<IEnumerable<object>> GetPatientsWithMostReviews()
-        {
-            var result = await _context.Reviews
-                .Join(_context.Users,
-                    review => review.PatientId,
-                    user => user.UserId,
-                    (review, user) => new { review, user })
-                .Where(ru => ru.user.RoleId == 2) // Assuming RoleId 2 is for patients
-                .GroupBy(ru => new { ru.review.PatientId, ru.user.Name })
-                .Select(g => new
-                {
-                    g.Key.PatientId,
-                    g.Key.Name,
-                    ReviewCount = g.Count()
-                })
-                .OrderByDescending(g => g.ReviewCount)
-                .Take(10)
-                .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<IEnumerable<object>> GetPatientsWithMostMedicalRecords()
-        {
-            var result = await _context.PatientRecords
-                .Include(pr => pr.Patient)
-                .GroupBy(pr => new { pr.PatientId, pr.Patient.Name })
-                .Select(g => new
-                {
-                    g.Key.PatientId,
-                    g.Key.Name,
-                    MedicalRecordCount = g.Count()
-                })
-                .OrderByDescending(g => g.MedicalRecordCount)
-                .Take(10)
-                .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<IEnumerable<object>> GetDoctorsWithMostAppointments()
-        {
-            var result = await _context.Appointments
-                .Include(a => a.Doctor)
-                .GroupBy(a => new { a.DoctorId, a.Doctor.Name })
-                .Select(g => new
-                {
-                    g.Key.DoctorId,
-                    g.Key.Name,
-                    AppointmentsCount = g.Count()
-                })
-                .OrderByDescending(g => g.AppointmentsCount)
-                .Take(10)
-                .ToListAsync();
-
-            return result;
         }
     }
 }
