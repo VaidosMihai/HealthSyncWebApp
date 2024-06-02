@@ -98,10 +98,6 @@ builder.Services.AddScoped<IEmailService, MailerSendEmailService>();
 builder.Services.AddScoped<IContactFormService, ContactFormService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
-
-
-/*builder.Services.AddTransient<IEmailService, EmailService>();*/
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -150,9 +146,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles(); // This will serve the Angular build files
 
-app.UseCors("AllowSpecificOrigin");
-
 app.UseHttpsRedirection();
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
