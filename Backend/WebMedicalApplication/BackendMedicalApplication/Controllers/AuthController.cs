@@ -38,10 +38,17 @@ namespace BackendMedicalApplication.Controllers
             if (user == null)
                 return BadRequest(new { message = "Email or password is incorrect" });
 
+            var userEntity = await _context.Users.SingleOrDefaultAsync(u => u.EmailAddress == loginDto.Email);
+            if (userEntity != null && !userEntity.IsVerified)
+            {
+                return BadRequest(new { message = "Please verify your email address before logging in." });
+            }
+
             var token = GenerateJwtToken(user);
 
             return Ok(new { token });
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto registrationDto)
@@ -52,9 +59,14 @@ namespace BackendMedicalApplication.Controllers
                 return BadRequest(new { message = "User already exists" });
             }
 
+            var isCnpUnique = await _userService.IsCnpUniqueAsync(registrationDto.CNP);
+            if (!isCnpUnique)
+            {
+                return BadRequest(new { message = "CNP already exists" });
+            }
+
             if (registrationDto.Password == registrationDto.ConfirmPassword)
             {
-
                 var user = new UserDto
                 {
                     Username = registrationDto.Username,
@@ -68,21 +80,23 @@ namespace BackendMedicalApplication.Controllers
                     Address = registrationDto.Address,
                     PhoneNumber = registrationDto.PhoneNumber,
                 };
+
+                var createdUser = await _userService.CreateUserAsync(registrationDto);
+                if (createdUser == null)
+                {
+                    return BadRequest(new { message = "User creation failed" });
+                }
+
+                var jwtToken = GenerateJwtToken(createdUser);
+
+                return Ok(new { token = jwtToken });
             }
             else
             {
                 return BadRequest(new { message = "Passwords don't match" });
             }
-            var createdUser = await _userService.CreateUserAsync(registrationDto);
-            if (createdUser == null)
-            {
-                return BadRequest(new { message = "User creation failed" });
-            }
-
-            var jwtToken = GenerateJwtToken(createdUser);
-
-            return Ok(new { token = jwtToken });
         }
+
 
         private string GenerateJwtToken(UserDto user)
         {

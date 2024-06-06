@@ -69,6 +69,10 @@ namespace BackendMedicalApplication
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<User>()
+                        .HasIndex(u => u.CNP)
+                        .IsUnique();
+
             modelBuilder.Entity<ReviewVote>().HasIndex(rv => new { rv.ReviewId, rv.UserId }).IsUnique();
 
             modelBuilder.Entity<ContactFormSubmission>().ToTable("ContactFormSubmissions");

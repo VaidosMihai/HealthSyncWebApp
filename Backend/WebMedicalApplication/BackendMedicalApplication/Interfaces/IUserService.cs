@@ -1,4 +1,6 @@
 ﻿using BackendMedicalApplication.DTo;
+using BackendMedicalApplication.Services;
+using Microsoft.AspNetCore.Mvc;
 using WebMedicalApplication.Models;
 
 namespace BackendMedicalApplication.Interfaces
@@ -18,5 +20,8 @@ namespace BackendMedicalApplication.Interfaces
         Task<User> GeneratePasswordResetCode(string phoneNumber);
         Task<User> ResetPasswordWithCode(string phoneNumber, string code, string newPassword);
         IEnumerable<UserDto> GetUsersByRole(int roleId);
+        [HttpPost("register")]
+        Task<bool> IsCnpUniqueAsync(string cnp);
+
     }
 }

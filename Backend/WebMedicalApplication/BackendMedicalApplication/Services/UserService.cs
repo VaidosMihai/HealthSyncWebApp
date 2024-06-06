@@ -358,5 +358,11 @@ namespace BackendMedicalApplication.Services
                            })
                            .ToList();
         }
+
+        public async Task<bool> IsCnpUniqueAsync(string cnp)
+        {
+            return !await _context.Users.AnyAsync(u => u.CNP == cnp);
+        }
+
     }
 }
