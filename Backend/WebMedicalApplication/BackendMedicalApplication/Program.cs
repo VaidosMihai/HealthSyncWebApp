@@ -113,7 +113,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder
+        policy => policy
             .WithOrigins(
                 "http://localhost:4200", // Local development
                 "https://lemon-cliff-0c0893203.5.azurestaticapps.net" // Azure Static Web Apps
@@ -136,12 +136,13 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles(); // This will serve the Angular build files
 
 app.UseHttpsRedirection();
-app.UseCors("AllowSpecificOrigin");
+
+app.UseRouting();
+
+app.UseCors("AllowSpecificOrigin"); // Apply the CORS policy
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
