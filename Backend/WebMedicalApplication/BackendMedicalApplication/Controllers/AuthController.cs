@@ -41,14 +41,13 @@ namespace BackendMedicalApplication.Controllers
             var userEntity = await _context.Users.SingleOrDefaultAsync(u => u.EmailAddress == loginDto.Email);
             if (userEntity != null && !userEntity.IsVerified)
             {
-                return BadRequest(new { message = "Please verify your email address before logging in." });
+                return Unauthorized(new { message = "Email not verified" }); // Change to Unauthorized with specific message
             }
 
             var token = GenerateJwtToken(user);
 
             return Ok(new { token });
         }
-
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto registrationDto)
@@ -160,6 +159,30 @@ namespace BackendMedicalApplication.Controllers
             return Ok("Email verified successfully.");
         }
 
+        [HttpPost("resend-verification-email")]
+        public async Task<IActionResult> ResendVerificationEmail([FromBody] EmailDto emailDto)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.EmailAddress == emailDto.To);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            if (user.IsVerified)
+            {
+                return BadRequest("User is already verified.");
+            }
+
+            user.VerificationToken = Guid.NewGuid().ToString();
+            user.VerificationTokenExpires = DateTime.UtcNow.AddHours(24);
+            await _context.SaveChangesAsync();
+
+            emailDto.Subject = "Verify your email";
+            emailDto.Body = $"Your verification token is: {user.VerificationToken}";
+
+            await _emailService.SendEmailAsync(user.EmailAddress, emailDto.Subject, emailDto.Body, true);
+            return Ok("Verification email sent.");
+        }
     }
 }
 
