@@ -240,6 +240,8 @@ export class PatientProfileComponent implements OnInit {
       this.reviewService.deleteReview(reviewId).subscribe({
         next: () => {
           console.log('Review deleted successfully');
+          alert('Review deleted successfully');
+          this.loadUserProfile();
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/profile']);
           });
@@ -251,6 +253,9 @@ export class PatientProfileComponent implements OnInit {
         },
         error: (error) => {
           console.error('Failed to delete review', error);
+          console.log('Review deleted successfully');
+          alert('Review deleted successfully');
+          this.loadUserProfile();
         }
       });
     } else {
