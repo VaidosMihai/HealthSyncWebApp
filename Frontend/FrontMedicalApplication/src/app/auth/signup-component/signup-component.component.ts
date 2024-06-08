@@ -57,10 +57,11 @@ export class SignupComponent {
           this.loading = false;
         },
         error: (error) => {
-          this.error = error;
+          this.error = error.error.message || 'An error occurred during registration';
           this.loading = false;
         }
       });
     }
   }
+  
 }
