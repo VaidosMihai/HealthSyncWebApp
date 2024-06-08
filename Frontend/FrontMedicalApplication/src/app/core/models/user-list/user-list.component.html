@@ -1,7 +1,27 @@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
 <div class="container mt-4">
+  <div class="position-relative mb-3">
+    <button class="btn btn-primary btn-sm add-button" [routerLink]="['/user/add']">Add New User</button>
+  </div>
   <h2>Users</h2>
+  <div class="form-group">
+    <label for="searchName">Find by Name:</label>
+    <input type="text" id="searchName" class="form-control" [(ngModel)]="searchName" (input)="filterUsers()" placeholder="Enter name or surname">
+  </div>
+  <div class="form-group">
+    <label for="searchCnp">Find by CNP:</label>
+    <input type="text" id="searchCnp" class="form-control" [(ngModel)]="searchCnp" (input)="filterUsers()" placeholder="Enter CNP">
+  </div>
+  <div class="form-group">
+    <label for="sortOrder">Sort by Name:</label>
+    <select id="sortOrder" class="form-control" [(ngModel)]="sortOrder" (change)="sortUsers()">
+      <option value="asc">Alphabetical (A-Z)</option>
+      <option value="desc">Reverse Alphabetical (Z-A)</option>
+    </select>
+  </div>
   <div class="row">
-    <div class="col-md-4 mb-3" *ngFor="let user of users">
+    <div class="col-md-4 mb-3" *ngFor="let user of filteredUsers">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">{{ user.name }} {{ user.surname }}</h5>
@@ -26,7 +46,8 @@
             <input type="text" id="phone" class="form-control" [value]="user.phoneNumber" readonly>
           </div>
           <div class="form-group">
-            <label for="address">Address:</label>
+            <label *ngIf="user.roleId == 2" for="address">Address:</label>
+            <label *ngIf="user.roleId == 1" for="address">Working address:</label>
             <input type="text" id="address" class="form-control" [value]="user.address" readonly>
           </div>
           <div class="form-group">
@@ -34,7 +55,7 @@
             <input type="text" id="role" class="form-control" [value]="getRoleName(user.roleId)" readonly>
           </div>
           <div class="form-group">
-            <label for="cnp">CNP:</label>
+            <label for="cnp">Personal numerical code (CNP):</label>
             <input type="text" id="cnp" class="form-control" [value]="user.cnp" readonly>
           </div>
           <div class="d-flex justify-content-around mt-3">

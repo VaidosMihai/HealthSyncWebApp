@@ -10,7 +10,10 @@ import { Router } from '@angular/router';
 })
 export class UserListComponent implements OnInit {
   users: UserDto[] = [];
-  user: UserDto = new UserDto("","",0,"");
+  filteredUsers: UserDto[] = [];
+  searchName: string = '';
+  searchCnp: string = '';
+  sortOrder: string = 'asc'; // Default sort order
 
   constructor(private userService: UserService, private router: Router) { }
 
@@ -21,8 +24,32 @@ export class UserListComponent implements OnInit {
   fetchUsers() {
     this.userService.getAllUsers().subscribe(users => {
       this.users = users;
+      this.filteredUsers = users; // Initialize the filtered users list
+      this.sortUsers(); // Sort users initially
     }, error => {
       console.error('Error fetching users:', error);
+    });
+  }
+
+  filterUsers() {
+    const searchName = this.searchName.toLowerCase();
+    const searchCnp = this.searchCnp;
+    this.filteredUsers = this.users.filter(user =>
+      (user.name.toLowerCase().includes(searchName) || user.surname.toLowerCase().includes(searchName)) &&
+      (user.cnp?.includes(searchCnp) ?? false)
+    );
+    this.sortUsers(); // Sort users after filtering
+  }
+
+  sortUsers() {
+    this.filteredUsers.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (this.sortOrder === 'asc') {
+        return nameA.localeCompare(nameB);
+      } else {
+        return nameB.localeCompare(nameA);
+      }
     });
   }
 
@@ -33,8 +60,11 @@ export class UserListComponent implements OnInit {
   }
 
   deleteUser(userId: number) {
-    this.userService.deletePatient(userId).subscribe(() => {
-      this.fetchUsers(); // Reload users after deletion
+    this.userService.deletePatient(userId).subscribe(response => {
+      console.log(`Successfully deleted user with ID: ${userId}`);
+      console.log('Server response:', response);
+      this.users = this.users.filter(user => user.userId !== userId); // Remove the deleted user from the list
+      this.filteredUsers = this.filteredUsers.filter(user => user.userId !== userId); // Remove the deleted user from the filtered list
     }, error => {
       console.error('Failed to delete user:', error);
     });

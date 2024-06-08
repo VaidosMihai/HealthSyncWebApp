@@ -28,11 +28,12 @@
                       Please enter a valid email address.
                     </mat-error>
                   </div>
-
+                  <button type="button" class="btn btn-primary  custom-margin btn-block mb-4" [routerLink]="['/login']">
+                    Back
+                  </button>
                   <button type="submit" mat-raised-button color="primary" class="btn btn-primary btn-block mb-4">
                     Send Code
                   </button>
-
                   <div *ngIf="resetError" class="alert alert-danger">
                     {{ resetError }}
                   </div>

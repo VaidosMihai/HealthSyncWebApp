@@ -3,63 +3,98 @@
 <div class="container mt-4">
   <h2>Add New User</h2>
   <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="roleId">Role ID</label>
-      <input type="number" class="form-control" id="roleId" formControlName="roleId" placeholder="Enter role ID">
-    </div>
-        <div class="form-outline mb-4">
-          <label class="form-label" for="username">Username</label>
-          <input type="text" id="username" class="form-control" formControlName="username" required placeholder="Enter username"/>
-        </div>
-
-        <div class="form-outline mb-4">
-          <label class="form-label" for="name">Name</label>
-          <input type="text" id="name" class="form-control" formControlName="name" required placeholder="Enter name"/>
-        </div>
-
-        <div class="form-outline mb-4">
-          <label class="form-label" for="surname">Surname</label>
-          <input type="text" id="surname" class="form-control" formControlName="surname" required placeholder="Enter surname"/>
-        </div>
-
-        <div class="form-outline mb-4">
-          <label class="form-label" for="email">Email address</label>
-          <input type="email" id="email" class="form-control" formControlName="email" required placeholder="Enter email address"/>
-          <mat-error *ngIf="addUserForm.get('email')?.errors?.['email']">Please enter a valid email</mat-error>
-        </div>
-
-        <div class="form-outline mb-4">
-          <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" class="form-control" formControlName="password" required minlength="6" placeholder="Enter password"/>
-          <mat-error *ngIf="addUserForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
-        </div>
-
-        <div class="form-outline mb-4">
-          <label class="form-label" for="confirmPassword">Confirm Password</label>
-          <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" required minlength="6" placeholder="Enter password"/>
-          <mat-error *ngIf="addUserForm.get('confirmPassword')?.hasError('minlength')">Confirmation Password must be at least 6 characters</mat-error>
-        </div>
-
+    <div class="row">
+      <div class="col-md-6">
         <div class="form-group">
-            <label class="labels">CNP</label>
-            <input type="text" class="form-control" placeholder="CNP" formControlName="cnp">
+          <label for="roleId">Role ID</label>
+          <input type="number" class="form-control" id="roleId" formControlName="roleId" placeholder="Enter role ID">
+          <div *ngIf="addUserForm.get('roleId')?.invalid && addUserForm.get('roleId')?.touched" class="text-danger">
+            Role ID is required.
+          </div>
         </div>
-
-        <div class="form-outline mb-4">
-          <label class="form-label" for="age">Age</label>
-          <input type="number" id="age" class="form-control" formControlName="age" required min="0" placeholder="Enter age"/>
-          <mat-error *ngIf="addUserForm.get('age')?.hasError('min')">Age must be a positive number</mat-error>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" class="form-control" formControlName="username" placeholder="Enter username">
+          <div *ngIf="addUserForm.get('username')?.invalid && addUserForm.get('username')?.touched" class="text-danger">
+            Username is required and must be alphanumeric.
+          </div>
         </div>
-        
-        <div class="form-outline mb-4">
-          <label class="form-label" for="address">Address</label>
-          <input type="text" id="address" class="form-control" formControlName="address" required placeholder="Enter address"/>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" class="form-control" formControlName="name" placeholder="Enter name">
+          <div *ngIf="addUserForm.get('name')?.invalid && addUserForm.get('name')?.touched" class="text-danger">
+            Name is required and must start with an uppercase letter.
+          </div>
         </div>
-        
-        <div class="form-outline mb-4">
-          <label class="form-label" for="phonenumber">Phone Number</label>
-          <input type="text" id="phonenumber" class="form-control" formControlName="phonenumber" required placeholder="Enter phone number"/>
+        <div class="form-group">
+          <label for="surname">Surname</label>
+          <input type="text" id="surname" class="form-control" formControlName="surname" placeholder="Enter surname">
+          <div *ngIf="addUserForm.get('surname')?.invalid && addUserForm.get('surname')?.touched" class="text-danger">
+            Surname is required and must start with an uppercase letter.
+          </div>
         </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" class="form-control" formControlName="email" placeholder="Enter email address">
+          <div *ngIf="addUserForm.get('email')?.invalid && addUserForm.get('email')?.touched" class="text-danger">
+            Please enter a valid email address.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cnp">CNP</label>
+          <input type="text" id="cnp" class="form-control" formControlName="cnp" placeholder="Enter CNP">
+          <div *ngIf="addUserForm.get('cnp')?.invalid && addUserForm.get('cnp')?.touched" class="text-danger">
+            CNP must be exactly 13 characters long and contain only numbers.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password">
+          <div *ngIf="addUserForm.get('password')?.invalid && addUserForm.get('password')?.touched" class="text-danger">
+            Password must be at least 8 characters, contain 1 uppercase letter, 1 special character, and at least 3 numbers.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" placeholder="Enter password">
+          <div *ngIf="addUserForm.get('confirmPassword')?.invalid && addUserForm.get('confirmPassword')?.touched" class="text-danger">
+            Confirmation Password must match and be at least 8 characters.
+          </div>
+          <div *ngIf="addUserForm.errors?.['mismatch'] && addUserForm.get('confirmPassword')?.touched" class="text-danger">
+            Passwords must match.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" class="form-control" formControlName="age" placeholder="Enter age">
+          <div *ngIf="addUserForm.get('age')?.invalid && addUserForm.get('age')?.touched" class="text-danger">
+            Age must be a positive number and cannot exceed 150.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" class="form-control" formControlName="address" placeholder="Enter address">
+          <div *ngIf="addUserForm.get('address')?.invalid && addUserForm.get('address')?.touched" class="text-danger">
+            Address is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phonenumber">Phone Number</label>
+          <input type="text" id="phonenumber" class="form-control" formControlName="phonenumber" placeholder="Enter phone number">
+          <div *ngIf="addUserForm.get('phonenumber')?.invalid && addUserForm.get('phonenumber')?.touched" class="text-danger">
+            Phone number must contain only numbers.
+          </div>
+        </div>
+      </div>
+    </div>
     <button type="submit" class="btn btn-primary">Create User</button>
   </form>
+  <div *ngIf="message" class="alert alert-success mt-3">
+    {{ message }}
+  </div>
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>
 </div>

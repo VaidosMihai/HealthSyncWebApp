@@ -1,3 +1,5 @@
+import { ReviewDto } from './review.dto';
+
 export class UserDto {
   userId?: number;
   username: string;
@@ -12,6 +14,9 @@ export class UserDto {
   phoneNumber?: string;
   token?: string;
   description?: string;
+  averageRating?: number = 0;
+  reviewCount?: number = 0;
+  reviews?: ReviewDto[] = [];
 
   constructor(
     username: string = '',
@@ -25,8 +30,8 @@ export class UserDto {
     password?: string,
     address?: string,
     phoneNumber?: string,
-    description? : string,
-    token? : string
+    description?: string,
+    token?: string
   ) {
     this.username = username;
     this.emailAddress = emailAddress;
@@ -40,7 +45,7 @@ export class UserDto {
     }
     this.password = password;
     this.address = address;
-    this.phoneNumber = phoneNumber; 
+    this.phoneNumber = phoneNumber;
     this.description = description;
     this.token = token;
   }

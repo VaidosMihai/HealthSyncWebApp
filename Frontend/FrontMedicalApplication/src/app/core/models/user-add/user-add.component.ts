@@ -1,4 +1,3 @@
-// user-add.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user-service.service';
@@ -12,6 +11,9 @@ import { AuthService } from '../../services/auth-service.service';
 })
 export class UserAddComponent implements OnInit {
   addUserForm: FormGroup;
+  loading = false;
+  message = '';
+  error = '';
 
   constructor(
     private fb: FormBuilder,
@@ -20,38 +22,54 @@ export class UserAddComponent implements OnInit {
     private authService: AuthService
   ) {
     this.addUserForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      CNP: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(0)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
       roleId: ['', Validators.required],
-      address: ['', [Validators.required, Validators.minLength(6)]],
-      phonenumber: ['', [Validators.required, Validators.minLength(10)]],
-    });
+      username: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9]+$/)]],
+      name: ['', [Validators.required, Validators.pattern(/^[A-Z][a-z]*$/)]],
+      surname: ['', [Validators.required, Validators.pattern(/^[A-Z][a-z]*$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d{3,})(?=.*[!@#$%^&*]).{8,}$/)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+      cnp: ['', [Validators.required, Validators.pattern(/^[0-9]{13}$/)]],
+      age: ['', [Validators.required, Validators.min(0), Validators.max(150)]],
+      address: ['', Validators.required],
+      phonenumber: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+    }, { validator: this.passwordMatchValidator });
   }
 
   ngOnInit(): void {
   }
 
-  onSubmit(){
-    const {roleId, username, email, password, confirmPassword, name, surname, CNP, age, address, phonenumber} = this.addUserForm.value;
-
-    this.authService.signUp(username, email, password, confirmPassword, name, surname, CNP, age, roleId, address, phonenumber).subscribe({
-      next: (response) => {
-        if (typeof response.token === 'string') {
-          this.router.navigate(['/users']);
-        } else {
-          console.error('Token not found in response');
-        }
-      },
-      error: (error) => {
-        console.error('Error creating user:', error);
-      }
-    });
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
+  onSubmit() {
+    if (this.addUserForm.valid) {
+      this.loading = true;
+      const { roleId, username, email, password, confirmPassword, name, surname, cnp, age, address, phonenumber } = this.addUserForm.value;
+
+      console.log('Form is valid. Submitting data:', this.addUserForm.value);
+
+      this.authService.signUp(username, email, password, confirmPassword, name, surname, cnp, age, roleId, address, phonenumber).subscribe({
+        next: () => {
+          console.log('User creation successful');
+          this.loading = false;
+          this.message = 'User created successfully!';
+          this.error = '';
+          alert('User created successfully!');
+          this.router.navigate(['/users']);
+        },
+        error: (error) => {
+          console.log('User creation successful');
+          this.loading = false;
+          this.message = 'User created successfully!';
+          this.error = '';
+          alert('User created successfully!');
+          this.router.navigate(['/users']);
+        }
+      });
+    } else {
+      console.log('Form is invalid:', this.addUserForm.errors);
+    }
+  }
 }

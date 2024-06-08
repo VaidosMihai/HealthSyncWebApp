@@ -31,8 +31,8 @@ export class UserService {
     return localStorage.getItem('token') || ''; // Or however you handle token retrieval
   }
 
-  deletePatient(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  deletePatient(userId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${userId}`, { responseType: 'text' });
   }
   
   getAllUsers(): Observable<UserDto[]> {

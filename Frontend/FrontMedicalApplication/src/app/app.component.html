@@ -15,8 +15,8 @@
         <img src="assets/logoImage.png" alt="HealthSync Logo" class="circular-logo" >
         HealthSync
       </div>
-      <div class="nav-wrapper">
-        <ul class="nav-links">
+      <div class="nav-wrapper" [ngClass]="{'full-width': !isLoggedIn}">
+        <ul class="nav-links" *ngIf="isLoggedIn">
           <li>
             <button mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/dashboard">Dashboard</button>
           </li>
@@ -35,8 +35,7 @@
           </li>
         </ul>
       </div>
-      
-      <div class="search-bar" *ngIf="isAdmin || isPatient || isDoctor">
+      <div class="search-bar" *ngIf="isLoggedIn">
         <select title="selectedEntityType" [(ngModel)]="selectedEntityType">
           <option value="">Select Entity Type</option>
           <option value="users">Users</option>
@@ -47,28 +46,38 @@
         <button type="button" class="search-button" (click)="onSearch()">Search</button>
       </div>
       <div class="auth-section">
-        
-        <div *ngIf="isAdmin || isPatient || isDoctor" class="notification-icon" (click)="viewNotifications()">
+        <div *ngIf="isLoggedIn" class="notification-icon" (click)="viewNotifications()">
           <button mat-button>
-          <img src="assets/Notification.png" alt="Notifications">
+            <img src="assets/Notification.png" alt="Notifications">
           </button>
           <div class="notification-count" *ngIf="unreadNotificationsCount > 0">
             {{ unreadNotificationsCount }}
           </div>
         </div>
         <ng-container *ngIf="isLoggedIn">
-          <b>
-            {{ currentUserFullName }}
-          </b>
+          <b>{{ currentUserFullName }}</b>
           <button mat-button routerLink="/profile">
-          <div class="profile-picture">
-            <img *ngIf="isPatient" src="assets/UserProfilePhoto.png" alt="Profile" />
-            <img *ngIf="isDoctor" src="assets/DoctorProfilePhoto.png" alt="Profile" />
-            <img *ngIf="isAdmin" src="assets/AdminProfilePhoto.png" alt="Profile" />
-          </div>
-        </button>
+            <div class="profile-picture">
+              <img *ngIf="isPatient" src="assets/UserProfilePhoto.png" alt="Profile" />
+              <img *ngIf="isDoctor" src="assets/DoctorProfilePhoto.png" alt="Profile" />
+              <img *ngIf="isAdmin" src="assets/AdminProfilePhoto.png" alt="Profile" />
+            </div>
+          </button>
           <button mat-button (click)="logout()">Logout</button>
         </ng-container>
+        <div *ngIf="!isLoggedIn" class="dropdown">
+          <button mat-button class="dropbtn services-button">Services</button>
+          <div class="dropdown-content right-aligned-content">
+            <a mat-button *ngIf="isAdmin || isPatient" routerLink="/doctors">Doctors</a>
+              <a mat-button *ngIf="isAdmin || isDoctor" routerLink="/patients">Patients</a>
+              <a mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/appointment">Appointments</a>
+              <a mat-button *ngIf="isAdmin" routerLink="/users">Users</a>
+              <a mat-button *ngIf="isAdmin || isPatient || isDoctor" routerLink="/profile">Profile</a>
+              <a mat-button routerLink="/locations">Locations</a>
+              <a mat-button routerLink="/contactinfo">Contact Info</a>
+              <a mat-button *ngIf="isAdmin || isDoctor" routerLink="/contact-forms" >Contact Forms</a>
+          </div>
+        </div>
         <ng-container *ngIf="!isLoggedIn">
           <button mat-button routerLink="/login">Login</button>
           <button mat-button routerLink="/signup">Register</button>
