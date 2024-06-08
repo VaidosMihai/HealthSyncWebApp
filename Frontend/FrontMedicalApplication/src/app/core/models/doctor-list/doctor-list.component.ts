@@ -192,7 +192,9 @@ export class DoctorListComponent implements OnInit {
   
     if (currentUser) {
       this.newReview.patientId = currentUser.userId;
-      this.newReview.createdAt = new Date();
+      const now = new Date();
+      now.setHours(now.getHours() + 3);
+      this.newReview.createdAt = now;
   
       const reviewToSubmit: ReviewDto = { ...this.newReview };
   
@@ -207,7 +209,6 @@ export class DoctorListComponent implements OnInit {
           console.log('Review submitted successfully', review);
           this.loadDoctors();
           this.loadReviews(this.newReview.doctorId);
-          // this.closeReviewModal();
         },
         (error: any) => {
           console.error('Failed to submit review', error);
@@ -237,9 +238,9 @@ export class DoctorListComponent implements OnInit {
         });
         this.updateStarRatings();
         this.calculateAverageRating();
-        console.log('Reviews loaded:', this.reviews); // Debug log
-        console.log('Star Ratings:', this.starRatings); // Debug log
-        console.log('Average Rating:', this.averageRating); // Debug log
+        console.log('Reviews loaded:', this.reviews);
+        console.log('Star Ratings:', this.starRatings);
+        console.log('Average Rating:', this.averageRating);
       },
       error: (error) => {
         console.error('Failed to load reviews', error);

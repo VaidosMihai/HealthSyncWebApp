@@ -253,9 +253,16 @@
                   <div class="review-description">
                     <p>{{ review.comment }}</p>
                   </div>
-                  <span class="publish py-3 d-inline-block w-100">
-                    Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
-                  </span>
+                  <div *ngIf="isDoctor">
+                    <span class="publish py-3 d-inline-block w-100">
+                      Published {{ review.createdAt | date: 'short' }}
+                    </span>
+                  </div>
+                  <div *ngIf="isPatient">
+                    <span  class="publish py-3 d-inline-block w-100">
+                      Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
+                    </span>
+                  </div>
                   <div class="helpful-thumbs">
                     <button class="helpful-thumb text-body-2" (click)="markHelpful(review)">
                       <span class="fit-icon thumbs-icon">
