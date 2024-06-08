@@ -1,14 +1,26 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="container">
-  <h2>Doctors</h2>
-
+<div class="container mt-4">
   <div class="row mb-3">
-    <label for="cityFilter"><b>Filter by City:</b></label>
     <div class="col-md-4">
-      <select class="form-control" [(ngModel)]="selectedCity" (change)="filterByCity()" style="font-size: 20px;">
+      <label for="cityFilter">Filter by City:</label>
+      <select id="cityFilter" class="form-control" [(ngModel)]="selectedCity" (change)="filterDoctors()">
         <option value="">All Cities</option>
         <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="specializationFilter">Filter by Specialization:</label>
+      <select id="specializationFilter" class="form-control" [(ngModel)]="selectedSpecialization" (change)="filterDoctors()">
+        <option value="">All Specializations</option>
+        <option *ngFor="let specialization of specializations" [value]="specialization">{{ specialization }}</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="sortOrder">Sort by Rating:</label>
+      <select id="sortOrder" class="form-control" [(ngModel)]="selectedSortOrder" (change)="sortDoctors()">
+        <option value="asc">Low to High</option>
+        <option value="desc">High to Low</option>
       </select>
     </div>
   </div>
@@ -22,13 +34,15 @@
           <p><strong>Email:</strong> {{ doctor.emailAddress }}</p>
           <p><strong>Address:</strong> {{ doctor.address }}</p>
           <p>{{ doctor.description }}</p>
+          <p><strong>Average Rating:</strong> {{ doctor.averageRating?.toFixed(1) }} &#11088; ({{ doctor.reviewCount }} reviews)</p>
           <button class="btn btn-primary custom-margin" (click)="scheduleAppointment(doctor.username)">Schedules</button>
-          <button class="btn btn-secondary" (click)="openReviewModal(doctor)">Reviews</button>
+          <button class="btn btn-secondary custom-margin" (click)="openReviewModal(doctor)">Reviews</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 
 <style>
   .card {
@@ -43,104 +57,107 @@
 </style>
 
 
-  <!-- Review Modal -->
-  <div id="reviewModal" class="modal" [class.show]="isReviewModalOpen">
-    <div class="modal-content">
-      <span class="close" (click)="closeReviewModal()">&times;</span>
-      <h2>Reviews for {{ selectedDoctor?.name }} {{ selectedDoctor?.surname }}</h2>
-  
-      <div id="reviews" class="review-section">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h4 class="m-0">{{ reviews.length }} Reviews ({{ averageRating.toFixed(1) }} &#11088;)</h4>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <table class="stars-counters">
-              <tbody>
-                <tr *ngFor="let star of starRatings">
-                  <td>
-                    <b class="fit-button fit-button-color-blue fit-button-fill-ghost fit-button-size-medium stars-filter">{{ star.stars }} &#11088;</b>
-                  </td>
-                  <td class="progress-bar-container">
-                    <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
-                      <div class="fit-progressbar-background">
-                        <span class="progress-fill" [style.width.%]="star.percentage"></span>
-                      </div>
+<!-- Review Modal -->
+<div id="reviewModal" class="modal" [class.show]="isReviewModalOpen">
+  <div class="modal-content">
+    <span class="close" (click)="closeReviewModal()">&times;</span>
+    <h2>Reviews for {{ selectedDoctor?.name }} {{ selectedDoctor?.surname }}</h2>
+
+    <div id="reviews" class="review-section">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h4 class="m-0">{{ reviews.length }} Reviews ({{ averageRating.toFixed(1) }} &#11088;)</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <table class="stars-counters">
+            <tbody>
+              <tr *ngFor="let star of starRatings">
+                <td>
+                  <b class="fit-button fit-button-color-blue fit-button-fill-ghost fit-button-size-medium stars-filter">{{ star.stars }} &#11088;</b>
+                </td>
+                <td class="progress-bar-container">
+                  <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
+                    <div class="fit-progressbar-background">
+                      <span class="progress-fill" [style.width.%]="star.percentage"></span>
                     </div>
-                  </td>
-                  <td class="star-num">({{ star.count }})</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-md-6 text-right">
-            <select class="custom-select custom-select-sm border-0 shadow-sm ml-2" (change)="sortReviews($event)">
-              <option value="relevant">Most Relevant</option>
-              <option value="recent">Most Recent</option>
-            </select>
-          </div>
+                  </div>
+                </td>
+                <td class="star-num">({{ star.count }})</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6 text-right">
+          <select class="custom-select custom-select-sm border-0 shadow-sm ml-2" (change)="sortReviews($event)">
+            <option value="relevant">Most Relevant</option>
+            <option value="recent">Most Recent</option>
+          </select>
         </div>
       </div>
-  
-      <div class="review-list">
-        <ul>
-          <li *ngFor="let review of reviews">
-            <div class="d-flex">
-              <div class="left">
-                <span><img src="../../../../assets/UserProfilePhoto.png" class="profile-pict-img img-fluid" alt="" /></span>
-              </div>
-              <div class="right">
-                <h4>{{ review.patientName  }}
-                  <span class="gig-rating text-body-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" width="15" height="15">
-                      <path fill="currentColor" d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z"></path>
-                    </svg>
-                    {{ review.rating }}
-                  </span>
-                </h4>
-                <div class="review-description">
-                  <p>{{ review.comment }}</p>
-                </div>
-                <span class="publish py-3 d-inline-block w-100">
-                  Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
+    </div>
+
+    <div class="review-list">
+      <ul>
+        <li *ngFor="let review of reviews">
+          <div class="d-flex">
+            <div class="left">
+              <span><img src="../../../../assets/UserProfilePhoto.png" class="profile-pict-img img-fluid" alt="" /></span>
+            </div>
+            <div class="right">
+              <h4>{{ review.patientName  }}
+                <span class="gig-rating text-body-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" width="15" height="15">
+                    <path fill="currentColor" d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z"></path>
+                  </svg>
+                  {{ review.rating }}
                 </span>
-                <div class="helpful-thumbs">
-                  <button class="helpful-thumb text-body-2" (click)="markHelpful(review)" [disabled]="isHelpfulButtonDisabled(review)">
-                    <span class="fit-icon thumbs-icon">
-                      <i class="fa fa-thumbs-up"></i>
-                    </span>
-                    <span class="thumb-title">({{ review.helpfulCount }})</span>
-                  </button>
-                  <button class="helpful-thumb text-body-2 ml-3" (click)="markNotHelpful(review)" [disabled]="isNotHelpfulButtonDisabled(review)">
-                    <span class="fit-icon thumbs-icon">
-                      <i class="fa fa-thumbs-down"></i>
-                    </span>
-                    <span class="thumb-title">({{ review.notHelpfulCount }})</span>
-                  </button>
-                  <button (click)="deleteReview(review.reviewId!)" class="delete-button"><i class="material-icons">&#xe872;</i></button>
-                </div>
+              </h4>
+              <div class="review-description">
+                <p>{{ review.comment }}</p>
+              </div>
+              <span class="publish py-3 d-inline-block w-100">
+                Published {{ review.createdAt | date: 'short' }} for doctor {{review.doctorName}}
+              </span>
+              <div class="helpful-thumbs">
+                <button class="helpful-thumb text-body-2" (click)="markHelpful(review)" [disabled]="isHelpfulButtonDisabled(review)">
+                  <span class="fit-icon thumbs-icon">
+                    <i class="fa fa-thumbs-up"></i>
+                  </span>
+                  <span class="thumb-title">({{ review.helpfulCount }})</span>
+                </button>
+                <button class="helpful-thumb text-body-2 ml-3" (click)="markNotHelpful(review)" [disabled]="isNotHelpfulButtonDisabled(review)">
+                  <span class="fit-icon thumbs-icon">
+                    <i class="fa fa-thumbs-down"></i>
+                  </span>
+                  <span class="thumb-title">({{ review.notHelpfulCount }})</span>
+                </button>
+                <button *ngIf="canDeleteReview(review)" (click)="deleteReview(review)" class="delete-button">
+                  <i class="material-icons">&#xe872;</i>
+                </button>
               </div>
             </div>
-          </li>
-        </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <h3>Submit a Review</h3>
+    <div class="form-group">
+      <label for="rating">Rating:</label>
+      <div id="rating" class="star-rating">
+        <button type="button" class="star" *ngFor="let star of [1, 2, 3, 4, 5]" (click)="setRating(star)">
+          <span [ngClass]="{'selected': newReview.rating >= star}">&#11088; {{ star }}</span>
+        </button>
       </div>
-  
-      <h3>Submit a Review</h3>
-      <div class="form-group">
-        <label for="rating">Rating:</label>
-        <div id="rating" class="star-rating">
-          <button type="button" class="star" *ngFor="let star of [1, 2, 3, 4, 5]" (click)="setRating(star)">
-            <span [ngClass]="{'selected': newReview.rating >= star}">&#11088; {{ star }}</span>
-          </button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="comment">Comment:</label>
-        <textarea id="comment" class="form-control" [(ngModel)]="newReview.comment" maxlength="250"></textarea>
-      </div>
-      <button class="btn btn-primary" (click)="submitReview()">Submit Review</button>
-      <button class="btn btn-primary" (click)="closeReviewModal()" style="background-color: #f44336">Close</button>
-  
+    </div>
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" class="form-control" [(ngModel)]="newReview.comment" maxlength="250"></textarea>
+    </div>
+    <button class="btn btn-primary" (click)="submitReview()">Submit Review</button>
+    <br>
+    <button class="btn btn-primary" (click)="closeReviewModal()" style="background-color: #f44336">Close</button>
+
       <style>
         .star-rating {
           display: flex;
