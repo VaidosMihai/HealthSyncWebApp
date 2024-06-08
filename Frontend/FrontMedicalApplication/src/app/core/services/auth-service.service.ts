@@ -117,4 +117,14 @@ export class AuthService {
     console.error('An error occurred:', error);
     return throwError(error); // Use throwError
   }
+
+  public resendVerificationEmail(email: string): Observable<any> {
+    const emailDto = { To: email, Subject: '', Body: '' };
+    return this.http.post(`${environment.apiUrl}/auth/resend-verification-email`, emailDto, { responseType: 'text' }).pipe(
+      tap((response) => {
+        console.log('Verification email resent!', response);
+      }),
+      catchError(this.handleError)
+    );
+  }
 }

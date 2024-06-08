@@ -1,0 +1,14 @@
+.not-verified-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .not-verified-container h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .not-verified-container p {
+    margin-bottom: 20px;
+  }
+  

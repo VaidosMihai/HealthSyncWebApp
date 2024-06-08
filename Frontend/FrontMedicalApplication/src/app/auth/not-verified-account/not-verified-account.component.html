@@ -1,0 +1,7 @@
+<div class="not-verified-container">
+    <h2>Account Not Verified</h2>
+    <p>Your account has not been verified. Please check your email for the verification link.</p>
+    <button class="btn btn-primary btn-block mb-4" (click)="resendVerificationEmail()">Resend Verification Email</button>
+    <div *ngIf="resendMessage" class="alert alert-info">{{ resendMessage }}</div>
+  </div>
+  

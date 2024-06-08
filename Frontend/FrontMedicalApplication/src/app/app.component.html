@@ -35,7 +35,7 @@
           </li>
         </ul>
       </div>
-      <div class="search-bar" *ngIf="isLoggedIn">
+      <div class="search-bar" *ngIf="isAdmin || isPatient || isDoctor">
         <select title="selectedEntityType" [(ngModel)]="selectedEntityType">
           <option value="">Select Entity Type</option>
           <option value="users">Users</option>
@@ -46,7 +46,7 @@
         <button type="button" class="search-button" (click)="onSearch()">Search</button>
       </div>
       <div class="auth-section">
-        <div *ngIf="isLoggedIn" class="notification-icon" (click)="viewNotifications()">
+        <div *ngIf="isAdmin || isPatient || isDoctor" class="notification-icon" (click)="viewNotifications()">
           <button mat-button>
             <img src="assets/Notification.png" alt="Notifications">
           </button>
@@ -54,7 +54,7 @@
             {{ unreadNotificationsCount }}
           </div>
         </div>
-        <ng-container *ngIf="isLoggedIn">
+        <ng-container *ngIf="isAdmin || isPatient || isDoctor">
           <b>{{ currentUserFullName }}</b>
           <button mat-button routerLink="/profile">
             <div class="profile-picture">
@@ -65,7 +65,7 @@
           </button>
           <button mat-button (click)="logout()">Logout</button>
         </ng-container>
-        <div *ngIf="!isLoggedIn" class="dropdown">
+        <div *ngIf="!(isAdmin || isPatient || isDoctor)" class="dropdown">
           <button mat-button class="dropbtn services-button">Services</button>
           <div class="dropdown-content right-aligned-content">
             <a mat-button *ngIf="isAdmin || isPatient" routerLink="/doctors">Doctors</a>

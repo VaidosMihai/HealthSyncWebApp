@@ -35,7 +35,7 @@ export class LoginComponent {
             userData => {
               this.router.navigate(['/dashboard']);
               this.loading = false;
-              this.loginError = ''; // Clear any previous error messages
+              this.loginError = '';
             },
             userError => {
               console.error('Failed to load user data:', userError);
@@ -44,7 +44,11 @@ export class LoginComponent {
           );
         },
         error: (error) => {
-          this.loginError = 'Incorrect username or password. Please try again.'; // Set the error message
+          if (error.status === 401 && error.error.message === 'Email not verified') {
+            this.router.navigate(['/not-verified']);
+          } else {
+            this.loginError = 'Incorrect username or password. Please try again.';
+          }
           this.loading = false;
         }
       });
