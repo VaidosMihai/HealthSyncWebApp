@@ -177,8 +177,9 @@ namespace BackendMedicalApplication.Controllers
             user.VerificationTokenExpires = DateTime.UtcNow.AddHours(24);
             await _context.SaveChangesAsync();
 
-            emailDto.Subject = "Verify your email";
-            emailDto.Body = $"Your verification token is: {user.VerificationToken}";
+            string verificationUrl = $"https://backendmedicalapplication.azurewebsites.net/api/auth/verify-email?token={user.VerificationToken}";
+            emailDto.Subject = "Verify your email address";
+            emailDto.Body = $"Please verify your email address by clicking the link below:\n{verificationUrl}\nThis link will expire in 24 hours.";
 
             await _emailService.SendEmailAsync(user.EmailAddress, emailDto.Subject, emailDto.Body, true);
             return Ok("Verification email sent.");
