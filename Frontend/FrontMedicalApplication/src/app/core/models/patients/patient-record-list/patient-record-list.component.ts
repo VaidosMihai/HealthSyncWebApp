@@ -20,6 +20,7 @@ export class PatientListComponent implements OnInit {
   selectedPatient: UserDto | null = null;
   currentDoctorId: number | null = null;
   currentUserRoleId: number | null = null;
+  noPatients: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -36,7 +37,7 @@ export class PatientListComponent implements OnInit {
       this.loadAllPatientsAndAppointments();
     } else if (this.currentDoctorId !== null) {
       // Doctor view: Load patients and appointments for the current doctor
-      this.loadPatients();
+      this.loadPatientsAndAppointmentsForDoctor(this.currentDoctorId);
     } else {
       console.error('Current user ID or role ID not found in local storage');
     }
@@ -60,11 +61,11 @@ export class PatientListComponent implements OnInit {
     return null;
   }
 
-  loadPatients(): void {
+  loadPatientsAndAppointmentsForDoctor(doctorId: number): void {
     this.userService.getAllUsersWithRoleId(2).subscribe(
       (data) => {
         this.patients = data.filter(user => user.roleId === 2); // Assuming roleId 2 is for patients
-        this.loadAppointments();
+        this.loadAppointmentsForDoctor(doctorId);
       },
       (error) => {
         console.error('There was an error fetching the patients', error);
@@ -84,14 +85,12 @@ export class PatientListComponent implements OnInit {
     );
   }
 
-  loadAppointments(): void {
-    if (this.currentDoctorId === null) return;
-
-    this.appointmentService.getAppointmentsByDoctor(this.currentDoctorId).subscribe({
+  loadAppointmentsForDoctor(doctorId: number): void {
+    this.appointmentService.getAppointmentsByDoctor(doctorId).subscribe({
       next: (response) => {
         if (response.body) {
           this.patientAppointments = response.body;
-          this.filterPatientsByDoctorAppointments();
+          this.filterPatientsByDoctorAppointments(doctorId);
         }
       },
       error: (error) => {
@@ -113,9 +112,15 @@ export class PatientListComponent implements OnInit {
     });
   }
 
-  filterPatientsByDoctorAppointments(): void {
-    const patientIdsWithAppointments = this.patientAppointments.map(appt => appt.patientId);
-    this.patients = this.patients.filter(patient => patient.userId !== undefined && patientIdsWithAppointments.includes(patient.userId));
+  filterPatientsByDoctorAppointments(doctorId: number): void {
+    const patientIdsWithAppointments = this.patientAppointments
+      .filter(appt => appt.doctorId === doctorId)
+      .map(appt => appt.patientId);
+
+    this.patients = this.patients.filter(patient => 
+      patient.userId !== undefined && patientIdsWithAppointments.includes(patient.userId));
+
+    this.noPatients = this.patients.length === 0;
   }
 
   getNextAppointment(patientId: number | undefined): AppointmentDto | undefined {

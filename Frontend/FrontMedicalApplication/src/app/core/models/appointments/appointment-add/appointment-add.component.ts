@@ -40,25 +40,31 @@ export class AppointmentAddComponent implements OnInit {
 
   ngOnInit() {
     this.loadDoctors();
+
+    const patientUserJson = localStorage.getItem('currentUser');
+    if (patientUserJson) {
+      const patientUser: UserDto = JSON.parse(patientUserJson);
+      this.patientId = patientUser.userId;
+      this.appointmentForm.patchValue({
+        patientId: patientUser.userId,
+        patientUsername: patientUser.username
+      });
+    }
+
     this.route.queryParams.pipe(
       switchMap(params => {
         const doctorUsername = params['doctorUsername'];
-        const patientUsername = params['patientUsername'];
-        return forkJoin({
-          doctor: this.userService.getUserByUsername(doctorUsername),
-          patient: this.userService.getUserByUsername(patientUsername),
-        });
+        return this.userService.getUserByUsername(doctorUsername);
       })
-    ).subscribe(result => {
-      if (result.doctor && result.patient) {
+    ).subscribe(doctor => {
+      if (doctor) {
         this.appointmentForm.patchValue({
-          doctorId: result.doctor.userId,
-          patientId: result.patient.userId,
-          doctorUsername: result.doctor.username,
-          patientUsername: result.patient.username,
+          doctorId: doctor.userId,
+          doctorUsername: doctor.username
         });
       }
     });
+
     this.route.queryParams.subscribe(params => {
       const doctorUsername = params['doctorUsername'];
       if (doctorUsername) {
@@ -68,13 +74,6 @@ export class AppointmentAddComponent implements OnInit {
             this.appointmentForm.get('doctorId')?.setValue(this.doctorId);
           }
         );
-      }
-      const patientUserJson = localStorage.getItem('currentUser');
-      if (patientUserJson) {
-        const patientUser = JSON.parse(patientUserJson);
-        this.patientId = patientUser.userId;
-        this.appointmentForm.get('patientId')?.setValue(this.patientId);
-        this.appointmentForm.get('patientUsername')?.setValue(patientUser.username);
       }
     });
   }

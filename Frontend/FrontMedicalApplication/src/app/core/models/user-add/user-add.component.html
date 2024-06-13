@@ -89,7 +89,8 @@
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Create User</button>
+    <button type="button" class="btn btn-primary custom-margin" [routerLink]="['/users']">Back</button>
+    <button type="submit" class="btn btn-primary custom-margin">Create User</button>
   </form>
   <div *ngIf="message" class="alert alert-success mt-3">
     {{ message }}

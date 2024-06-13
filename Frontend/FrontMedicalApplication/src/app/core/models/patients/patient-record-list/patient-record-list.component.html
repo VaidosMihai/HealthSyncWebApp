@@ -1,22 +1,26 @@
 <div class="container mt-3">
   <h2>Patients</h2>
-  <div class="row">
-    <div *ngFor="let patient of patients" class="col-md-4 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title text-center">{{ patient.name }} {{ patient.surname }}</h5>
-          <ul class="list-unstyled">
-            <li><strong>Username:</strong> {{ patient.username }}</li>
-            <li><strong>Email:</strong> {{ patient.emailAddress }}</li>
-            <li><strong>Next Appointment:</strong> {{ getNextAppointment(patient.userId)?.dateTime | date: 'short' || 'No upcoming appointments' }}</li>
-          </ul>
-          <div class="text-center">
-            <button class="btn btn-primary mt-2" (click)="openModal(patient)">View patient profile</button>
-          </div>
+<div *ngIf="noPatients" class="text-center">
+  <p>No patients</p>
+</div>
+<div *ngIf="!noPatients" class="row">
+  <div *ngFor="let patient of patients" class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title text-center">{{ patient.name }} {{ patient.surname }}</h5>
+        <ul class="list-unstyled">
+          <li><strong>Username:</strong> {{ patient.username }}</li>
+          <li><strong>Email:</strong> {{ patient.emailAddress }}</li>
+          <li><strong>Next Appointment:</strong> {{ getNextAppointment(patient.userId)?.dateTime | date: 'short' || 'No upcoming appointments' }}</li>
+        </ul>
+        <div class="text-center">
+          <button class="btn btn-primary mt-2" (click)="openModal(patient)">View patient profile</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 
   <!-- Modal -->
   <div id="patientModal" class="modal" [class.show]="isModalOpen">

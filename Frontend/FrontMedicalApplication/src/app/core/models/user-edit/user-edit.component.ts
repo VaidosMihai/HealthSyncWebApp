@@ -22,26 +22,24 @@ export class UserEditComponent implements OnInit {
   ) {
     this.userId = this.route.snapshot.params['id'];
     this.editUserForm = this.fb.group({
-      userId: ['', Validators.required],
-      username: ['', Validators.required],
-      emailAddress: ['', [Validators.required, Validators.email]],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      cnp: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(0)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      address: ['', [Validators.required, Validators.minLength(6)]],
-      phoneNumber: ['', [Validators.required]],
       roleId: ['', Validators.required],
-      description: ['', [Validators.required]]
+      username: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9]+$/)]],
+      name: ['', [Validators.required, Validators.pattern(/^[A-Z][a-z]*$/)]],
+      surname: ['', [Validators.required, Validators.pattern(/^[A-Z][a-z]*$/)]],
+      emailAddress: ['', [Validators.required, Validators.email]],
+      cnp: ['', [Validators.required, Validators.pattern(/^[0-9]{13}$/)]],
+      age: ['', [Validators.required, Validators.min(0), Validators.max(150)]],
+      address: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      description: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     if (this.userId) {
       this.userService.getPatientById(this.userId).subscribe({
-        next: (user: UserDto) => { // Cast response as UserDto
-          console.log('Fetched User:', user); // Log fetched user data for debugging
+        next: (user: UserDto) => {
+          console.log('Fetched User:', user);
           this.editUserForm.patchValue(user);
         },
         error: (error) => {
@@ -55,9 +53,9 @@ export class UserEditComponent implements OnInit {
     if (this.editUserForm.valid) {
       this.userService.updatePatient(this.userId, this.editUserForm.value).subscribe({
         next: (updatedUser) => {
-          alert("User updated successfully");
+          alert('User updated successfully');
           console.log('User updated successfully', updatedUser);
-          this.router.navigate(['/users']); // Redirect to the users list
+          this.router.navigate(['/users']);
         },
         error: (error) => {
           console.error('Error updating user:', error);
