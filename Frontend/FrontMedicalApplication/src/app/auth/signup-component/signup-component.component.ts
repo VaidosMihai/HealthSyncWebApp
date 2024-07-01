@@ -30,7 +30,7 @@ export class SignupComponent {
       password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[A-Z])(?=.*[0-9]{3,})(?=.*[!@#$%^&*]).+$')]],
       confirmPassword: ['', [Validators.required, Validators.minLength(8), this.passwordMatchValidator]],
       Address: ['', [Validators.required, Validators.minLength(6)]],
-      PhoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      PhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
     });
   }
 

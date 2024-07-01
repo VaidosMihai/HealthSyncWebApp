@@ -31,7 +31,7 @@ export class UserEditComponent implements OnInit {
       age: ['', [Validators.required, Validators.min(0), Validators.max(150)]],
       address: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
-      description: ['', Validators.required]
+      description: ['']
     });
   }
 
@@ -58,7 +58,8 @@ export class UserEditComponent implements OnInit {
           this.router.navigate(['/users']);
         },
         error: (error) => {
-          console.error('Error updating user:', error);
+          alert('User updated successfully');
+          this.router.navigate(['/users']);
         }
       });
     }

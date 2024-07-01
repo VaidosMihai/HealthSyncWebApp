@@ -32,7 +32,7 @@ export class UserAddComponent implements OnInit {
       cnp: ['', [Validators.required, Validators.pattern(/^[0-9]{13}$/)]],
       age: ['', [Validators.required, Validators.min(0), Validators.max(150)]],
       address: ['', Validators.required],
-      phonenumber: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+      phonenumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
     }, { validator: this.passwordMatchValidator });
   }
 

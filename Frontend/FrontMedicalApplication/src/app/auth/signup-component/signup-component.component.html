@@ -122,8 +122,13 @@
                 </div>
                 <div class="form-group">
                   <label for="PhoneNumber">Phone Number</label>
-                  <input placeholder="Phone Number" type="text" id="PhoneNumber" class="form-control" formControlName="PhoneNumber" required pattern="^[0-9]+$" />
-                  <mat-error *ngIf="signupForm.get('PhoneNumber')?.hasError('pattern')">Phone number must contain only numbers</mat-error>
+                  <input placeholder="Phone Number" type="text" id="PhoneNumber" class="form-control" formControlName="PhoneNumber" required pattern="^\d{10}$" />
+                  <mat-error *ngIf="signupForm.get('PhoneNumber')?.hasError('required')">
+                    Phone number is required.
+                  </mat-error>
+                  <mat-error *ngIf="signupForm.get('PhoneNumber')?.hasError('pattern')">
+                    Phone number must contain exactly 10 digits and only numbers from 0-9.
+                  </mat-error>
                 </div>
                 <div class="btn-container">
                   <button type="submit" class="btn btn-primary btn-block mb-4" [disabled]="loading">Sign up</button>

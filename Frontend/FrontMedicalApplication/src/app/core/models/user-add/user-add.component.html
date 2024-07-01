@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          <label for="roleId">Role ID</label>
+          <label for="roleId">Role ID (1-Patient,2-Doctor,3-Admin)</label>
           <input type="number" class="form-control" id="roleId" formControlName="roleId" placeholder="Enter role ID">
           <div *ngIf="addUserForm.get('roleId')?.invalid && addUserForm.get('roleId')?.touched" class="text-danger">
             Role ID is required.
@@ -84,7 +84,12 @@
           <label for="phonenumber">Phone Number</label>
           <input type="text" id="phonenumber" class="form-control" formControlName="phonenumber" placeholder="Enter phone number">
           <div *ngIf="addUserForm.get('phonenumber')?.invalid && addUserForm.get('phonenumber')?.touched" class="text-danger">
-            Phone number must contain only numbers.
+            <div *ngIf="addUserForm.get('phonenumber')?.errors?.['required']">
+              Phone number is required.
+            </div>
+            <div *ngIf="addUserForm.get('phonenumber')?.errors?.['pattern']">
+              Phone number must contain exactly 10 digits and only numbers from 0-9.
+            </div>
           </div>
         </div>
       </div>
